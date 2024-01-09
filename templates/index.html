@@ -6,6 +6,30 @@
     <title>Document</title>
 </head>
 <body>
+    {% load static %}
+    <script src="{% static 'js/htmx.min.js' %}" defer></script>       
+    <link rel="stylesheet" href="{% static 'css/bulma.min.css' %}">
+    <script src="{% static 'js/cdn.min.js' %}"></script>
+
     <h1>Hello World</h1>    
+
+    <h1 class="title is-1 has-text-centered has-text-primary-dark has-text-weight-bold is-uppercase">
+        Olá, Esta é uma Estilização em Bulma!
+      </h1>
+      <form hx-post="/store">
+        <input id="title" name="title" type="text"
+            hx-post="/validate"
+            hx-trigger="change"
+        >
+        <button type="submit">Submit</button>
+    </form>
+    <div x-data="{ open: false }">
+        <button @click="open = true">Expand</button>
+     
+        <span x-show="open">
+            Content...
+        </span>
+    </div>
+
 </body>
 </html>
