@@ -1,0 +1,76 @@
+{% load widget_tweaks %}
+{% with WIDGET_ERROR_CLASS='is-invalid' %}
+<div class="modal" x-bind:class="modalloginopen ? 'is-active' : ''">
+    <div class="modal-background" ></div>
+    <div class="modal-content has-background-white py-5 px-5" id="login-modal" @click.stop.outside="modalloginopen = false">
+
+        <div class="box">
+            <div x-data="{ openNotificationlogin: true }">
+                
+                    {% if error_messages %}
+                        <div  x-cloak class="notification is-danger" x-show="openNotificationlogin">
+                            <button class="delete" x-on:click.stop.prevent="openNotificationlogin = !openNotificationlogin"></button>
+                            {{ error_messages.invalid_login }}
+                        </div>
+                    {% endif %}
+                
+            </div>
+            <h1 class="title is-3">LOGIN</h1>
+            
+            <form class="form" name="form"        
+            hx-post = {{request.path}} 
+            hx-trigger="submit"
+            hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}'
+            hx-target="#login-modal"                                
+            >
+                {% csrf_token %}
+                
+                <div class="field">
+                    <label class="label">Email</label>
+                    <div class="control">
+                        {% render_field form.email class="input is-link" placeholder="user@example.com" name="email"%}
+                    {% if form.email.errors %}
+                        <p class="help is-danger">{{ form.email.errors|first }}</p>
+                    {% endif %}
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <label class="label">Senha</label>
+                    <div class="control">
+                        {% render_field form.password class="input is-link" placeholder="*********" name="password" %}
+                    {% if form.password.errors %}
+                        <p class="help is-danger">{{ form.password.errors|first }}</p>
+                    {% endif %} 
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-success" 
+                        type="submit" 
+                                                          
+                        >Login</button>
+                    </div>
+                </div>
+
+                <a class="is-size-8 button-unstyled has-text-link
+                               login-modal-tabbable"
+                               hx-get="{% url 'register' %}"
+                               hx-target="#modal-register"
+                               hx-trigger="click once"
+                               x-cloak
+                               @click.stop.prevent="modalregisteropen = !modalregisteropen">
+                  Register new account
+                </a>               
+                  
+            </form>
+        </div>
+        
+        <button class="modal-close is-large" aria-label="close" @click.stop="modalloginopen = false"></button>
+    </div>
+</div>
+{% endwith %}
+
+
+
