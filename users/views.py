@@ -51,7 +51,10 @@ def user_login(request):
                 login(request, user)
                 
                 request.session['success_message'] = "Login bem-sucedido. Bem-vindo!"
-                return HttpResponseRedirect('/')
+                response = HttpResponse()
+                response["Hx-Redirect"] = "/" 
+                return response
+                
             else:                
                 # Usuário não autenticado - trate conforme necessário
                 form.add_error(None, 'Credenciais inválidas. Verifique seu email e senha.')
@@ -68,6 +71,10 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+
+def refresh_navbar(request):
+    return render(request, 'includes/header.html')
 
 
 

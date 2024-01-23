@@ -15,14 +15,15 @@
                     {% endif %}
                 
             </div>
-            <h1 class="title is-3">LOGIN</h1>
+            <h1 class="title is-3">LOGIN</h1>            
             
             <form class="form" name="form"        
             hx-post = {{request.path}} 
             hx-trigger="submit"
             hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}'
-            hx-target="#login-modal"                                
+            hx-target="#login-modal"                                                  
             >
+                
                 {% csrf_token %}
                 
                 <div class="field">
@@ -44,15 +45,16 @@
                     {% endif %} 
                     </div>
                 </div>
-                
+
                 <div class="field">
                     <div class="control">
-                        <button class="button is-success" 
-                        type="submit" 
-                                                          
-                        >Login</button>
+                        <button class="button is-success"
+                        type="submit"
+                                                                                                      
+                        >Login</button>                
                     </div>
                 </div>
+                
 
                 <a class="is-size-8 button-unstyled has-text-link
                                login-modal-tabbable"
