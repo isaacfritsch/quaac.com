@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
-        {% load static %}
+        
         <script src="{% static 'js/htmx.min.js' %}" defer></script>       
         <link rel="stylesheet" href="{% static 'css/bulma.min.css' %}">
     </head>
@@ -12,7 +13,9 @@
         <div id="div para incluir modais" 
         x-data="{ 
             modalloginopen: false,
-            modalregisteropen: false,          
+            modalregisteropen: false,
+            modalcreatespace: false,
+            modalusercreatespaceerror: false,        
         }">
             <script src="{% static 'js/cdn.min.js' %}"></script>
             {% include 'includes/header.html' %}
@@ -22,9 +25,13 @@
 
             <!-- Register modal -->
             <div id="modal-register"></div>
+
+            <!-- Register Espaço -->
+            <div id="modal-space"></div>
+
             {%endblock modals%}
             {%block content%}
-            
+
             {%endblock content%}
         </div>
     </body>

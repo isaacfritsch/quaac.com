@@ -23,7 +23,9 @@ def user_register(request, *args, **kwargs):
             login(request, user)
             
             # Redirect to a success page or homepage
-            return HttpResponseRedirect(reverse('home'))
+            response = HttpResponse()
+            response["Hx-Redirect"] = "/"
+            return response
             
     else:
         form = CustomUserCreationForm()
@@ -72,9 +74,6 @@ def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
 
-
-def refresh_navbar(request):
-    return render(request, 'includes/header.html')
 
 
 

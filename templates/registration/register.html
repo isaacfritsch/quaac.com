@@ -5,13 +5,12 @@
     <div class="modal-content has-background-white py-5 px-5" id="register-modal"  @click.stop.outside="modalregisteropen = false">
 
         <div class="box">
-            
+            <button class="delete is-pulled-right" x-on:click.stop.prevent="modalregisteropen = false"></button>
             <h1 class="title is-3">REGISTER</h1>
             
             <form class="form" name="form"           
             hx-post="{{ request.path }}" 
-            hx-trigger="submit"
-            hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}'
+            hx-trigger="submit"            
             hx-target="#register-modal"
             >
                 {% csrf_token %}
@@ -68,7 +67,7 @@
         </div>
         
         
-        <button class="modal-close is-large" aria-label="close" @click.stop="modalregisteropen = false"></button>
+        
     </div>
 </div>
 {% endwith %}

@@ -17,17 +17,18 @@
             </a>                    
         </div>
         
-        <div class="navbar-menu" 
+        <div class="navbar-menu"
         x-cloak x-bind:class="open ? 'is-active' : ''" 
         x-on:click.stop.outside="open = false">
             <div class="navbar-end">
                 <a class="navbar-item" href="/">
                     Sobre
                 </a>          
-                <a class="navbar-item">
-                    Criar espaço
-                </a>
+                
                 {% if user.is_authenticated %}
+                    <a class="navbar-item">
+                        Criar espaço
+                    </a>
                     <a class="navbar-item"
                     href="{% url 'logout' %}">
                     Log out

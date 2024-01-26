@@ -15,12 +15,12 @@
                     {% endif %}
                 
             </div>
+            <button class="delete is-pulled-right" x-on:click.stop.prevent="modalloginopen = false"></button>
             <h1 class="title is-3">LOGIN</h1>            
             
             <form class="form" name="form"        
             hx-post = {{request.path}} 
-            hx-trigger="submit"
-            hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}'
+            hx-trigger="submit"            
             hx-target="#login-modal"                                                  
             >
                 
@@ -69,7 +69,7 @@
             </form>
         </div>
         
-        <button class="modal-close is-large" aria-label="close" @click.stop="modalloginopen = false"></button>
+        
     </div>
 </div>
 {% endwith %}

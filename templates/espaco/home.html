@@ -1,4 +1,28 @@
 {% extends 'base.html' %}
 {%block content%}
-<p>Projeto de compartilhamento de questões</p>
+<section class="section">
+    <div class="container has-text-centered">
+        <p class="title is-4">Projeto de compartilhamento de questões</p>
+        <div x-data="{ openNotificationspaceerror: true }">
+                
+            {% if error_messages %}
+                <div  x-cloak class="notification is-danger" x-show="openNotificationspaceerror">
+                    <button class="delete" x-on:click.stop.prevent="openNotificationspaceerror = !openNotificationspaceerror"></button>
+                    {{ error_messages.invalid_login }}
+                </div>
+            {% endif %}
+        
+        </div>
+        <button class="button is-link is-centered"
+        hx-get="{% url 'create_space' %}"
+        hx-target="#modal-space"
+        hx-trigger="click once"
+        x-cloak
+        @click.stop.prevent="modalusercreatespaceerror = !modalusercreatespaceerror"
+        @click.stop.prevent="modalcreatespace = !modalcreatespace">
+            Crie um Espaço
+        </button>
+    </div>
+</section>
 {%endblock content%}
+

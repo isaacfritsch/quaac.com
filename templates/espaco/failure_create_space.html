@@ -1,0 +1,16 @@
+<div class="modal" x-bind:class="modalusercreatespaceerror ? 'is-active' : ''">
+    <div class="modal-background" ></div>
+    <div class="modal-content has-background-white py-5 px-5" @click.stop.outside="modalusercreatespaceerror = false">
+
+        <div class="container has-text-centered">
+            <div class="notification is-danger" >
+                <button class="delete" x-on:click.stop.prevent="modalusercreatespaceerror = false"></button>
+                <p>Você precisa estar logado para criar um espaço!</p>
+            </div> 
+        </div>
+
+    </div>
+</div>
+                       
+          
+        

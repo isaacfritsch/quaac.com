@@ -1,0 +1,55 @@
+{% load widget_tweaks %}
+{% with WIDGET_ERROR_CLASS='is-invalid' %}
+<div class="modal" x-bind:class="modalcreatespace ? 'is-active' : ''">
+    <div class="modal-background" ></div>
+    <div class="modal-content has-background-white py-5 px-5" id="space-modal" @click.stop.outside="modalcreatespace = false">
+
+        <div class="box">            
+            <h1 class="title is-3">CRIAR ESPAÇO</h1>            
+            
+            <form class="form" name="form"      
+            hx-post = {{request.path}}
+            hx-trigger="submit"         
+            hx-target="#space-modal"                                               
+            >
+
+                {% csrf_token %}
+
+                <div class="field">
+                    <label class="label">Título</label>                 
+                    <div class="control">
+                        {% render_field form.title class="input is-link" placeholder="" name="title"%}
+                    {% if form.title.errors %}
+                        <p class="help is-danger">{{ form.title.errors|first }}</p>
+                    {% endif %}
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <label class="label">Descrição</label>
+                    <p><small>Qual o objetivo desse espaço?</small></p>
+                    <div class="control">
+                        {% render_field form.description class="textarea is-link" placeholder="" name="description" %}
+                    {% if form.description.errors %}
+                        <p class="help is-danger">{{ form.description.errors|first }}</p>
+                    {% endif %} 
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-success"
+                        type="submit"
+                                                                                                      
+                        >Criar</button>                
+                    </div>
+                </div>        
+                              
+                  
+            </form>
+        </div>
+        
+        <button class="modal-close is-large" aria-label="close" @click.stop="modalcreatespace = false"></button>
+    </div>
+</div>
+{% endwith %}
