@@ -1,0 +1,19 @@
+{% for tag in nomes_tags %}
+    <a class="panel-block is-active"
+    hx-post={% url 'processar_tags' tag=tag %}         
+    hx-target="#tags_selected"
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+    hx-trigger="click">
+        <span class="icon">
+            <i class="fa-solid fa-repeat"></i>
+        </span>
+        <span>
+            {{ tag }}
+        </span>   
+        </span>
+            
+    </a>            
+{% endfor %}
+
+                        
+   

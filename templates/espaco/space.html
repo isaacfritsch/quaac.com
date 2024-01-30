@@ -1,12 +1,88 @@
 {% extends 'base.html' %}
 {%block content%}
+<style>
+  .panel-tabs-scrollable {
+    overflow-x: auto;
+    white-space: nowrap;
+    text-align: center;
+  }
+  
+  .panel-tabs {
+    display: inline-block;
+    white-space: nowrap;
+  } 
+</style>
 <section class="hero is-small is-link">
     <div class="hero-body">
       <p class="title">
         {{espaco.title}}
-      </p>      
+      </p>
+      <p class="subtitle is-size-7">
+        {{espaco.description}}
+      </p>
+      <p class="control has-icons-left">
+        <input class="input is-medium " type="text" placeholder="Pesquisa de palavras-chave em questões, comentários ou resoluções">
+        <span class="icon is-left">
+          <i class="fas fa-search" aria-hidden="true"></i>
+        </span>
+      </p>
+        
     </div>
 </section>
+
+<div>
+  <nav class="panel">
+    <p class="panel-heading">
+      Painel de Tags
+    </p>
+    <div class="panel-block">
+      <p class="control has-icons-left">
+        <input class="input  " type="text" placeholder="Pesquisar por tags">
+        <span class="icon is-left">
+          <i class="fas fa-search" aria-hidden="true"></i>
+        </span>
+      </p>
+    </div>
+    <div class="panel-tabs-scrollable">
+      <p class="panel-tabs">
+        {% if quantidade_tags_por_categoria|length > 0 %}
+          <button class="button is-link is-small is-outlined is-responsive"
+          hx-get="{% url 'lista_tags' espaco=espaco.title categoria='all'%}"
+          hx-target="#tag_selection"
+          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+          hx-trigger="click"
+          >
+            All
+            ({{quantidade_total_tags}})
+          </button>
+            {% for tag in quantidade_tags_por_categoria %}                    
+              <button class="button is-link is-small is-outlined is-responsive" 
+              hx-get="{% url 'lista_tags' espaco=espaco.title categoria=tag.category %}"
+              hx-target="#tag_selection"
+              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+              hx-trigger="click">
+              {{ tag.category }}
+              ({{ tag.quantidade_tags }})
+              </button>
+            {% endfor %} 
+            
+
+        {% else %}
+          <p>Você não possui nenhuma tag adicionada</p>
+        {% endif %} 
+      </p>
+    </div>
+    <div id="tag_selection">
+    </div>
+    
+  </nav>
+</div>
+
+<div class="box" id="tags_selected">
+  {% include 'espaco/tags_selecionadas.html' %}    
+</div>
+
+
 
   
   

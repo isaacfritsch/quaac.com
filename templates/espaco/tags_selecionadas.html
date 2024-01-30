@@ -1,0 +1,30 @@
+
+<p class="block">
+    <strong>Tags selecionadas:</strong>
+</p>
+    
+        
+{% if selected_tags|length > 0 %}
+    <p class="block">
+    {% for tag in selected_tags %}                  
+        <span class="tag is-link">
+            {{ tag }}
+            <button class="delete is-small"
+            hx-post={% url 'processar_tags' tag=tag %}         
+            hx-target="#tags_selected"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            hx-trigger="click"            
+            ></button>
+        </span>           
+    {% endfor %}
+        <div class="buttons is-right">
+            <button class="button is-warning is-medium">FILTRAR</button>
+        </div>
+        </p>
+    {% else %}
+    <p class="block">
+        Você não possui nenhuma tag selecionada
+    </p>
+{% endif %}
+                        
+    

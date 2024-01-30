@@ -16,7 +16,7 @@
                 {% csrf_token %}
 
                 <div class="field">
-                    <label class="label">Título</label>                 
+                    <label class="label" for="{{ form.title.id_for_label }}">Título</label>                 
                     <div class="control">
                         {% render_field form.title class="input is-link" placeholder="" name="title"%}
                     {% if form.title.errors %}
@@ -26,7 +26,7 @@
                 </div>
                 
                 <div class="field">
-                    <label class="label">Descrição</label>
+                    <label class="label" for="{{ form.description.id_for_label }}">Descrição</label>
                     <p><small>Qual o objetivo desse espaço?</small></p>
                     <div class="control">
                         {% render_field form.description class="textarea is-link" placeholder="" name="description" %}

@@ -16,10 +16,10 @@
         <button class="button is-link is-centered"
         hx-get="{% url 'create_space' %}"
         hx-target="#modal-space"
-        hx-trigger="click once"
+        hx-trigger="click"
         x-cloak
-        @click.stop.prevent="modalusercreatespaceerror = !modalusercreatespaceerror"
-        @click.stop.prevent="modalcreatespace = !modalcreatespace">
+        @click.stop="modalusercreatespaceerror = !modalusercreatespaceerror"
+        @click.stop="modalcreatespace = !modalcreatespace">
             Crie um Espaço
         </button>
     </div>

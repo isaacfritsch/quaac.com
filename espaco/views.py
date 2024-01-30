@@ -1,9 +1,15 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
 from django.http import HttpResponse
+from django.db.models import Count
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from .models import Espaco
+from .models import Espaco, Tag
 from .forms import CreateSpaceForm
+from django.views.decorators.http import require_POST
+from django.views.generic.list import ListView
 
 # Create your views here.
 
@@ -13,6 +19,7 @@ def test_view(request):
 
 def create_space(request):
     if request.user.is_authenticated:
+        
         if request.method == 'POST':
             
             
@@ -29,6 +36,7 @@ def create_space(request):
                 return response
         else:
             form = CreateSpaceForm()
+            
 
         return render(request, 'espaco/create_space.html', {'form': form})
     
@@ -37,5 +45,61 @@ def create_space(request):
 
 
 def url_espaco(request, slug):
-    espaco = get_object_or_404(Espaco, slug=slug)
-    return render(request, 'espaco/space.html', {'espaco': espaco})
+    espaco = get_object_or_404(Espaco, slug=slug)    
+    quantidade_tags_por_categoria = Tag.objects.filter(space=espaco).values('category').annotate(quantidade_tags=Count('id'))
+    quantidade_total_tags = Tag.objects.filter(space=espaco).aggregate(quantidade_total=Count('id'))['quantidade_total']
+    if 'selected_tags' in request.session:
+        selected_tags = request.session['selected_tags']
+    else:
+        selected_tags = []  
+        
+    if None in selected_tags:
+        selected_tags.remove(None)
+        
+    request.session['selected_tags'] = selected_tags 
+    context = {
+        'espaco':espaco,
+        'quantidade_tags_por_categoria':quantidade_tags_por_categoria,
+        'selected_tags': selected_tags,
+        'quantidade_total_tags': quantidade_total_tags,
+    }
+
+    return render(request, 'espaco/space.html', context)
+
+def lista_tags(request, espaco, categoria):
+    espaco_desejado = Espaco.objects.get(title=espaco)
+    if categoria == 'all':
+        nomes_tags = Tag.objects.filter(space=espaco_desejado.id).values_list('name', flat=True)
+    else:
+        nomes_tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria).values_list('name', flat=True)
+        
+    context = {
+        'nomes_tags': list(nomes_tags)
+    }
+    
+    return render(request, 'espaco/lista_tags.html', context)
+
+
+def processar_tags(request, tag):   
+    
+    selected_tags = request.session['selected_tags']
+    
+
+    if tag not in selected_tags:
+        selected_tags.append(tag)        
+    else:
+        selected_tags.remove(tag)
+        
+    if None in selected_tags:
+        selected_tags.remove(None)
+        
+    request.session['selected_tags'] = selected_tags
+    
+    return render(request, 'espaco/tags_selecionadas.html', {'selected_tags': selected_tags})
+
+
+
+
+
+
+
