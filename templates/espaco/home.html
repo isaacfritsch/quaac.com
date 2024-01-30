@@ -18,7 +18,7 @@
         hx-target="#modal-space"
         hx-trigger="click"
         x-cloak
-        @click.stop="modalusercreatespaceerror = !modalusercreatespaceerror"
+        @click.stop.prevent="modalusercreatespaceerror = !modalusercreatespaceerror"
         @click.stop="modalcreatespace = !modalcreatespace">
             Crie um Espaço
         </button>
