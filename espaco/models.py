@@ -10,12 +10,12 @@ class Espaco(models.Model):
     )
     
     title = models.CharField(max_length=45, unique=True)
-    description = models.TextField(max_length=160, blank=True)
+    description = models.TextField(max_length=255, blank=True)
     
     slug = AutoSlugField(unique=True, populate_from='title')   
     
     def __str__(self):
-        return self.title 
+        return self.title
       
     
 class Tag(models.Model):

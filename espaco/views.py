@@ -3,11 +3,12 @@ from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.http import HttpResponse
+from urllib.parse import unquote
 from django.db.models import Count
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .models import Espaco, Tag
-from .forms import CreateSpaceForm
+from .forms import CreateSpaceForm, CreateTagForm
 from django.views.decorators.http import require_POST
 from django.views.generic.list import ListView
 
@@ -45,20 +46,33 @@ def create_space(request):
 
 
 def url_espaco(request, slug):
-    espaco = get_object_or_404(Espaco, slug=slug)    
-    quantidade_tags_por_categoria = Tag.objects.filter(space=espaco).values('category').annotate(quantidade_tags=Count('id'))
-    quantidade_total_tags = Tag.objects.filter(space=espaco).aggregate(quantidade_total=Count('id'))['quantidade_total']
+    espaco_solicitado = get_object_or_404(Espaco, slug=slug)
+    
+    # Verifica se o espaço atual é diferente do solicitado
+    if 'current_espaco' in request.session:
+        espaco_atual = request.session['current_espaco']
+        if espaco_atual != espaco_solicitado.id:
+            # Se o espaço mudou, redefine selected_tags
+            request.session['selected_tags'] = []
+    else:
+        espaco_atual = None
+    
+    quantidade_tags_por_categoria = Tag.objects.filter(space=espaco_solicitado).values('category').annotate(quantidade_tags=Count('id'))
+    
+    quantidade_total_tags = Tag.objects.filter(space=espaco_solicitado).aggregate(quantidade_total=Count('id'))['quantidade_total']
+    
     if 'selected_tags' in request.session:
         selected_tags = request.session['selected_tags']
     else:
-        selected_tags = []  
-        
+        selected_tags = []
+
     if None in selected_tags:
         selected_tags.remove(None)
         
-    request.session['selected_tags'] = selected_tags 
+    request.session['current_espaco'] = espaco_solicitado.id
+    request.session['selected_tags'] = selected_tags
     context = {
-        'espaco':espaco,
+        'espaco':espaco_solicitado,
         'quantidade_tags_por_categoria':quantidade_tags_por_categoria,
         'selected_tags': selected_tags,
         'quantidade_total_tags': quantidade_total_tags,
@@ -66,19 +80,21 @@ def url_espaco(request, slug):
 
     return render(request, 'espaco/space.html', context)
 
-def lista_tags(request, espaco, categoria):
-    espaco_desejado = Espaco.objects.get(title=espaco)
-    if categoria == 'all':
-        nomes_tags = Tag.objects.filter(space=espaco_desejado.id).values_list('name', flat=True)
-    else:
-        nomes_tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria).values_list('name', flat=True)
-        
-    context = {
-        'nomes_tags': list(nomes_tags)
-    }
+def lista_tags(request):
     
+    espaco = request.GET.get("espaco")
+    categoria = request.GET.get("categoria")
+    
+    espaco_desejado = Espaco.objects.get(id=espaco)
+    
+    if categoria == 'all':
+        nomes_tags = Tag.objects.filter(space=espaco_desejado.id).values_list('name', flat=True)        
+    else:
+        nomes_tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria).values_list('name', flat=True) 
+    context = {
+        'nomes_tags': sorted(nomes_tags)
+    }
     return render(request, 'espaco/lista_tags.html', context)
-
 
 def processar_tags(request, tag):   
     
@@ -97,7 +113,58 @@ def processar_tags(request, tag):
     
     return render(request, 'espaco/tags_selecionadas.html', {'selected_tags': selected_tags})
 
+def tag_creation(request, espaco):
+    
+    espaco_desejado = Espaco.objects.get(id=espaco)
+    
+    
+    if request.method == 'POST':
+        
+        # create a form instance and populate it with data from the request:
+        form = CreateTagForm(request.POST)
+        nomes_category = Tag.objects.filter(space=espaco_desejado.id).values_list('category', flat=True)
+        categorias_unicas = sorted(set(nomes_category)) 
+        
+        error_messages = form.errors  
+        print(error_messages)
+                  
+        
+        # check whether it's valid:
+        if form.is_valid():
+            tag_instance = form.save(commit=False)
+            tag_instance.save()
+            
+            response = HttpResponse()
+            response["Hx-Redirect"] = "/"
+            return response
+        
+        return render(request, 'espaco/tag_modal.html', {'form': form, 
+                                                         'error_messages': error_messages,
+                                                         'categorias_unicas': categorias_unicas,                                                         
+                                                         })
 
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        
+        form = CreateTagForm(initial={'space': espaco_desejado.id, 'user': request.user.id})
+        
+        nomes_category = Tag.objects.filter(space=espaco_desejado.id).values_list('category', flat=True)
+        categorias_unicas = sorted(set(nomes_category)) 
+    
+    return render(request, 'espaco/tag_modal.html', {'form': form, 'categorias_unicas': categorias_unicas,})
+
+def search_tag(request):
+    search_text = request.POST.get("search")
+    
+    espaco = request.POST.get("espaco")
+    
+    espaco_desejado = Espaco.objects.get(id=espaco)
+        
+    results = Tag.objects.filter(space=espaco_desejado.id, name__icontains=search_text).values_list('name', flat=True)
+    
+    context = {'results': results}
+    
+    return render(request, 'espaco/tag_search.html', context)
 
 
 

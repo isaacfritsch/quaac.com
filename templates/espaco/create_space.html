@@ -4,7 +4,9 @@
     <div class="modal-background" ></div>
     <div class="modal-content has-background-white py-5 px-5" id="space-modal" @click.stop.outside="modalcreatespace = false">
 
-        <div class="box">            
+        <div class="box">
+            
+            <button class="delete is-pulled-right"  x-on:click.stop.prevent="modalcreatespace = false"></button>       
             <h1 class="title is-3">CRIAR ESPAÇO</h1>            
             
             <form class="form" name="form"      
@@ -49,7 +51,7 @@
             </form>
         </div>
         
-        <button class="modal-close is-large" aria-label="close" @click.stop="modalcreatespace = false"></button>
+        
     </div>
 </div>
 {% endwith %}

@@ -1,4 +1,6 @@
-{% for tag in nomes_tags %}
+
+{% if results %}
+{% for tag in results %}
     <a class="panel-block is-active"
     hx-post={% url 'processar_tags' tag=tag %}        
     hx-target="#tags_selected"
@@ -10,10 +12,9 @@
         <span>
             {{ tag }}
         </span>
-        </span>
-            
-    </a>            
+        </span>            
+    </a>
 {% endfor %}
-
-                        
-   
+{% else %}
+<p>Nenhuma pesquisa correspondente, por que não crie essa tag?</p>
+{% endif %}

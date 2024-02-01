@@ -10,18 +10,21 @@
   .panel-tabs {
     display: inline-block;
     white-space: nowrap;
-  } 
+  }
 </style>
+<!-- Modal tag-->
+<div id="modal-tag">
+</div>
 <section class="hero is-small is-link">
     <div class="hero-body">
       <p class="title">
         {{espaco.title}}
       </p>
-      <p class="subtitle is-size-7">
-        {{espaco.description}}
-      </p>
+        <p class="subtitle is-size-7">
+          {{espaco.description}}
+        </p>      
       <p class="control has-icons-left">
-        <input class="input is-medium " type="text" placeholder="Pesquisa de palavras-chave em questões, comentários ou resoluções">
+        <input class="input is-medium is-focused is-danger" type="text" placeholder="Pesquisa de palavras-chave em questões, comentários ou resoluções">
         <span class="icon is-left">
           <i class="fas fa-search" aria-hidden="true"></i>
         </span>
@@ -29,15 +32,38 @@
         
     </div>
 </section>
-
 <div>
   <nav class="panel">
-    <p class="panel-heading">
-      Painel de Tags
-    </p>
+    <div class="panel-heading">
+      <div class="columns is-mobile">
+        <div class="column">
+          Painel de Tags
+        </div>
+        <div class="column is-narrow">
+          <div class="buttons is-right">
+            <button class="button is-info"            
+             hx-get="{% url 'tag_creation' espaco=espaco.id %}"             
+             hx-target="#modal-tag"
+             hx-trigger="click"
+             x-cloak
+             @click.stop="modaltagopen = !modaltagopen">
+             Adicionar tag</button>
+          </div>
+        </div>
+      </div>
+    </div>    
     <div class="panel-block">
       <p class="control has-icons-left">
-        <input class="input  " type="text" placeholder="Pesquisar por tags">
+        <input class="input" 
+        type="text" 
+        placeholder="Pesquisar dentre todas as tags"
+        hx-post="{% url 'search_tag' %}"
+        hx-target='#tag_selection'
+        hx-vals='{"espaco": "{{espaco.id}}"}'
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-trigger="keyup changed delay:500ms"
+        name="search"
+        >
         <span class="icon is-left">
           <i class="fas fa-search" aria-hidden="true"></i>
         </span>
@@ -47,7 +73,8 @@
       <p class="panel-tabs">
         {% if quantidade_tags_por_categoria|length > 0 %}
           <button class="button is-link is-small is-outlined is-responsive"
-          hx-get="{% url 'lista_tags' espaco=espaco.title categoria='all'%}"
+          hx-get="{% url 'lista_tags' %}"
+          hx-vals='{"espaco": "{{espaco.id}}","categoria": "all"}'
           hx-target="#tag_selection"
           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
           hx-trigger="click"
@@ -56,20 +83,20 @@
             ({{quantidade_total_tags}})
           </button>
             {% for tag in quantidade_tags_por_categoria %}                    
-              <button class="button is-link is-small is-outlined is-responsive" 
-              hx-get="{% url 'lista_tags' espaco=espaco.title categoria=tag.category %}"
+              <button class="button is-link is-small is-outlined is-responsive"
+              hx-get="{% url 'lista_tags' %}"
+              hx-vals='{"espaco": "{{espaco.id}}","categoria": "{{tag.category}}"}'
               hx-target="#tag_selection"
               hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-              hx-trigger="click">
+              hx-trigger="click"              
+              >
               {{ tag.category }}
               ({{ tag.quantidade_tags }})
               </button>
-            {% endfor %} 
-            
-
+            {% endfor %}
         {% else %}
           <p>Você não possui nenhuma tag adicionada</p>
-        {% endif %} 
+        {% endif %}
       </p>
     </div>
     <div id="tag_selection">
@@ -81,6 +108,8 @@
 <div class="box" id="tags_selected">
   {% include 'espaco/tags_selecionadas.html' %}    
 </div>
+
+
 
 
 

@@ -37,7 +37,7 @@
                     <a class="navbar-item"
                     hx-get="{% url 'login' %}"
                     hx-target="#modal-login"
-                    hx-trigger="click once"
+                    hx-trigger="click"
                     x-cloak
                     @click.stop.prevent="modalloginopen = !modalloginopen">
                             Login
@@ -45,7 +45,7 @@
                     <a class="navbar-item"
                     hx-get="{% url 'register' %}"
                     hx-target="#modal-register"
-                    hx-trigger="click once"
+                    hx-trigger="click"
                     x-cloak
                     @click.stop.prevent="modalregisteropen = !modalregisteropen">
                         <strong>Register</strong>

@@ -1,0 +1,35 @@
+{% load widget_tweaks %}
+{% with WIDGET_ERROR_CLASS='is-invalid' %}
+<div class="modal" x-bind:class="modaltagopen ? 'is-active' : ''">
+    <div class="modal-background" ></div>
+    <div class="modal-content has-background-white py-5 px-5" id="tag-modal" @click.stop.outside="modaltagopen = false">
+
+        <div class="box">
+            
+            <button class="delete is-pulled-right" x-on:click.stop.prevent="modaltagopen = false"></button>
+            <h1 class="title is-3">TAG</h1>         
+            
+            <form class="form" name="form"        
+            hx-post = {{request.path}} 
+            hx-trigger="submit"            
+            hx-target="#tag-modal"                                                  
+            >
+                
+            <form class="form" name="form"        
+            hx-post = {{request.path}} 
+            hx-trigger="submit"            
+            hx-target="#tag-modal"                                                  
+            
+            >
+                {% csrf_token %}
+                
+                <!-- Campos do formulário -->
+                {{ form.as_p }}
+                
+                <button type="submit">Enviar</button>
+            </form>
+        </div>     
+        
+    </div>
+</div>
+{% endwith %}
