@@ -1,0 +1,15 @@
+{% if results %}
+{% for espaco in results %}
+    <a class="panel-block is-active">
+        <span class="panel-icon">
+            <i class="fas fa-book" aria-hidden="true"></i>
+        </span>
+        <div class="content">
+            <p class="title is-5">{{espaco.title}}</p>
+            <p class="subtitle is-7">{{espaco.description}}</p>
+        </div>
+    </a>
+{% endfor %}
+{% else %}
+<p>Nenhum espaço correspondente, você ainda pode criá-lo</p>
+{% endif %}

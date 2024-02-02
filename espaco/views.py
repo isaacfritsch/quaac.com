@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.http import HttpResponse
 from urllib.parse import unquote
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .models import Espaco, Tag
@@ -14,8 +14,19 @@ from django.views.generic.list import ListView
 
 # Create your views here.
 
-def test_view(request):
+def test_view(request): 
+    
     return render(request, 'espaco/home.html')
+
+def espaco_list_view(request):   
+    
+    espacos = Espaco.objects.all()
+    
+    context = {
+        'espacos': espacos,
+    }
+    
+    return render(request, 'espaco/lista_espaco.html', context)
 
 
 def create_space(request):
@@ -120,14 +131,22 @@ def tag_creation(request, espaco):
     if request.method == 'POST':
         
         # create a form instance and populate it with data from the request:
-        form = CreateTagForm(request.POST)
-        
+        form = CreateTagForm(request.POST)        
+                
         
         error_messages = form.errors                 
         
         # check whether it's valid:
         if form.is_valid():
-            
+            nomes_tags = Tag.objects.filter(space=espaco_desejado.id, category=form.instance.category).values_list('name', flat=True)
+        
+            if form.instance.name in nomes_tags:            
+                form.add_error('name', 'Esta tag já existe nesta categoria. Escolha outro nome.')
+                error_messages = form.errors
+                return render(request, 'espaco/tag_modal.html', {'form': form, 
+                                                         'error_messages': error_messages,
+                                                         'espaco_desejado': espaco_desejado,                                                                                                                  
+                                                         })
             form.instance.space = espaco_desejado
             form.instance.user = request.user
             tag_instance = form.save(commit=False)
@@ -199,6 +218,18 @@ def processar_categoria(request):
     
     
 ))
+        
+        
+def search_space(request):
+    search_text = request.POST.get("search")
+    
+    results = Espaco.objects.filter(
+    Q(title__icontains=search_text) | Q(description__icontains=search_text)
+)
+    
+    context = {'results': results}
+    
+    return render(request, 'espaco/space_search.html', context)
 
 
 
