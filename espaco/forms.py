@@ -24,3 +24,8 @@ class CreateTagForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
+        self.fields['space'].required = False
+        self.fields['user'].required = False
+        
+    
+        

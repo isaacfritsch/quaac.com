@@ -115,43 +115,41 @@ def processar_tags(request, tag):
 
 def tag_creation(request, espaco):
     
-    espaco_desejado = Espaco.objects.get(id=espaco)
-    
+    espaco_desejado = Espaco.objects.get(id=espaco)    
     
     if request.method == 'POST':
         
         # create a form instance and populate it with data from the request:
         form = CreateTagForm(request.POST)
-        nomes_category = Tag.objects.filter(space=espaco_desejado.id).values_list('category', flat=True)
-        categorias_unicas = sorted(set(nomes_category)) 
         
-        error_messages = form.errors  
-        print(error_messages)
-                  
+        
+        error_messages = form.errors                 
         
         # check whether it's valid:
         if form.is_valid():
+            
+            form.instance.space = espaco_desejado
+            form.instance.user = request.user
             tag_instance = form.save(commit=False)
             tag_instance.save()
             
             response = HttpResponse()
-            response["Hx-Redirect"] = "/"
+            response["Hx-Redirect"] = reverse('url_espaco', kwargs={'slug': espaco_desejado.slug})
             return response
         
         return render(request, 'espaco/tag_modal.html', {'form': form, 
                                                          'error_messages': error_messages,
-                                                         'categorias_unicas': categorias_unicas,                                                         
+                                                         'espaco_desejado': espaco_desejado,                                                                                                                  
                                                          })
 
     # if a GET (or any other method) we'll create a blank form
     else:
         
-        form = CreateTagForm(initial={'space': espaco_desejado.id, 'user': request.user.id})
-        
-        nomes_category = Tag.objects.filter(space=espaco_desejado.id).values_list('category', flat=True)
-        categorias_unicas = sorted(set(nomes_category)) 
+        form = CreateTagForm()        
+         
     
-    return render(request, 'espaco/tag_modal.html', {'form': form, 'categorias_unicas': categorias_unicas,})
+    return render(request, 'espaco/tag_modal.html', {'form': form,                                                     
+                                                     'espaco_desejado': espaco_desejado,})
 
 def search_tag(request):
     search_text = request.POST.get("search")
@@ -165,6 +163,42 @@ def search_tag(request):
     context = {'results': results}
     
     return render(request, 'espaco/tag_search.html', context)
+
+
+def search_category(request):
+    
+    search_text = request.POST.get("category")
+    
+    espaco = request.POST.get("espaco")  
+    
+    espaco_desejado = Espaco.objects.get(id=espaco)
+        
+    results = Tag.objects.filter(space=espaco_desejado.id, category__icontains=search_text).values_list('category', flat=True)
+    
+    results = sorted(set(results)) 
+    
+    context = {'results': results, "search_text" : search_text}
+    
+    return render(request, 'espaco/category_search.html', context)
+
+
+def processar_categoria(request):
+    if request.method == 'POST':
+        categoria = request.POST.get("category")        
+        return HttpResponse((
+    f'<input class="input is-link" id="modal-tag-category-form" readonly '
+    f'type="text" '
+    f'placeholder="Selecione ou crie uma categoria" '
+    f'name="category" '
+    f'value="{categoria}" '
+    f'hx-post="{{% url \'search_category\' %}}" '
+    f'hx-target=\'#category_selection\' '
+    f'hx-vals=\'{{"espaco": {{"{{espaco_desejado.id}}"}}}}\' '
+    f'hx-headers=\'{{"X-CSRFToken": "{{ csrf_token }}"}}\' '
+    f'hx-trigger="keyup changed delay:500ms"> '
+    
+    
+))
 
 
 

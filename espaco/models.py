@@ -23,10 +23,12 @@ class Tag(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
+        null = False
     )
     space = models.ForeignKey(
         Espaco,
         on_delete=models.CASCADE,
+        null = False
     )
     name = models.CharField(max_length=45, unique=False)  
     

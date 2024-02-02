@@ -7,13 +7,9 @@
         <div class="box">
             
             <button class="delete is-pulled-right" x-on:click.stop.prevent="modaltagopen = false"></button>
-            <h1 class="title is-3">TAG</h1>         
+            <h1 class="title is-3">CRIAR NOVA TAG</h1>  
             
-            <form class="form" name="form"        
-            hx-post = {{request.path}} 
-            hx-trigger="submit"            
-            hx-target="#tag-modal"                                                  
-            >
+            
                 
             <form class="form" name="form"        
             hx-post = {{request.path}} 
@@ -24,9 +20,41 @@
                 {% csrf_token %}
                 
                 <!-- Campos do formulário -->
-                {{ form.as_p }}
+                <div class="field">
+                    <label class="label is-size-5">Categoria</label>
+                    <p class="is-size-6">Selecione uma categoria ou escreva uma nova:</p>
+                    <div class="control">
+                        <input class="input is-link" id="modal-tag-category-form"                        
+                               type="text"
+                               placeholder="Digite para pesquisar..."
+                               name="category"
+                               hx-post="{% url 'search_category' %}"
+                               hx-target='#category_selection'
+                               hx-vals='{"espaco": "{{espaco_desejado.id}}"}'
+                               hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                               hx-trigger="keyup changed delay:500ms"                                                                                            
+                               >
+                               
+                    </div>
+                </div>
+                <div id="category_selection">
+                </div>
+
+                <div class="field">
+                    <label class="label is-size-5">Nome</label>
+                    <div class="control">
+                        {% render_field form.name class="input is-link" placeholder="Digite o nome da nova tag" name="name" %}
+                        {% if form.name.errors %}
+                            <p class="help is-danger">{{ form.name.errors|first }}</p>
+                        {% endif %}
+                    </div>
+                </div>
                 
-                <button type="submit">Enviar</button>
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-success" type="submit">Criar</button>
+                    </div>
+                </div>
             </form>
         </div>     
         

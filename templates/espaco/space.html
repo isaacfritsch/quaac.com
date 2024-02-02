@@ -47,7 +47,7 @@
              hx-trigger="click"
              x-cloak
              @click.stop="modaltagopen = !modaltagopen">
-             Adicionar tag</button>
+             Criar nova tag</button>
           </div>
         </div>
       </div>
@@ -79,8 +79,11 @@
           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
           hx-trigger="click"
           >
-            All
-            ({{quantidade_total_tags}})
+          <span class="icon">
+            <i class="fa-regular fa-square-check"></i>
+          </span>
+            <p>All</p>
+            <p>({{quantidade_total_tags}})</p>
           </button>
             {% for tag in quantidade_tags_por_categoria %}                    
               <button class="button is-link is-small is-outlined is-responsive"
@@ -88,10 +91,14 @@
               hx-vals='{"espaco": "{{espaco.id}}","categoria": "{{tag.category}}"}'
               hx-target="#tag_selection"
               hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-              hx-trigger="click"              
+              hx-trigger="click"
+                                      
               >
-              {{ tag.category }}
-              ({{ tag.quantidade_tags }})
+              <span class="icon">
+                <i class="fa-regular fa-square-check"></i>
+              </span>
+            <p>{{ tag.category }}</p>
+            <p>({{ tag.quantidade_tags }})</p>
               </button>
             {% endfor %}
         {% else %}
