@@ -1,20 +1,31 @@
 
 {% if results %}
+<div class="columns is-gapless is-multiline is-mobile">
 {% for tag in results %}
-    <a class="panel-block is-active"
-    hx-post={% url 'processar_tags' tag=tag %}        
-    hx-target="#tags_selected"
-    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-    hx-trigger="click">
-        <span class="icon">
-            <i class="fa-solid fa-repeat"></i>
-        </span>
-        <span>
-            {{ tag }}
-        </span>
-                   
-    </a>
+    <div class="column is-11">
+        <a class="panel-block is-active"
+        hx-post={% url 'processar_tags' tag=tag %}        
+        hx-target="#tags_selected"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-trigger="click">
+            <span class="icon">
+                <i class="fa-solid fa-repeat"></i>
+            </span>
+            <span>
+                {{ tag }}
+            </span>
+                    
+        </a>
+    </div>
+    <div class="column is-1">
+        <button class="button is-warning is-small">
+            <span class="icon">
+                <i class="fa-solid fa-pencil"></i>
+            </span>
+            <p>Editar</p></button>
+    </div>
 {% endfor %}
+</div>
 {% else %}
 <p>Nenhuma tag correspondente, você ainda pode criá-la</p>
 {% endif %}

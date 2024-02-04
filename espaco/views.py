@@ -32,8 +32,7 @@ def espaco_list_view(request):
 def create_space(request):
     if request.user.is_authenticated:
         
-        if request.method == 'POST':
-            
+        if request.method == 'POST':            
             
             form = CreateSpaceForm(request.POST)
             if form.is_valid():
@@ -152,8 +151,7 @@ def tag_creation(request, espaco):
             tag_instance = form.save(commit=False)
             tag_instance.save()
             
-            response = HttpResponse()
-            response["Hx-Redirect"] = reverse('url_espaco', kwargs={'slug': espaco_desejado.slug})
+            response = HttpResponse(status=204, headers={'HX-Trigger': 'taglistchanged'})            
             return response
         
         return render(request, 'espaco/tag_modal.html', {'form': form, 
@@ -168,7 +166,7 @@ def tag_creation(request, espaco):
          
     
     return render(request, 'espaco/tag_modal.html', {'form': form,                                                     
-                                                     'espaco_desejado': espaco_desejado,})
+                                                     'espaco_desejado': espaco_desejado,})   
 
 def search_tag(request):
     search_text = request.POST.get("search")

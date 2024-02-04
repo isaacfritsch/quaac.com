@@ -1,6 +1,6 @@
 {% load widget_tweaks %}
 {% with WIDGET_ERROR_CLASS='is-invalid' %}
-<div class="modal" x-bind:class="modaltagopen ? 'is-active' : ''">
+<div class="modal" x-bind:class="modaltagopen ? 'is-active' : ''" @taglistchanged="modaltagopen = false">
     <div class="modal-background" ></div>
     <div class="modal-content has-background-white py-5 px-5" id="tag-modal" @click.stop.outside="modaltagopen = false">
 
