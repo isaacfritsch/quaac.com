@@ -65,11 +65,7 @@ def url_espaco(request, slug):
             # Se o espaço mudou, redefine selected_tags
             request.session['selected_tags'] = []
     else:
-        espaco_atual = None
-    
-    quantidade_tags_por_categoria = Tag.objects.filter(space=espaco_solicitado).values('category').annotate(quantidade_tags=Count('id')).order_by('category')
-    
-    quantidade_total_tags = Tag.objects.filter(space=espaco_solicitado).aggregate(quantidade_total=Count('id'))['quantidade_total']
+        espaco_atual = None    
     
     if 'selected_tags' in request.session:
         selected_tags = request.session['selected_tags']
@@ -82,10 +78,8 @@ def url_espaco(request, slug):
     request.session['current_espaco'] = espaco_solicitado.id
     request.session['selected_tags'] = selected_tags
     context = {
-        'espaco':espaco_solicitado,
-        'quantidade_tags_por_categoria':quantidade_tags_por_categoria,
-        'selected_tags': selected_tags,
-        'quantidade_total_tags': quantidade_total_tags,
+        'espaco':espaco_solicitado,        
+        'selected_tags': selected_tags,        
     }
 
     return render(request, 'espaco/space.html', context)
@@ -212,8 +206,7 @@ def processar_categoria(request):
     f'hx-target=\'#category_selection\' '
     f'hx-vals=\'{{"espaco": {{"{{espaco_desejado.id}}"}}}}\' '
     f'hx-headers=\'{{"X-CSRFToken": "{{ csrf_token }}"}}\' '
-    f'hx-trigger="keyup changed delay:500ms"> '
-    
+    f'hx-trigger="keyup changed delay:500ms"> '   
     
 ))
         
@@ -228,6 +221,26 @@ def search_space(request):
     context = {'results': results}
     
     return render(request, 'espaco/space_search.html', context)
+
+
+def lista_categorias(request):
+
+    espaco = request.GET.get("espaco") 
+
+    espaco_solicitado = Espaco.objects.get(id=espaco)
+
+    quantidade_tags_por_categoria = Tag.objects.filter(space=espaco_solicitado).values('category').annotate(quantidade_tags=Count('id')).order_by('category')
+
+    quantidade_total_tags = Tag.objects.filter(space=espaco_solicitado).aggregate(quantidade_total=Count('id'))['quantidade_total']
+
+    context = {
+        'espaco':espaco_solicitado,
+        'quantidade_tags_por_categoria':quantidade_tags_por_categoria,        
+        'quantidade_total_tags': quantidade_total_tags,
+    }
+
+    return render(request, 'espaco/lista_categorias.html', context)
+
 
 
 

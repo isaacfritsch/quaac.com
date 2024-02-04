@@ -15,5 +15,6 @@ urlpatterns = [
     path('search_tag/', views.search_tag, name='search_tag'), 
     path('search_category/', views.search_category, name='search_category'),
     path('search_space/', views.search_space, name='search_space'),
-    path('processar_categoria/', views.processar_categoria, name='processar_categoria'),     
+    path('processar_categoria/', views.processar_categoria, name='processar_categoria'), 
+    path('lista_categorias/', views.lista_categorias, name='lista_categorias'),    
 ]

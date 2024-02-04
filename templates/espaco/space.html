@@ -29,7 +29,7 @@
         <div class="column is-narrow">
           <div x-data="{ isdropdownOpen: false }" x-bind:class="isdropdownOpen ? 'is-active' : ''" class="dropdown is-right" x-cloak>
             <div class="dropdown-trigger">
-              <button @click.stop.prevent="isdropdownOpen = !isdropdownOpen" @click.stop.outside="isdropdownOpen = false" class="button is-medium is-success" aria-haspopup="true" aria-controls="dropdown-menu">
+              <button @click.stop.prevent="isdropdownOpen = !isdropdownOpen" @click.stop.outside="isdropdownOpen = false" class="button is-medium is-primary" aria-haspopup="true" aria-controls="dropdown-menu">
                 <span>Adicionar nova questão</span>
                 <span class="icon is-small">
                   <i class="fas fa-angle-down" aria-hidden="true"></i>
@@ -111,42 +111,17 @@
       </p>
       
     </div>
-    <div class="panel-tabs-scrollable">
-      <p class="panel-tabs">
-        {% if quantidade_tags_por_categoria|length > 0 %}
-          <button class="button is-link is-small is-outlined is-responsive"
-          hx-get="{% url 'lista_tags' %}"
-          hx-vals='{"espaco": "{{espaco.id}}","categoria": "all"}'
-          hx-target="#tag_selection"
-          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-          hx-trigger="click"
-          >
-          <span class="icon">
-            <i class="fa-regular fa-square-check"></i>
-          </span>
-            <p>All</p>
-            <p>({{quantidade_total_tags}})</p>
-          </button>
-            {% for tag in quantidade_tags_por_categoria %}                    
-              <button class="button is-link is-small is-outlined is-responsive"
-              hx-get="{% url 'lista_tags' %}"
-              hx-vals='{"espaco": "{{espaco.id}}","categoria": "{{tag.category}}"}'
-              hx-target="#tag_selection"
-              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-              hx-trigger="click, taglistchanged from:body"                 
-              >
-              <span class="icon">
-                <i class="fa-regular fa-square-check"></i>
-              </span>
-            <p>{{ tag.category }}</p>
-            <p>({{ tag.quantidade_tags }})</p>
-              </button>
-            {% endfor %}
-        {% else %}
-          <p>Você não possui nenhuma tag adicionada</p>
-        {% endif %}
-      </p>
-    </div>     
+
+    <div hx-get="{% url 'lista_categorias' %}"
+    hx-vals='{"espaco": "{{espaco.id}}"}'
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+    hx-trigger="load, taglistchanged from:window"
+    hx-swap="innerHTML" 
+    hx-target="#categoria_lista" 
+    >      
+    </div> 
+    <div id="categoria_lista">
+    </div>    
     
     </div>
     <div id="tag_selection">
