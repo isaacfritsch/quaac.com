@@ -17,14 +17,11 @@
         x-cloak x-bind:class="open ? 'is-active' : ''" 
         x-on:click.stop.outside="open = false">
             <div class="navbar-end">
-                <a class="navbar-item" href="/">
-                    Sobre
+                <a class="navbar-item" href="{% url 'home'%}">
+                    Home
                 </a>          
                 
-                {% if user.is_authenticated %}
-                    <a class="navbar-item">
-                        Criar espaço
-                    </a>
+                {% if user.is_authenticated %}                    
                     <a class="navbar-item"
                     href="{% url 'logout' %}">
                     Log out

@@ -53,6 +53,15 @@ def create_space(request):
     
     else:
         return render(request, 'espaco/failure_create_space.html')
+    
+def redirect_to_space(request):
+    
+    espaco = request.GET.get("espaco")
+    espaco = Espaco.objects.get(id=espaco)
+    slug_do_novo_espaco = espaco.slug
+    response = HttpResponse()
+    response["Hx-Redirect"] = reverse('url_espaco', kwargs={'slug': slug_do_novo_espaco})
+    return response
 
 
 def url_espaco(request, slug):
