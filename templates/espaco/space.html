@@ -15,6 +15,8 @@
 <!-- Modal tag-->
 <div id="modal-tag">
 </div>
+<div id="editar-tag-modal">
+</div>
 <section class="hero is-small is-link">
     <div class="hero-body">
       <div class="columns is-mobile">
@@ -69,7 +71,7 @@
         </div>
         <div class="column is-narrow">
           <div class="buttons is-right">
-            <button class="button is-info"            
+            <button class="button is-info"
              hx-get="{% url 'tag_creation' espaco=espaco.id %}"             
              hx-target="#modal-tag"
              hx-trigger="click"
@@ -90,7 +92,7 @@
       <span class="icon">
         <i class="fa-solid fa-circle-check"></i>
       </span>
-      <p>Tag adicionada com sucesso!</p>
+      <p>Alterações salvas com sucesso!</p>
     </div>
          
     <div class="panel-block">

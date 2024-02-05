@@ -10,7 +10,7 @@ class CreateSpaceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-class CreateTagForm(forms.ModelForm):   
+class TagForm(forms.ModelForm):   
 
     class Meta:
         model = Tag
@@ -18,7 +18,7 @@ class CreateTagForm(forms.ModelForm):
         widgets = {
         'user': forms.HiddenInput(),
         'space': forms.HiddenInput(),
-        }    
+        }
     
 
     def __init__(self, *args, **kwargs):

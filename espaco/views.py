@@ -8,7 +8,7 @@ from django.db.models import Count, Q
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .models import Espaco, Tag
-from .forms import CreateSpaceForm, CreateTagForm
+from .forms import CreateSpaceForm, TagForm
 from django.views.decorators.http import require_POST
 from django.views.generic.list import ListView
 
@@ -124,7 +124,7 @@ def tag_creation(request, espaco):
     if request.method == 'POST':
         
         # create a form instance and populate it with data from the request:
-        form = CreateTagForm(request.POST)        
+        form = TagForm(request.POST)        
                 
         
         error_messages = form.errors                 
@@ -134,7 +134,7 @@ def tag_creation(request, espaco):
             nomes_tags = Tag.objects.filter(space=espaco_desejado.id, category=form.instance.category).values_list('name', flat=True)
         
             if form.instance.name in nomes_tags:            
-                form.add_error('name', 'Esta tag já existe nesta categoria. Escolha outro nome.')
+                form.add_error('name', 'Essa tag já existe nessa categoria. Escolha outro nome.')
                 error_messages = form.errors
                 return render(request, 'espaco/tag_modal.html', {'form': form, 
                                                          'error_messages': error_messages,
@@ -156,7 +156,7 @@ def tag_creation(request, espaco):
     # if a GET (or any other method) we'll create a blank form
     else:
         
-        form = CreateTagForm()        
+        form = TagForm()        
          
     
     return render(request, 'espaco/tag_modal.html', {'form': form,                                                     
@@ -241,7 +241,72 @@ def lista_categorias(request):
 
     return render(request, 'espaco/lista_categorias.html', context)
 
+def botao_edicao_tag(request):
+    
+    if request.method == 'GET':
+                               
+        tag = request.GET.get("tag")        
+        tag = Tag.objects.get(name=tag)        
+        espaco = tag.space
+        espaco_desejado = Espaco.objects.get(title=espaco.title)
+    
+    if request.method == 'POST':
+        
+        tag = request.POST.get("tag")    
+                           
+        tag = Tag.objects.get(name=tag)
+        tag_original = tag.name       
+        espaco = tag.space        
+        espaco_desejado = Espaco.objects.get(title=espaco.title)
+        
+        # create a form instance and populate it with data from the request:
+        form = TagForm(request.POST, instance=tag) 
+        
+        nomes_tags = Tag.objects.filter(space = espaco_desejado.id, category = request.POST['category']).values_list('name', flat=True)
+        
+        if request.POST['name'] in nomes_tags:     
+            
+            form.add_error('name', 'Essa tag já existe nessa categoria. Escolha outro nome.')            
+            tag = Tag.objects.get(name=tag_original)
+            return render(request, 'espaco/tag_modal_edit.html', {'form': form,                                                         
+                                                         'espaco_desejado': espaco_desejado,
+                                                         'tag':tag,                                                                                                                                                                         
+                                                         })
 
+        # check whether it's valid:
+        if form.is_valid():
+            error_messages = form.errors
+            form.instance.space = espaco_desejado
+            form.instance.user = request.user
+            tag_instance = form.save(commit=False)
+            tag_instance.save()
+            
+            response = HttpResponse(status=204, headers={'HX-Trigger': 'taglistchanged'})            
+            return response
+        
+        error_messages = form.errors
+        return render(request, 'espaco/tag_modal_edit.html', {'form': form, 
+                                                         'error_messages': error_messages,
+                                                         'espaco_desejado': espaco_desejado, 
+                                                         'tag': tag,                                                                                                                 
+                                                         })
+    else:
+        
+        form = TagForm(instance=tag)         
+    
+    return render(request, 'espaco/tag_modal_edit.html', {'form': form,                                                     
+                                                     'espaco_desejado': espaco_desejado,
+                                                     'tag': tag,})
+    
+def botao_tag_confirmar_deletar(request): 
+    if request.method == 'POST':
+        
+        tag = request.POST.get("tag")
+        tag = Tag.objects.get(name=tag)
+        tag.delete()
+        
+        response = HttpResponse(status=204, headers={'HX-Trigger': 'taglistchanged'})            
+        return response
 
 
 

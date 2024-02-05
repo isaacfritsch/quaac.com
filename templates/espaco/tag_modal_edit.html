@@ -1,0 +1,97 @@
+{% load widget_tweaks %}
+{% with WIDGET_ERROR_CLASS='is-invalid' %}
+<div class="modal" x-bind:class="modaltageditopen ? 'is-active' : ''" @taglistchanged="modaltageditopen = false">
+    <div class="modal-background" ></div>
+    <div class="modal-content has-background-white py-5 px-5" id="tag-modal-edit" @click.stop.outside="modaltageditopen = false">
+
+        <div class="box">
+            
+            <button class="delete is-pulled-right" x-on:click.stop.prevent="modaltageditopen = false"></button>
+            <h1 class="title is-3">EDITAR TAG > {{tag.category}}: {{tag.name}}</h1>  
+            <div id="botao_tag_confirmar">
+            </div>
+            
+            <form class="form" name="form"        
+            hx-post = "{%url 'botao_edicao_tag'%}"
+            hx-trigger="submit"
+            hx-vals='{"tag" : "{{ tag }}"}'           
+            hx-target="#tag-modal-edit"
+            
+            >
+                {% csrf_token %}
+                
+                <!-- Campos do formulário -->
+                <div class="field">
+                    <label class="label is-size-5">Categoria</label>
+                    <p class="is-size-6">Editar "{{tag.category}}" para:</p>
+                    <div class="control">
+                        <input class="input is-link" id="modal-tag-category-form"                        
+                               type="text"
+                               placeholder="Digite para pesquisar..."
+                               name="category"
+                               hx-post="{% url 'search_category' %}"
+                               hx-target='#category_selection'
+                               hx-vals='{"espaco": "{{espaco_desejado.id}}"}'
+                               hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                               hx-trigger="keyup changed delay:500ms"                                                                                            
+                               >                               
+                    </div>
+                </div>
+                <div id="category_selection">
+                </div>
+
+                <div class="field">
+                    <label class="label is-size-5">Nome</label>
+                    <p class="is-size-6">Editar "{{tag.name}}" para:</p>
+                    <div class="control">
+                        {% render_field form.name class="input is-link" placeholder="Digite o nome da nova tag" name="name" %}
+                        {% if form.name.errors %}
+                            <p class="help is-danger">{{ form.name.errors|first }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="columns is-mobile">
+                    <div class="column">
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-success" type="submit">Salvar edição</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-narrow"
+                    hx-get="{%url 'botao_tag_confirmar_deletar'%}"
+                    hx-vals='{"tag" : "{{ tag }}"}'
+                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                    hx-target="#botao_tag_confirmar"
+                    x-cloak
+                    @click.stop="modaltagconfirmardeletar = !modaltagconfirmardeletar"
+                    
+                    >
+                        <button class="button is-small is-danger">Deletar</button>
+                    </div>
+                </div>
+
+                <div  x-cloak class="notification is-info" x-show="modaltagconfirmardeletar">
+                    <button class="delete" x-on:click.stop.prevent="modaltagconfirmardeletar = !modaltagconfirmardeletar"></button>
+                    <h1 class="title is-5">TEM CERTEZA QUE DESEJA EXCLUIR A TAG > {{tag.category}}: {{tag.name}}</h1>
+                    <div class="columns is-mobile">                
+                        <div class="column"
+                        hx-post="{%url 'botao_tag_confirmar_deletar'%}"
+                        hx-vals='{"tag" : "{{ tag }}"}'
+                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'                
+                        x-cloak
+                        @click.stop.prevent="modaltagconfirmardeletar = !modaltagconfirmardeletar"
+                        >
+                            <button class="button is-danger" type="submit">Deletar</button>
+                        </div>
+                        <div class="column is-narrow">
+                            <button class="button is-light" x-on:click.stop.prevent="modaltagconfirmardeletar = false">Cancelar</button>                    
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>       
+    </div>
+</div>
+{% endwith %}

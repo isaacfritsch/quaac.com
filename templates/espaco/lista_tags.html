@@ -4,7 +4,7 @@
     
         <div class="column is-11">
             <a class="panel-block is-active"
-            hx-post={% url 'processar_tags' tag=tag %}        
+            hx-post={% url 'processar_tags' tag=tag %}      
             hx-target="#tags_selected"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
             hx-trigger="click">
@@ -13,12 +13,18 @@
                 </span>
                 <span>
                     {{ tag }}
-                </span>          
-                    
+                </span>
             </a>
         </div>
         <div class="column is-1">
-            <button class="button is-warning is-small is-fullwidth">
+            <button class="button is-warning is-small is-fullwidth"
+            hx-get="{%url 'botao_edicao_tag'%}"
+            hx-vals='{"tag" : "{{ tag }}"}'
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            hx-target="#editar-tag-modal"
+            x-cloak
+            @click.stop="modaltageditopen = !modaltageditopen"
+            >
                 <span class="icon">
                     <i class="fa-solid fa-pencil"></i>
                 </span>
