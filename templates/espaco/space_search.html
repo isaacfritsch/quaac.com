@@ -1,6 +1,11 @@
 {% if results %}
 {% for espaco in results %}
-    <a class="panel-block is-active">
+    <a class="panel-block is-active"
+    hx-get={% url 'redirect_to_space' %}      
+    hx-vals='{"espaco": "{{espaco.id}}"}'
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+    hx-trigger="click"
+    >
         <span class="panel-icon">
             <i class="fas fa-book" aria-hidden="true"></i>
         </span>

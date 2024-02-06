@@ -4,7 +4,7 @@
     <div class="container has-text-centered">
         <p class="title is-4">Projeto de compartilhamento de questões</p>
         <div x-data="{ openNotificationspaceerror: true }">
-                
+
             {% if error_messages %}
                 <div  x-cloak class="notification is-danger" x-show="openNotificationspaceerror">
                     <button class="delete" x-on:click.stop.prevent="openNotificationspaceerror = !openNotificationspaceerror"></button>
@@ -47,7 +47,7 @@
             </div>
 
             <div id="space_selection"
-            hx-get='{% url 'espaco_list_view' %}'
+            hx-get="{% url 'espaco_list_view' %}"
             hx-trigger="load"
             >
             </div>

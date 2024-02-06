@@ -26,6 +26,8 @@ class TagForm(forms.ModelForm):
         
         self.fields['space'].required = False
         self.fields['user'].required = False
+        self.fields['category'].required = True
+        self.fields['name'].required = True
         
     
         

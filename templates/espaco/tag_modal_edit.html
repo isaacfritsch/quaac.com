@@ -15,8 +15,7 @@
             hx-post = "{%url 'botao_edicao_tag'%}"
             hx-trigger="submit"
             hx-vals='{"tag" : "{{ tag }}"}'           
-            hx-target="#tag-modal-edit"
-            
+            hx-target="#tag-modal-edit"            
             >
                 {% csrf_token %}
                 
@@ -34,7 +33,10 @@
                                hx-vals='{"espaco": "{{espaco_desejado.id}}"}'
                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                                hx-trigger="keyup changed delay:500ms"                                                                                            
-                               >                               
+                               > 
+                        {% if form.category.errors %}
+                            <p class="help is-danger">{{ form.category.errors|first }}</p>
+                        {% endif %}                              
                     </div>
                 </div>
                 <div id="category_selection">
@@ -66,8 +68,7 @@
                     </div>
                 </div>
 
-                <div  x-cloak class="notification is-info is-light" x-show="modaltagconfirmardeletar">
-                    <button class="delete" x-on:click.stop.prevent="modaltagconfirmardeletar = !modaltagconfirmardeletar"></button>
+                <div  x-cloak class="notification is-info is-light" x-show="modaltagconfirmardeletar">                    
                     <h1 class="title is-5">TEM CERTEZA QUE DESEJA EXCLUIR A TAG > {{tag.category}}: {{tag.name}}  ?</h1>
                     <div class="columns is-mobile">                
                         <div class="column">

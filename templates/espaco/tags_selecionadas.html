@@ -2,11 +2,10 @@
 <p class="block">
     <strong>Tags selecionadas:</strong>
 </p>
-    
-        
+
 {% if selected_tags|length > 0 %}
     <p class="block">
-    {% for tag in selected_tags %}                  
+    {% for tag in selected_tags %}               
         <span class="tag is-link">
             {{ tag }}
             <button class="delete is-small"

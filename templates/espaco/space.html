@@ -98,7 +98,7 @@
     <div class="panel-block">
       <p class="control has-icons-left">
         <input class="input" 
-        type="text" 
+        type="text"
         placeholder="Pesquisar entre todas as tags"
         hx-post="{% url 'search_tag' %}"
         hx-target='#tag_selection'
@@ -124,7 +124,7 @@
     </div> 
     <div id="categoria_lista">
     </div>    
-    
+
     </div>
     <div id="tag_selection">
     </div>
@@ -132,14 +132,10 @@
   </nav>
 </div>
 
-<div class="box" id="tags_selected">
+<div class="box" id="tags_selected"
+
+>
   {% include 'espaco/tags_selecionadas.html' %}    
-</div>
-
-
-
-
-
-  
+</div>  
   
 {%endblock content%}
