@@ -50,19 +50,16 @@
             </div>
           </div>
         </div>
-      </div>
-        
+      </div>        
       <p class="control has-icons-left">
         <input class="input is-medium is-focused is-danger" type="text" placeholder="Pesquisa de palavras-chave em questões, comentários ou resoluções">
         <span class="icon is-left">
           <i class="fas fa-search" aria-hidden="true"></i>
         </span>
-      </p>
-        
+      </p>        
     </div>
 </section>
-<div>
-  
+<div>  
   <nav class="panel" >
     <div class="panel-heading">
       <div class="columns is-mobile">
@@ -81,8 +78,7 @@
           </div>
         </div>
       </div>
-    </div> 
-
+    </div>
     <div class="panel-block has-background-success has-text-white p-2 has-border-success"
       x-cloak
       x-show="successmessage"
@@ -94,7 +90,6 @@
       </span>
       <p>Alterações salvas com sucesso!</p>
     </div>
-         
     <div class="panel-block">
       <p class="control has-icons-left">
         <input class="input" 
@@ -110,10 +105,8 @@
         <span class="icon is-left">
           <i class="fas fa-search" aria-hidden="true"></i>
         </span>
-      </p>
-      
+      </p>      
     </div>
-
     <div hx-get="{% url 'lista_categorias' %}"
     hx-vals='{"espaco": "{{espaco.id}}"}'
     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
@@ -124,18 +117,19 @@
     </div> 
     <div id="categoria_lista">
     </div>    
-
+    <div class="columns is-gapless is-multiline is-mobile">
+      <div class="column is-7">        
+        <div id="tag_selection"></div>
+      </div>      
+      <div class="column is-5">
+        <div class="box" id="tags_selected">
+          {% include 'espaco/tags_selecionadas.html' %}    
+        </div>
+      </div>
     </div>
-    <div id="tag_selection">
-    </div>
-
   </nav>
 </div>
 
-<div class="box" id="tags_selected"
-
->
-  {% include 'espaco/tags_selecionadas.html' %}    
-</div>  
+ 
   
 {%endblock content%}

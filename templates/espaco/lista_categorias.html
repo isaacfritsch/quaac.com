@@ -13,6 +13,9 @@
         </span>
           <p>All</p>
           <p>({{quantidade_total_tags}})</p>
+          <span class="icon">
+            <i class="fa-solid fa-arrow-down"></i>
+          </span>
         </button>
           {% for tag in quantidade_tags_por_categoria %}                    
             <button class="button is-link is-small is-outlined is-responsive"
@@ -27,6 +30,9 @@
             </span>
           <p>{{ tag.category }}</p>
           <p>({{ tag.quantidade_tags }})</p>
+          <span class="icon">
+            <i class="fa-solid fa-arrow-down"></i>
+          </span>
             </button>
           {% endfor %}
       {% else %}
