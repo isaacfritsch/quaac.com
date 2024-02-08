@@ -2,12 +2,13 @@
   
     <p class="panel-tabs">
       {% if quantidade_tags_por_categoria|length > 0 %}
-        <button class="button is-link is-small is-outlined is-responsive"
+        <button class="button is-info is-small is-outlined is-responsive"
         hx-get="{% url 'lista_tags' %}"
-        hx-vals='{"espaco": "{{espaco.id}}","categoria": "all"}'
+        hx-vals='{"espaco": "{{espaco.id}}","categoria": "all"}'        
         hx-target="#tag_selection"
         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-        hx-trigger="click, taglistchanged from:window"               
+        hx-trigger=" click, taglistchanged from:window"
+        hx-swap="innerHTML"               
         >
         
         <span class="icon">
@@ -20,12 +21,13 @@
           </span>
         </button>
           {% for tag in quantidade_tags_por_categoria %}                    
-            <button class="button is-link is-small is-outlined is-responsive"
+            <button class="button is-info is-small is-outlined is-responsive"
             hx-get="{% url 'lista_tags' %}"
-            hx-vals='{"espaco": "{{espaco.id}}","categoria": "{{tag.category}}"}'
+            hx-vals='{"espaco": "{{espaco.id}}","categoria": "{{tag.category}}"}'            
             hx-target="#tag_selection"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-            hx-trigger="click, taglistchanged from:window"                     
+            hx-trigger=" click, taglistchanged from:window"
+            hx-swap="innerHTML"                       
             >
             
             <span class="icon">

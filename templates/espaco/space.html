@@ -3,6 +3,22 @@
 <div id="selectedTagsData" style="display: none;">
   {{ selected_tags_json }}
 </div>
+<style>
+  #tag_selection {
+    max-height: 300px; /* Adjust this height as needed */
+    overflow-y: auto;  /* Enable vertical scrollbar */
+}
+.panel-tabs-scrollable {
+  overflow-x: auto;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.panel-tabs {
+  display: inline-block;
+  white-space: nowrap;
+}
+</style>
 <script type="text/javascript">
   function updateMinhalista(updatedData) {
     window.minhalista = JSON.parse(updatedData);
@@ -15,29 +31,18 @@
 
   window.addEventListener('load', function(evt) { 
     selectedTagsJson = document.getElementById('selectedTagsData').textContent;
-    console.log(selectedTagsJson) 
+     
 
     updateMinhalista(selectedTagsJson);
 });
 </script>
-<style>
-  .panel-tabs-scrollable {
-    overflow-x: auto;
-    white-space: nowrap;
-    text-align: center;
-  }
-  
-  .panel-tabs {
-    display: inline-block;
-    white-space: nowrap;
-  }
-</style>
+
 <!-- Modal tag-->
 <div id="modal-tag">
 </div>
 <div id="editar-tag-modal">
 </div>
-<section class="hero is-small is-link">
+<section class="hero is-small is-black">
     <div class="hero-body">
       <div class="columns is-mobile">
         <div class="column">
@@ -51,7 +56,7 @@
         <div class="column is-narrow">
           <div x-data="{ isdropdownOpen: false }" x-bind:class="isdropdownOpen ? 'is-active' : ''" class="dropdown is-right" x-cloak>
             <div class="dropdown-trigger">
-              <button @click.stop.prevent="isdropdownOpen = !isdropdownOpen" @click.stop.outside="isdropdownOpen = false" class="button is-medium is-primary" aria-haspopup="true" aria-controls="dropdown-menu">
+              <button @click.stop.prevent="isdropdownOpen = !isdropdownOpen" @click.stop.outside="isdropdownOpen = false" class="button is-medium is-info" aria-haspopup="true" aria-controls="dropdown-menu">
                 
                 <span>Adicionar nova questão</span>
                 <span class="icon is-small">
@@ -122,7 +127,7 @@
     </div>
     <div class="panel-block">
       <p class="control has-icons-left">
-        <input class="input" 
+        <input class="input"
         type="text"
         placeholder="Pesquisar entre todas as tags"
         hx-post="{% url 'search_tag' %}"
@@ -131,6 +136,7 @@
         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
         hx-trigger="keyup changed delay:500ms"
         name="search"
+        hx-swap="innerHTML"
         >
         <span class="icon is-left">
           <i class="fas fa-search" aria-hidden="true"></i>
@@ -149,7 +155,12 @@
     </div>    
     <div class="columns is-gapless is-multiline is-mobile">
       <div class="column is-7">
-        <div id="tag_selection"></div>
+        <div id="tag_selection">
+          <div class="scroll-loading has-text-centered" style="display: none"> 
+            <span class="icon is-medium"><i class="fas fa-spinner fa-pulse"></i></span>
+          </div>
+        </div>
+        
       </div>
       <div class="column is-5">
         <div class="box" id="tags_selected">

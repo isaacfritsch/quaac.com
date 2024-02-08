@@ -13,6 +13,7 @@ from .forms import CreateSpaceForm, TagForm
 from django.views.decorators.http import require_POST
 from django.views.generic.list import ListView
 from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -353,6 +354,8 @@ def botao_tag_confirmar_deletar(request):
 
         response = HttpResponse(status=204, headers={'HX-Trigger': 'taglistchanged'})          
         return response
+    
+
 
 
 

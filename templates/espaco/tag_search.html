@@ -2,27 +2,37 @@
 {% if results %}
 <div class="columns is-gapless is-multiline is-mobile">
 {% for tag in results %}
-    <div class="column is-11">
-        <a class="panel-block is-active"
-        hx-post={% url 'processar_tags' tag=tag %}        
-        hx-target="#tags_selected"
-        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-        hx-trigger="click">
-            <span class="icon">
-                <i class="fa-solid fa-repeat"></i>
-            </span>
-            <span>
-                {{ tag }}
-            </span>
+    <div class="column is-11"
+        x-cloak
+        x-data="{ checked: false,}"
+        x-init="checked = minhalista.includes('{{ tag }}')">
+        <a class="panel-block"
+            hx-post={% url 'processar_tags' tag=tag %}
+            hx-target="#tags_selected"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            hx-trigger="click"
+            x-on:click="checked = !checked"
+            >
+            <input type="checkbox" class="checkbox" x-bind:checked="checked" >            
                     
+                    <span>
+                        {{ tag }}
+                    </span>
         </a>
     </div>
     <div class="column is-1">
-        <button class="button is-warning is-small">
-            <span class="icon">
-                <i class="fa-solid fa-pencil"></i>
-            </span>
-            <p>Editar</p></button>
+        <button class="button is-warning is-small is-fullwidth is-focused"
+            hx-get="{%url 'botao_edicao_tag'%}"
+            hx-vals='{"tag" : "{{ tag }}"}'
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            hx-target="#editar-tag-modal"
+            x-cloak
+            @click.stop="modaltageditopen = !modaltageditopen"
+            >
+                <span class="icon">
+                    <i class="fa-solid fa-pencil"></i>
+                </span>
+                <p>Editar</p></button>
     </div>
 {% endfor %}
 </div>
