@@ -1,14 +1,23 @@
 {% extends 'base.html' %}
 {%block content%}
+<div id="selectedTagsData" style="display: none;">
+  {{ selected_tags_json }}
+</div>
 <script type="text/javascript">
+  function updateMinhalista(updatedData) {
+    window.minhalista = JSON.parse(updatedData);
+
+}
+
   document.addEventListener('eventupdateselectedtags', function(evt) {
-    const updatedData = evt.detail.selected_tags_json;
+    updateMinhalista(evt.detail.selected_tags_json)
+});
 
-    // Assume other parts of your code rely on 'minhalista'
-    window.minhalista = JSON.parse(updatedData); 
+  window.addEventListener('load', function(evt) { 
+    selectedTagsJson = document.getElementById('selectedTagsData').textContent;
+    console.log(selectedTagsJson) 
 
-    // ... Any additional logic to directly manipulate DOM elements on other templates
-    // based on the new 'minhalista' data
+    updateMinhalista(selectedTagsJson);
 });
 </script>
 <style>
