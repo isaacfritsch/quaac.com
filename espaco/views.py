@@ -12,6 +12,7 @@ from .models import Espaco, Tag
 from .forms import CreateSpaceForm, TagForm
 from django.views.decorators.http import require_POST
 from django.views.generic.list import ListView
+from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
 
 
 # Create your views here.
@@ -115,7 +116,7 @@ def lista_tags(request):
     return render(request, 'espaco/lista_tags.html', context)
 
 def processar_tags(request, tag):   
-    
+
     selected_tags = request.session['selected_tags']
 
     if tag not in selected_tags:
@@ -125,15 +126,20 @@ def processar_tags(request, tag):
 
     if None in selected_tags:
         selected_tags.remove(None)
-    
-        
+
+
     request.session['selected_tags'] = selected_tags
     selected_tags_json = json.dumps(request.session['selected_tags'])
-    
 
-    return render(request, 'espaco/tags_selecionadas.html', {'selected_tags': selected_tags,
-                                                             'selected_tags_json': selected_tags_json,
-                                                             })
+
+    response = render(request, 'espaco/tags_selecionadas.html', {
+         'selected_tags': selected_tags,
+    })
+
+    # Add HX-Trigger to the response
+    trigger_client_event(response, 'eventupdateselectedtags', {'selected_tags_json': selected_tags_json})
+
+    return response
 
 def tag_creation(request, espaco):
     

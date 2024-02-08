@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 {%block content%}
 <script type="text/javascript">
-  document.addEventListener('htmx:beforeRequest', function(evt) {
-      // Verifica se o elemento alvo da solicitação é '#tag_selection'
-      var targetId = evt.detail.target.id;
-      if (targetId === 'tags_selected' || targetId === 'tag_selection') {
-          // Executa o script antes da solicitação HTMX
-          window.minhalista = JSON.parse("{{ selected_tags_json|escapejs }}");          
-      }
-  });
+  document.addEventListener('eventupdateselectedtags', function(evt) {
+    const updatedData = evt.detail.selected_tags_json;
+
+    // Assume other parts of your code rely on 'minhalista'
+    window.minhalista = JSON.parse(updatedData); 
+
+    // ... Any additional logic to directly manipulate DOM elements on other templates
+    // based on the new 'minhalista' data
+});
 </script>
 <style>
   .panel-tabs-scrollable {
