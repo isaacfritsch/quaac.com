@@ -34,9 +34,9 @@
                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                                hx-trigger="keyup changed delay:500ms"                                                                                            
                                >
-                            <span class="icon is-left">
-                                <i class="fas fa-search" aria-hidden="true"></i>
-                            </span>
+                                    <span class="icon is-left">
+                                        <i class="fas fa-search" aria-hidden="true"></i>
+                                    </span>
                         {% if form.category.errors %}
                             <p class="help is-danger">{{ form.category.errors|first }}</p>
                         {% endif %}                              

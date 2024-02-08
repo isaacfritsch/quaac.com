@@ -13,6 +13,7 @@ from .forms import CreateSpaceForm, TagForm
 from django.views.decorators.http import require_POST
 from django.views.generic.list import ListView
 
+
 # Create your views here.
 
 def test_view(request): 
@@ -118,18 +119,17 @@ def processar_tags(request, tag):
     selected_tags = request.session['selected_tags']
 
     if tag not in selected_tags:
-        selected_tags.append(tag)        
+        selected_tags.append(tag)
     else:
         selected_tags.remove(tag)
-        
+
     if None in selected_tags:
         selected_tags.remove(None)
     
         
     request.session['selected_tags'] = selected_tags
     selected_tags_json = json.dumps(request.session['selected_tags'])
-    print(selected_tags)
-    print(selected_tags_json)
+    
 
     return render(request, 'espaco/tags_selecionadas.html', {'selected_tags': selected_tags,
                                                              'selected_tags_json': selected_tags_json,
@@ -320,7 +320,7 @@ def botao_edicao_tag(request):
             form.instance.user = request.user
             tag_instance = form.save(commit=False)
             tag_instance.save()
-            
+
             response = HttpResponse(status=204, headers={'HX-Trigger': 'taglistchanged'})            
             return response
         
