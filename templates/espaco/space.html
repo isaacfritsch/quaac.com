@@ -1,5 +1,15 @@
 {% extends 'base.html' %}
 {%block content%}
+<script type="text/javascript">
+  document.addEventListener('htmx:beforeRequest', function(evt) {
+      // Verifica se o elemento alvo da solicitação é '#tag_selection'
+      var targetId = evt.detail.target.id;
+      if (targetId === 'tags_selected' || targetId === 'tag_selection') {
+          // Executa o script antes da solicitação HTMX
+          window.minhalista = JSON.parse("{{ selected_tags_json|escapejs }}");          
+      }
+  });
+</script>
 <style>
   .panel-tabs-scrollable {
     overflow-x: auto;
@@ -32,6 +42,7 @@
           <div x-data="{ isdropdownOpen: false }" x-bind:class="isdropdownOpen ? 'is-active' : ''" class="dropdown is-right" x-cloak>
             <div class="dropdown-trigger">
               <button @click.stop.prevent="isdropdownOpen = !isdropdownOpen" @click.stop.outside="isdropdownOpen = false" class="button is-medium is-primary" aria-haspopup="true" aria-controls="dropdown-menu">
+                
                 <span>Adicionar nova questão</span>
                 <span class="icon is-small">
                   <i class="fas fa-angle-down" aria-hidden="true"></i>
@@ -41,10 +52,16 @@
             <div class="dropdown-menu"  id="dropdown-menu" role="menu">
               <div class="dropdown-content">
                 <a href="" class=" dropdown-item">
-                  múltipla escolha
+                  <span class="icon is-small">
+                    <i class="fa-solid fa-plus"></i>
+                  </span><span> múltipla escolha</span>
+                  
                 </a>
                 <a href="" class="dropdown-item">
-                  discursiva
+                  <span class="icon is-small">
+                    <i class="fa-solid fa-plus"></i>
+                  </span>
+                  <span>discursiva</span>
                 </a>
               </div>
             </div>
@@ -56,10 +73,10 @@
         <span class="icon is-left">
           <i class="fas fa-search" aria-hidden="true"></i>
         </span>
-      </p>        
+      </p>
     </div>
 </section>
-<div>  
+<div>
   <nav class="panel" >
     <div class="panel-heading">
       <div class="columns is-mobile">
@@ -74,7 +91,10 @@
              hx-trigger="click"
              x-cloak
              @click.stop="modaltagopen = !modaltagopen">
-             Criar nova tag</button>
+             <span class="icon is-small">
+              <i class="fa-regular fa-square-plus"></i>
+            </span>
+             <p>Criar nova tag</p></button>
           </div>
         </div>
       </div>
@@ -118,9 +138,9 @@
     <div id="categoria_lista">
     </div>    
     <div class="columns is-gapless is-multiline is-mobile">
-      <div class="column is-7">        
+      <div class="column is-7">
         <div id="tag_selection"></div>
-      </div>      
+      </div>
       <div class="column is-5">
         <div class="box" id="tags_selected">
           {% include 'espaco/tags_selecionadas.html' %}    

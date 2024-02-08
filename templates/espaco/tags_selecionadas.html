@@ -14,10 +14,15 @@
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
             hx-trigger="click"            
             ></button>
-        </span>           
+        </span>
     {% endfor %}
         <div class="buttons is-right">
-            <button class="button is-info ">FILTRAR</button>
+            <button class="button is-info ">
+                <span class="icon">
+                    <i class="fa-solid fa-filter"></i>
+                </span>
+            <p>FILTRAR</p></button>
+             
         </div>
         </p>
     {% else %}

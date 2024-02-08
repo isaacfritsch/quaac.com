@@ -1,4 +1,5 @@
 <div class="panel-tabs-scrollable">
+  
     <p class="panel-tabs">
       {% if quantidade_tags_por_categoria|length > 0 %}
         <button class="button is-link is-small is-outlined is-responsive"
@@ -6,8 +7,9 @@
         hx-vals='{"espaco": "{{espaco.id}}","categoria": "all"}'
         hx-target="#tag_selection"
         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-        hx-trigger="click, taglistchanged from:window"
+        hx-trigger="click, taglistchanged from:window"               
         >
+        
         <span class="icon">
           <i class="fa-regular fa-square-check"></i>
         </span>
@@ -23,8 +25,9 @@
             hx-vals='{"espaco": "{{espaco.id}}","categoria": "{{tag.category}}"}'
             hx-target="#tag_selection"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-            hx-trigger="click, taglistchanged from:window"                 
+            hx-trigger="click, taglistchanged from:window"                     
             >
+            
             <span class="icon">
               <i class="fa-regular fa-square-check"></i>
             </span>

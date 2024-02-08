@@ -1,4 +1,5 @@
 from typing import Any
+import json
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
@@ -86,9 +87,12 @@ def url_espaco(request, slug):
         
     request.session['current_espaco'] = espaco_solicitado.id
     request.session['selected_tags'] = selected_tags
+    selected_tags_json = json.dumps(request.session['selected_tags'])    
+    
     context = {
         'espaco':espaco_solicitado,        
-        'selected_tags': selected_tags,        
+        'selected_tags': selected_tags, 
+        'selected_tags_json': selected_tags_json,
     }
 
     return render(request, 'espaco/space.html', context)
@@ -120,10 +124,16 @@ def processar_tags(request, tag):
         
     if None in selected_tags:
         selected_tags.remove(None)
+    
         
     request.session['selected_tags'] = selected_tags
-    
-    return render(request, 'espaco/tags_selecionadas.html', {'selected_tags': selected_tags})
+    selected_tags_json = json.dumps(request.session['selected_tags'])
+    print(selected_tags)
+    print(selected_tags_json)
+
+    return render(request, 'espaco/tags_selecionadas.html', {'selected_tags': selected_tags,
+                                                             'selected_tags_json': selected_tags_json,
+                                                             })
 
 def tag_creation(request, espaco):
     

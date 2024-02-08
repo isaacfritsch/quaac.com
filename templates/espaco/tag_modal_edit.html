@@ -6,8 +6,8 @@
 
         <div class="box">
             
-            <button class="delete is-pulled-right" x-on:click.stop.prevent="modaltageditopen = false"></button>
-            <h1 class="title is-3">EDITAR TAG > {{tag.category}}: {{tag.name}}</h1>  
+            <button class="delete is-pulled-right" x-on:click.stop.prevent="modaltageditopen = false" x-on:click.stop="modaltagconfirmardeletar = false"></button>
+            <h1 class="title is-3">EDITAR TAG: {{tag.category}} - {{tag.name}}</h1>  
             <div id="botao_tag_confirmar">
             </div>
             
@@ -23,7 +23,7 @@
                 <div class="field">
                     <label class="label is-size-5">Categoria</label>
                     <p class="is-size-6">Editar "{{tag.category}}" para:</p>
-                    <div class="control">
+                    <div class="control has-icons-left">                        
                         <input class="input is-link" id="modal-tag-category-form"                        
                                type="text"
                                placeholder="Digite para pesquisar..."
@@ -33,7 +33,10 @@
                                hx-vals='{"espaco": "{{espaco_desejado.id}}"}'
                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                                hx-trigger="keyup changed delay:500ms"                                                                                            
-                               > 
+                               >
+                            <span class="icon is-left">
+                                <i class="fas fa-search" aria-hidden="true"></i>
+                            </span>
                         {% if form.category.errors %}
                             <p class="help is-danger">{{ form.category.errors|first }}</p>
                         {% endif %}                              
@@ -69,7 +72,7 @@
                 </div>
 
                 <div  x-cloak class="notification is-info is-light" x-show="modaltagconfirmardeletar">                    
-                    <h1 class="title is-5">TEM CERTEZA QUE DESEJA EXCLUIR A TAG > {{tag.category}}: {{tag.name}}  ?</h1>
+                    <h1 class="title is-5">TEM CERTEZA QUE DESEJA EXCLUIR A TAG: {{tag.category}} - {{tag.name}}  ?</h1>
                     <div class="columns is-mobile">                
                         <div class="column">
                             <button class="button is-danger"
