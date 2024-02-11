@@ -7,7 +7,7 @@
         hx-vals='{"espaco": "{{espaco.id}}","categoria": "all"}'        
         hx-target="#tag_selection"
         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-        hx-trigger=" click, taglistchanged from:window"
+        hx-trigger=" click, taglistchanged from:window, , taglistchangededit from:window, taglistchangeddelete from:window"
         hx-swap="innerHTML"               
         >
         
@@ -17,7 +17,7 @@
           <p>All</p>
           <p>({{quantidade_total_tags}})</p>
           <span class="icon">
-            <i class="fa-solid fa-arrow-down"></i>
+            <i class="fa-solid fa-caret-down"></i>
           </span>
         </button>
           {% for tag in quantidade_tags_por_categoria %}                    
@@ -26,7 +26,7 @@
             hx-vals='{"espaco": "{{espaco.id}}","categoria": "{{tag.category}}"}'            
             hx-target="#tag_selection"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-            hx-trigger=" click, taglistchanged from:window"
+            hx-trigger=" click, taglistchanged from:window, taglistchangededit from:window, taglistchangeddelete from:window"
             hx-swap="innerHTML"                       
             >
             
@@ -36,7 +36,7 @@
           <p>{{ tag.category }}</p>
           <p>({{ tag.quantidade_tags }})</p>
           <span class="icon">
-            <i class="fa-solid fa-arrow-down"></i>
+            <i class="fa-solid fa-caret-down"></i>
           </span>
             </button>
           {% endfor %}

@@ -1,5 +1,6 @@
 from typing import Any
 import json
+import ast
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
@@ -116,14 +117,15 @@ def lista_tags(request):
     }
     return render(request, 'espaco/lista_tags.html', context)
 
-def processar_tags(request, tag):   
+def processar_tags(request, tag):
 
     selected_tags = request.session['selected_tags']
-
+    #caso de criar tag
     if tag not in selected_tags:
         selected_tags.append(tag)
     else:
         selected_tags.remove(tag)
+      
 
     if None in selected_tags:
         selected_tags.remove(None)
@@ -222,7 +224,7 @@ def processar_categoria(request):
     if request.method == 'POST':
         categoria = request.POST.get("category")        
         return HttpResponse((
-    f'<input class="input is-link" id="modal-tag-category-form" readonly '
+    f'<input class="input is-primary" id="modal-tag-category-form" readonly '
     f'type="text" '
     f'placeholder="Selecione ou crie uma categoria" '
     f'name="category" '
@@ -290,23 +292,7 @@ def botao_edicao_tag(request):
         # create a form instance and populate it with data from the request:
         form = TagForm(request.POST, instance=tag)       
         
-        
-        if request.POST['name'] == '':
-            form.add_error('name', 'Nome da tag não pode ficar em branco!')            
-            tag = Tag.objects.get(name=tag_original)
-            return render(request, 'espaco/tag_modal_edit.html', {'form': form,                                                         
-                                                         'espaco_desejado': espaco_desejado,
-                                                         'tag':tag,                                                                                                                                                                         
-                                                         })
-        if request.POST['category'] == '':
-              
-            form.add_error('category', 'Categoria da tag não pode ficar em branco!')            
-            tag = Tag.objects.get(name=tag_original)
-            return render(request, 'espaco/tag_modal_edit.html', {'form': form,                                                         
-                                                         'espaco_desejado': espaco_desejado,
-                                                         'tag':tag,                                                                                                                                                                         
-                                                         })
-        
+           
         
         nomes_tags = Tag.objects.filter(space = espaco_desejado.id).values_list('name', flat=True)
             
@@ -327,10 +313,13 @@ def botao_edicao_tag(request):
             form.instance.user = request.user
             tag_instance = form.save(commit=False)
             tag_instance.save()
-
-            response = HttpResponse(status=204, headers={'HX-Trigger': 'taglistchanged'})            
+            
+            
+            response = HttpResponse(status=204)
+            response["Hx-Trigger"] = json.dumps({"taglistchangededit": json.dumps({"tag_original": tag_original, "tag_atual": form.instance.name})})
             return response
-        
+
+
         error_messages = form.errors
         return render(request, 'espaco/tag_modal_edit.html', {'form': form, 
                                                          'error_messages': error_messages,
@@ -347,13 +336,56 @@ def botao_edicao_tag(request):
     
 def botao_tag_confirmar_deletar(request):
     if request.method == 'POST':
-
-        tag = request.POST.get("tag")
-        tag = Tag.objects.get(name=tag)
+        tag_name = request.POST.get("tag")
+        tag = Tag.objects.get(name=tag_name)
         tag.delete()
 
-        response = HttpResponse(status=204, headers={'HX-Trigger': 'taglistchanged'})          
+        response = HttpResponse(status=204)
+        response["Hx-Trigger"] = json.dumps({"taglistchangeddelete": tag_name})
         return response
+
+def processar_tags_delete(request):  
+    
+    tag = request.GET.get("tag") 
+
+    selected_tags = request.session['selected_tags']
+    #caso de deletar tag
+    if tag in selected_tags:
+        selected_tags.remove(tag)
+
+    request.session['selected_tags'] = selected_tags
+
+
+    response = render(request, 'espaco/tags_selecionadas.html', {
+         'selected_tags': selected_tags,
+    })
+
+    return response
+
+def processar_tags_edit(request): 
+    
+    tag_total = request.GET.get("tag_total")   
+    
+    tag_total = ast.literal_eval(tag_total)
+    tag_atual = tag_total["tag_atual"]
+    tag_original =  tag_total["tag_original"]
+    
+
+    selected_tags = request.session['selected_tags']
+    #caso de deletar tag
+    for i in range(len(selected_tags)):
+        
+        if selected_tags[i] == tag_original:            
+            selected_tags[i] = tag_atual
+            
+
+    request.session['selected_tags'] = selected_tags
+    
+    response = render(request, 'espaco/tags_selecionadas.html', {
+         'selected_tags': selected_tags,
+    })
+    
+    return response
     
 
 

@@ -18,7 +18,7 @@
                 <div class="field">
                     <label class="label">Nome</label>
                     <div class="control">
-                        {% render_field form.name class="input is-link" placeholder="Nome Completo" name="name" %}
+                        {% render_field form.name class="input is-primary" placeholder="Nome Completo" name="name" %}
                         {% if form.name.errors %}
                             <p class="help is-danger">{{ form.name.errors|first }}</p>
                     {% endif %}
@@ -28,7 +28,7 @@
                 <div class="field">
                     <label class="label">Email</label>
                     <div class="control">
-                        {% render_field form.email class="input is-link" placeholder="user@example.com" name="email" %}
+                        {% render_field form.email class="input is-primary" placeholder="user@example.com" name="email" %}
                         {% if form.email.errors %}
                             <p class="help is-danger">{{ form.email.errors|first }}</p>
                         {% endif %}
@@ -38,7 +38,7 @@
                 <div class="field">
                     <label class="label">Senha</label>
                     <div class="control">
-                        {% render_field form.password1 class="input is-link" placeholder="*********" name="password1" %}
+                        {% render_field form.password1 class="input is-primary" placeholder="*********" name="password1" %}
                         {% if form.password1.errors %}
                             <p class="help is-danger">{{ form.password1.errors|first }}</p>
                         {% endif %}
@@ -48,7 +48,7 @@
                 <div class="field">
                     <label class="label">Confirmar Senha</label>
                     <div class="control">
-                        {% render_field form.password2 class="input is-link" placeholder="*********" name="password2" %}
+                        {% render_field form.password2 class="input is-primary" placeholder="*********" name="password2" %}
                         {% if form.password2.errors %}
                             <p class="help is-danger">{{ form.password2.errors|first }}</p>
                         {% endif %}

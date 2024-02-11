@@ -4,12 +4,15 @@
 </p>
 
 {% if selected_tags|length > 0 %}
+    <div id="selectedTags" style="display: none;">
+        {{ selected_tags }}
+    </div>
     <p class="block">
     {% for tag in selected_tags %}
-        <span class="tag is-link">
+        <span class="tag is-primary">
             {{ tag }}
             <button class="delete is-small"
-            hx-post={% url 'processar_tags' tag=tag %}         
+            hx-post={% url 'processar_tags' tag=tag %}  
             hx-target="#tags_selected"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
             hx-trigger="click"            

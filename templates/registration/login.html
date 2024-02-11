@@ -29,7 +29,7 @@
                 <div class="field">
                     <label class="label">Email</label>
                     <div class="control">
-                        {% render_field form.email class="input is-link" placeholder="user@example.com" name="email"%}
+                        {% render_field form.email class="input is-primary" placeholder="user@example.com" name="email"%}
                     {% if form.email.errors %}
                         <p class="help is-danger">{{ form.email.errors|first }}</p>
                     {% endif %}
@@ -39,7 +39,7 @@
                 <div class="field">
                     <label class="label">Senha</label>
                     <div class="control">
-                        {% render_field form.password class="input is-link" placeholder="*********" name="password" %}
+                        {% render_field form.password class="input is-primary" placeholder="*********" name="password" %}
                     {% if form.password.errors %}
                         <p class="help is-danger">{{ form.password.errors|first }}</p>
                     {% endif %} 

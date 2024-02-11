@@ -20,5 +20,6 @@ urlpatterns = [
     path('lista_categorias/', views.lista_categorias, name='lista_categorias'),
     path('botao_edicao_tag/', views.botao_edicao_tag, name='botao_edicao_tag'),
     path('botao_tag_confirmar_deletar/', views.botao_tag_confirmar_deletar, name='botao_tag_confirmar_deletar'),
-        
+    path('processar_tags_delete/', views.processar_tags_delete, name='processar_tags_delete'),  
+    path('processar_tags_edit/', views.processar_tags_edit, name='processar_tags_edit'),      
 ]

@@ -3,8 +3,9 @@
 <div id="selectedTagsData" style="display: none;">
   {{ selected_tags_json }}
 </div>
+
 <style>
-  #tag_selection {
+  #tag_selection, #tags_selected {
     max-height: 300px; /* Adjust this height as needed */
     overflow-y: auto;  /* Enable vertical scrollbar */
 }
@@ -31,10 +32,8 @@
 
   window.addEventListener('load', function(evt) { 
     selectedTagsJson = document.getElementById('selectedTagsData').textContent;
-     
-
     updateMinhalista(selectedTagsJson);
-});
+});    
 </script>
 
 <!-- Modal tag-->
@@ -46,12 +45,12 @@
     <div class="hero-body">
       <div class="columns is-mobile">
         <div class="column">
-          <p class="title is-size-2">
-            {{espaco.title}}
-          </p>
-            <p class="subtitle is-size-7">
-              {{espaco.description}}
-            </p>
+              <p class="title is-size-2">
+                {{espaco.title}}
+              </p>
+                <p class="subtitle is-size-7">
+                  {{espaco.description}}
+                </p>
         </div>
         <div class="column is-narrow">
           <div x-data="{ isdropdownOpen: false }" x-bind:class="isdropdownOpen ? 'is-active' : ''" class="dropdown is-right" x-cloak>
@@ -68,13 +67,13 @@
               <div class="dropdown-content">
                 <a href="" class=" dropdown-item">
                   <span class="icon is-small">
-                    <i class="fa-solid fa-plus"></i>
+                    <i class="fa-solid fa-circle-plus"></i>
                   </span><span> múltipla escolha</span>
                   
                 </a>
                 <a href="" class="dropdown-item">
                   <span class="icon is-small">
-                    <i class="fa-solid fa-plus"></i>
+                    <i class="fa-solid fa-circle-plus"></i>
                   </span>
                   <span>discursiva</span>
                 </a>
@@ -84,7 +83,7 @@
         </div>
       </div>        
       <p class="control has-icons-left">
-        <input class="input is-medium is-focused is-danger" type="text" placeholder="Pesquisa de palavras-chave em questões, comentários ou resoluções">
+        <input class="input is-medium is-focused is-primary" type="text" placeholder="Pesquisa de palavras-chave em questões, comentários ou resoluções">
         <span class="icon is-left">
           <i class="fas fa-search" aria-hidden="true"></i>
         </span>
@@ -107,7 +106,7 @@
              x-cloak
              @click.stop="modaltagopen = !modaltagopen">
              <span class="icon is-small">
-              <i class="fa-regular fa-square-plus"></i>
+              <i class="fa-solid fa-circle-plus"></i>
             </span>
              <p>Criar nova tag</p></button>
           </div>
@@ -119,6 +118,10 @@
       x-show="successmessage"
       @taglistchanged.window = "successmessage = !successmessage"
       @taglistchanged.window.debounce.3000ms="successmessage = !successmessage"
+      @taglistchangededit.window = "successmessage = !successmessage"
+      @taglistchangededit.window.debounce.3000ms="successmessage = !successmessage"
+      @taglistchangeddelete.window = "successmessage = !successmessage"
+      @taglistchangeddelete.window.debounce.3000ms="successmessage = !successmessage"
       >
       <span class="icon">
         <i class="fa-solid fa-circle-check"></i>
@@ -127,7 +130,7 @@
     </div>
     <div class="panel-block">
       <p class="control has-icons-left">
-        <input class="input"
+        <input class="input is-primary"
         type="text"
         placeholder="Pesquisar entre todas as tags"
         hx-post="{% url 'search_tag' %}"
@@ -146,21 +149,30 @@
     <div hx-get="{% url 'lista_categorias' %}"
     hx-vals='{"espaco": "{{espaco.id}}"}'
     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-    hx-trigger="load, taglistchanged from:window"
-    hx-swap="innerHTML" 
-    hx-target="#categoria_lista" 
-    >      
-    </div> 
+    hx-trigger="load, taglistchanged from:window, taglistchangededit from:window, taglistchangeddelete from:window"
+    hx-swap="innerHTML"
+    hx-target="#categoria_lista"
+    >
+    </div>
     <div id="categoria_lista">
-    </div>    
+    </div>
+    <br>
+    <div hx-get={% url 'processar_tags_delete' %}
+         hx-vals='js:{"tag": event.detail.value}'
+         hx-target="#tags_selected"    
+         hx-trigger="taglistchangeddelete from:body">
+    </div>
+
+    <div hx-get={% url 'processar_tags_edit' %}
+         hx-vals='js:{"tag_total": event.detail.value}'
+         hx-target="#tags_selected"   
+         hx-trigger="taglistchangededit from:body">
+    </div>
+
     <div class="columns is-gapless is-multiline is-mobile">
       <div class="column is-7">
         <div id="tag_selection">
-          <div class="scroll-loading has-text-centered" style="display: none"> 
-            <span class="icon is-medium"><i class="fas fa-spinner fa-pulse"></i></span>
-          </div>
         </div>
-        
       </div>
       <div class="column is-5">
         <div class="box" id="tags_selected">
