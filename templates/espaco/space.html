@@ -53,33 +53,14 @@
                 </p>
         </div>
         <div class="column is-narrow">
-          <div x-data="{ isdropdownOpen: false }" x-bind:class="isdropdownOpen ? 'is-active' : ''" class="dropdown is-right" x-cloak>
-            <div class="dropdown-trigger">
-              <button @click.stop.prevent="isdropdownOpen = !isdropdownOpen" @click.stop.outside="isdropdownOpen = false" class="button is-medium is-info" aria-haspopup="true" aria-controls="dropdown-menu">
-                
-                <span>Adicionar nova questão</span>
+           <a href="{% url 'question_create' espaco=espaco.title %}">
+              <button class="button is-medium is-info"> 
                 <span class="icon is-small">
-                  <i class="fas fa-angle-down" aria-hidden="true"></i>
+                  <i class="fa-solid fa-circle-plus"></i>
                 </span>
+                <span>Adicionar nova questão</span>                
               </button>
-            </div>
-            <div class="dropdown-menu"  id="dropdown-menu" role="menu">
-              <div class="dropdown-content">
-                <a href="" class=" dropdown-item">
-                  <span class="icon is-small">
-                    <i class="fa-solid fa-circle-plus"></i>
-                  </span><span> múltipla escolha</span>
-                  
-                </a>
-                <a href="" class="dropdown-item">
-                  <span class="icon is-small">
-                    <i class="fa-solid fa-circle-plus"></i>
-                  </span>
-                  <span>discursiva</span>
-                </a>
-              </div>
-            </div>
-          </div>
+            </a>
         </div>
       </div>        
       <p class="control has-icons-left">

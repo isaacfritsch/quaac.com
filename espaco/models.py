@@ -37,27 +37,6 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
     
-class Questao(models.Model):    
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
-    )
-    space = models.ForeignKey(
-        Espaco,
-        on_delete=models.CASCADE,
-    )
-    type = models.CharField(max_length=255)
-    body = models.TextField()
-    current_answer = models.TextField()
-    times_solved = models.IntegerField()
-    tags = models.ManyToManyField(Tag)
-    
-    
-class Alternativa(models.Model):
-    question = models.ForeignKey(
-        Questao, 
-        on_delete=models.CASCADE)
-    text = models.TextField()  
-    correct = models.BooleanField(default=False)
+
     
     

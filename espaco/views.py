@@ -330,10 +330,10 @@ def botao_edicao_tag(request):
         
         form = TagForm(instance=tag)         
     
-    return render(request, 'espaco/tag_modal_edit.html', {'form': form,                                                     
+    return render(request, 'espaco/tag_modal_edit.html', {'form': form,                                               
                                                      'espaco_desejado': espaco_desejado,
                                                      'tag': tag,})
-    
+
 def botao_tag_confirmar_deletar(request):
     if request.method == 'POST':
         tag_name = request.POST.get("tag")
@@ -375,7 +375,7 @@ def processar_tags_edit(request):
     #caso de deletar tag
     for i in range(len(selected_tags)):
         
-        if selected_tags[i] == tag_original:            
+        if selected_tags[i] == tag_original:   
             selected_tags[i] = tag_atual
             
 

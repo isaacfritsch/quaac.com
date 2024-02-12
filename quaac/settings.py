@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'espaco',
     'users',
-    'widget_tweaks'
+    'widget_tweaks',
+    'questoes',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
