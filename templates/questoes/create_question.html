@@ -2,51 +2,172 @@
 {%block content%}
 {% load widget_tweaks %}
 {% with WIDGET_ERROR_CLASS='is-invalid' %}
- 
-<h1 class="title is-3">CRIAR NOVA QUESTÃO</h1>
-    
-    
+
+<div id="modal-tag2">
+</div>
+<div id="editar-tag-modal2">
+</div>
+
+<div class="block" style="margin: 1.5rem;">
+  <h1 class="title is-3">Revise sua questão antes de postá-la</h1>
+</div>
+
+
 <form class="form" name="form"
 hx-post = {{request.path}}
 hx-trigger="submit"
 hx-target="#tag-modal"
 >
     {% csrf_token %}
-    <div class="box">
-        <input type="checkbox" class="checkbox">
-            <p>Não existe questão igual nesse espaço</p>
-        </input>
-        {% if form.confirm.errors %}
-            <p class="help is-danger">{{ form.confirm.errors|first }}</p>
-        {% endif %}
+    <div class="box" style="margin: 1.5rem;">
+      <div class="notification is-info is-light">
+        <div class="columns is-mobile is-gapless">
+          <div class="column is-narrow">
+            <div class="control" style="width: 20px;">
+              {% render_field form.confirm class="checkbox" placeholder="" name="confirm"%}
+            </div>
+          </div>                 
+          <div class="column">  
+            <label class="label" for="{{ form.confirm.id_for_label }}">
+              Confirme que não existe essa questão no espaço {{espaco.title}}
+            </label>
+          </div>
+            {% if form.confirm.errors %}
+                <p class="help is-danger">{{ form.confirm.errors|first }}</p>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="box has-text-centered">
+            <nav class="panel is-black">
+              <div class="panel-heading">
+                <div class="columns is-mobile">
+                  <div class="column">
+                    Marque tags que identifiquem essa questão
+                  </div>
+                  <div class="column is-narrow">
+                    <div class="buttons is-right">
+                      <button class="button is-info"
+                      hx-get="{% url 'tag_creation' espaco=espaco.id %}"             
+                      hx-target="#modal-tag2"
+                      hx-trigger="click"
+                      x-cloak
+                      @click.stop="modaltagopen = !modaltagopen">
+                      <span class="icon is-small">
+                      <i class="fa-solid fa-circle-plus"></i>
+                      </span>
+                     <p>Criar nova tag</p></button>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="panel-block has-background-success has-text-white p-2 has-border-success"
+              x-cloak
+              x-show="successmessage"
+              @taglistchanged.window = "successmessage = !successmessage"
+              @taglistchanged.window.debounce.3000ms="successmessage = !successmessage"
+              @taglistchangededit.window = "successmessage = !successmessage"
+              @taglistchangededit.window.debounce.3000ms="successmessage = !successmessage"
+              @taglistchangeddelete.window = "successmessage = !successmessage"
+              @taglistchangeddelete.window.debounce.3000ms="successmessage = !successmessage"
+              >
+              <span class="icon">
+                <i class="fa-solid fa-circle-check"></i>
+              </span>
+              <p>Alterações salvas com sucesso!</p>
+            </div>
+            <div class="panel-block">
+                <p class="control has-icons-left">
+                  <input class="input is-primary"
+                  type="text"
+                  placeholder="Pesquisar entre todas as tags"
+                  hx-post="{% url 'search_tag' %}"
+                  hx-target='#tag_selection2'
+                  hx-vals='{"espaco": "{{espaco.id}}"}'
+                  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                  hx-trigger="keyup changed delay:500ms"
+                  name="search"
+                  hx-swap="innerHTML"
+                  >
+                  <span class="icon is-left">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                  </span>
+                </p>
+              </div>
+              <div hx-get="{% url 'lista_categorias' %}"
+              hx-vals='{"espaco": "{{espaco.id}}"}'
+              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+              hx-trigger="load, taglistchanged from:window, taglistchangededit from:window, taglistchangeddelete from:window"
+              hx-swap="innerHTML"
+              hx-target="#categoria_lista2"
+              >
+              </div>
+              <div id="categoria_lista2">
+              </div>
+              <br>
+              <div hx-get={% url 'processar_tags_delete' %}
+                   hx-vals='js:{"tag": event.detail.value}'
+                   hx-target="#tags_selected"    
+                   hx-trigger="taglistchangeddelete from:body">
+              </div>
+          
+              <div hx-get={% url 'processar_tags_edit' %}
+                   hx-vals='js:{"tag_total": event.detail.value}'
+                   hx-target="#tags_selected"   
+                   hx-trigger="taglistchangededit from:body">
+              </div>
+          
+              <div class="columns is-gapless is-multiline is-mobile">
+                <div class="column is-7">
+                  <div id="tag_selection2" class="tag_selection2">
+                  </div>
+                </div>
+                <div class="column is-5">
+                  <div class="box" id="tags_selected">
+                    {% include 'espaco/tags_selecionadas.html' %}    
+                  </div>
+                </div>
+              </div>
+            </nav>
     </div>
 
     <div class="box">
-    <div class="field">
-        <label class="label is-size-5">Enunciado da questão:</label>                
-        <textarea class="textarea is-primary" placeholder="" rows="10"></textarea>
-                    
-                        
+        <div class="field">
+            <label class="label" for="{{ form.body.id_for_label }}">Enunciado</label>                 
+            <div class="control">
+                {% render_field form.body class="textarea is-primary"  placeholder="" name="body"%}
             {% if form.body.errors %}
                 <p class="help is-danger">{{ form.body.errors|first }}</p>
             {% endif %}
-                               
-    </div>           
-        
-
-        <div class="field">
-            <label class="label is-size-5">Nome</label>
-            <div class="control">
-                {% render_field form.name class="input is-primary" placeholder="Digite o nome da nova tag" name="name" %}
-                {% if form.name.errors %}
-                    <p class="help is-danger">{{ form.name.errors|first }}</p>
-                {% endif %}
             </div>
         </div>
-                
+    </div>
+
+    <div class="box">
+        <p>Alternativas</p>
+    </div>
+    
+    <div class="box">   
+        <div class="field">
+            <label class="label" for="{{ form.current_answer.id_for_label }}">Gabarito</label>
+            <p><small>Caso não tenha a resolução dessa questão você ainda poderá submetê-la, outros usuários poderão adicionar uma resolução!</small></p>
+            <div class="control">
+                {% render_field form.current_answer class="textarea is-primary"  placeholder="" name="current_answer" %}
+            {% if form.current_answer.errors %}
+                <p class="help is-danger">{{ form.current_answer.errors|first }}</p>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+
+    
+
         <div class="field">
             <div class="control">
-                <button class="button is-info" type="submit">Criar</button>
+                <button class="button is-info"
+                type="submit"                                                                                              
+                >Criar</button>                
             </div>
         </div>
 </form>

@@ -44,44 +44,45 @@
 <section class="hero is-small is-black">
     <div class="hero-body">
       <div class="columns is-mobile">
-        <div class="column">
+        <div class="column has-text-centered">
               <p class="title is-size-2">
                 {{espaco.title}}
               </p>
                 <p class="subtitle is-size-7">
                   {{espaco.description}}
                 </p>
-        </div>
-        <div class="column is-narrow">
-           <a href="{% url 'question_create' espaco=espaco.title %}">
-              <button class="button is-medium is-info"> 
-                <span class="icon is-small">
-                  <i class="fa-solid fa-circle-plus"></i>
-                </span>
-                <span>Adicionar nova questão</span>                
-              </button>
-            </a>
-        </div>
-      </div>        
+                              
+        </div>        
+                   
+    </div>
+           
       <p class="control has-icons-left">
         <input class="input is-medium is-focused is-primary" type="text" placeholder="Pesquisa de palavras-chave em questões, comentários ou resoluções">
         <span class="icon is-left">
           <i class="fas fa-search" aria-hidden="true"></i>
         </span>
       </p>
-    </div>
+    </div>    
 </section>
+
 <div>
-  <nav class="panel" >
+  <nav class="panel" id="panel_id">
     <div class="panel-heading">
       <div class="columns is-mobile">
-        <div class="column">
-          Painel de Tags
+        <div class="column">          
+          <a href="{% url 'question_create' espaco=espaco.title %}">
+            <button class="button is-info"> 
+              <span class="icon is-small">
+                <i class="fa-solid fa-circle-plus"></i>
+              </span>
+              <span>Adicionar nova questão</span>                
+            </button>
+          </a>
         </div>
         <div class="column is-narrow">
           <div class="buttons is-right">
             <button class="button is-info"
-             hx-get="{% url 'tag_creation' espaco=espaco.id %}"             
+             hx-get="{% url 'tag_creation' espaco=espaco.id %}"
              hx-target="#modal-tag"
              hx-trigger="click"
              x-cloak
@@ -109,6 +110,7 @@
       </span>
       <p>Alterações salvas com sucesso!</p>
     </div>
+    
     <div class="panel-block">
       <p class="control has-icons-left">
         <input class="input is-primary"

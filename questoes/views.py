@@ -60,7 +60,7 @@ def question_create(request, espaco):
 
 
     return render(request, 'questoes/create_question.html', {'form': form,                                                     
-                                                     'espaco_desejado': espaco_desejado,})
+                                                     'espaco': espaco_desejado,})
 
     
     
