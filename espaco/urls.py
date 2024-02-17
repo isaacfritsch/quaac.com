@@ -18,8 +18,7 @@ urlpatterns = [
     path('search_space/', views.search_space, name='search_space'),
     path('processar_categoria/', views.processar_categoria, name='processar_categoria'), 
     path('lista_categorias/', views.lista_categorias, name='lista_categorias'),
-    path('botao_edicao_tag/', views.botao_edicao_tag, name='botao_edicao_tag'),
-    path('botao_tag_confirmar_deletar/', views.botao_tag_confirmar_deletar, name='botao_tag_confirmar_deletar'),
-    path('processar_tags_delete/', views.processar_tags_delete, name='processar_tags_delete'),  
-    path('processar_tags_edit/', views.processar_tags_edit, name='processar_tags_edit'),      
+    path('tag_edicao/', views.tag_edicao, name='tag_edicao'),
+    path('botao_tag_confirmar_deletar/', views.botao_tag_confirmar_deletar, name='botao_tag_confirmar_deletar'),      
+    path('update_tags_selecionadas/', views.update_tags_selecionadas, name='update_tags_selecionadas'),      
 ]

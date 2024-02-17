@@ -7,7 +7,7 @@
         hx-vals='{"espaco": "{{espaco.id}}","categoria": "all"}'        
         hx-target="#tag_selection"
         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-        hx-trigger=" click, taglistchanged from:window, , taglistchangededit from:window, taglistchangeddelete from:window"
+        hx-trigger="click"
         hx-swap="innerHTML"
         >
         
@@ -26,8 +26,8 @@
             hx-vals='{"espaco": "{{espaco.id}}","categoria": "{{tag.category}}"}'            
             hx-target="#tag_selection"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-            hx-trigger=" click, taglistchanged from:window, taglistchangededit from:window, taglistchangeddelete from:window"
-            hx-swap="innerHTML"                       
+            hx-trigger="click"
+            hx-swap="innerHTML"
             >
             
             <span class="icon">

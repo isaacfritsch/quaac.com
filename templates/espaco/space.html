@@ -32,8 +32,8 @@
 
   window.addEventListener('load', function(evt) { 
     selectedTagsJson = document.getElementById('selectedTagsData').textContent;
-    updateMinhalista(selectedTagsJson);
-});    
+    updateMinhalista(selectedTagsJson);    
+});
 </script>
 
 <!-- Modal tag-->
@@ -92,14 +92,14 @@
             </span>
              <p>Criar nova tag</p></button>
           </div>
-        </div>
+        </div>        
       </div>
     </div>
     <div class="panel-block has-background-success has-text-white p-2 has-border-success"
       x-cloak
       x-show="successmessage"
-      @taglistchanged.window = "successmessage = !successmessage"
-      @taglistchanged.window.debounce.3000ms="successmessage = !successmessage"
+      @taglistcreated.window = "successmessage = !successmessage"
+      @taglistcreated.window.debounce.3000ms="successmessage = !successmessage"
       @taglistchangededit.window = "successmessage = !successmessage"
       @taglistchangededit.window.debounce.3000ms="successmessage = !successmessage"
       @taglistchangeddelete.window = "successmessage = !successmessage"
@@ -132,7 +132,7 @@
     <div hx-get="{% url 'lista_categorias' %}"
     hx-vals='{"espaco": "{{espaco.id}}"}'
     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-    hx-trigger="load, taglistchanged from:window, taglistchangededit from:window, taglistchangeddelete from:window"
+    hx-trigger="load, taglistcreated from:window, taglistchangededit from:window, taglistchangeddelete from:window"
     hx-swap="innerHTML"
     hx-target="#categoria_lista"
     >
@@ -140,16 +140,19 @@
     <div id="categoria_lista">
     </div>
     <br>
-    <div hx-get={% url 'processar_tags_delete' %}
-         hx-vals='js:{"tag": event.detail.value}'
-         hx-target="#tags_selected"    
-         hx-trigger="taglistchangeddelete from:body">
+    
+
+    {% comment %} Atualiza o tags_selecionadas {% endcomment %}
+    <div hx-get="{% url 'update_tags_selecionadas' %}"
+         hx-target="#tags_selected"
+         hx-trigger="taglistchangededit from:body, taglistchanged from:body, taglistchangeddelete from:body">
     </div>
 
-    <div hx-get={% url 'processar_tags_edit' %}
-         hx-vals='js:{"tag_total": event.detail.value}'
-         hx-target="#tags_selected"   
-         hx-trigger="taglistchangededit from:body">
+    {% comment %} Atualiza o lista_tags para a categoria que foi criada ou editada ou deletada {% endcomment %}
+    <div hx-get="{% url 'lista_tags' %}"
+         hx-vals='js:{"total": event.detail.value}'
+         hx-target="#tag_selection"
+         hx-trigger="taglistcreated from:body, taglistchangededit from:body, taglistchangeddelete from:body, taglistchanged from:body">
     </div>
 
     <div class="columns is-gapless is-multiline is-mobile">

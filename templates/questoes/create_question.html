@@ -44,7 +44,7 @@ hx-target="#tag-modal"
               <div class="panel-heading">
                 <div class="columns is-mobile">
                   <div class="column">
-                    Marque tags que identifiquem essa questão
+                    Marque tags que melhor identifiquem essa questão
                   </div>
                   <div class="column is-narrow">
                     <div class="buttons is-right">
@@ -83,7 +83,7 @@ hx-target="#tag-modal"
                   type="text"
                   placeholder="Pesquisar entre todas as tags"
                   hx-post="{% url 'search_tag' %}"
-                  hx-target='#tag_selection2'
+                  hx-target='.tag_selection'
                   hx-vals='{"espaco": "{{espaco.id}}"}'
                   hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                   hx-trigger="keyup changed delay:500ms"
@@ -108,24 +108,26 @@ hx-target="#tag-modal"
               <br>
               <div hx-get={% url 'processar_tags_delete' %}
                    hx-vals='js:{"tag": event.detail.value}'
-                   hx-target="#tags_selected"    
+                   hx-target=".tags_selected"    
                    hx-trigger="taglistchangeddelete from:body">
               </div>
           
               <div hx-get={% url 'processar_tags_edit' %}
                    hx-vals='js:{"tag_total": event.detail.value}'
-                   hx-target="#tags_selected"   
+                   hx-target=".tags_selected"   
                    hx-trigger="taglistchangededit from:body">
               </div>
           
               <div class="columns is-gapless is-multiline is-mobile">
                 <div class="column is-7">
-                  <div id="tag_selection2" class="tag_selection2">
+                  <div class="tag_selection">
                   </div>
                 </div>
                 <div class="column is-5">
-                  <div class="box" id="tags_selected">
-                    {% include 'espaco/tags_selecionadas.html' %}    
+                  <div class="box"> 
+                    <div class="tags_selected">
+                    {% include 'espaco/tags_selecionadas.html' %} 
+                    </div>   
                   </div>
                 </div>
               </div>

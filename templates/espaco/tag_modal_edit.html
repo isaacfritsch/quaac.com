@@ -1,6 +1,6 @@
 {% load widget_tweaks %}
 {% with WIDGET_ERROR_CLASS='is-invalid' %}
-<div class="modal" x-bind:class="modaltageditopen ? 'is-active' : ''" @taglistchanged="modaltageditopen = false" @taglistchangededit="modaltageditopen = false" @taglistchangeddelete="modaltageditopen = false">
+<div class="modal" x-bind:class="modaltageditopen ? 'is-active' : ''" @taglistcreated="modaltageditopen = false" @taglistchangededit="modaltageditopen = false" @taglistchangeddelete="modaltageditopen = false">
     <div class="modal-background" ></div>
     <div class="modal-content has-background-white py-5 px-5" id="tag-modal-edit" @click.stop.outside="modaltageditopen = false">
 
@@ -12,7 +12,7 @@
             </div>
             
             <form class="form" name="form"        
-            hx-post = "{%url 'botao_edicao_tag'%}"
+            hx-post = "{%url 'tag_edicao'%}"
             hx-trigger="submit"
             hx-vals='{"tag" : "{{ tag }}"}'           
             hx-target="#tag-modal-edit"            

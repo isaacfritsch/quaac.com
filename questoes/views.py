@@ -45,7 +45,7 @@ def question_create(request, espaco):
             tag_instance = form.save(commit=False)
             tag_instance.save()
             
-            response = HttpResponse(status=204, headers={'HX-Trigger': 'taglistchanged'})            
+            response = HttpResponse(status=204)            
             return response
         
         return render(request, 'questoes/create_question.html', {'form': form, 

@@ -22,7 +22,7 @@
     </div>
     <div class="column is-1">
         <button class="button is-info is-small is-fullwidth is-focused"
-            hx-get="{%url 'botao_edicao_tag'%}"
+            hx-get="{%url 'tag_edicao'%}"
             hx-vals='{"tag" : "{{ tag }}"}'
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
             hx-target="#editar-tag-modal"

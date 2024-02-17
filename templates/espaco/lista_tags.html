@@ -1,11 +1,9 @@
-
-
 <div class="columns is-gapless is-multiline is-mobile">
 
 {% for tag in nomes_tags %}
         <div class="column is-11"
         x-cloak
-        x-data="{ checked: false,}"
+        x-data="{ checked: false }"
         x-init="checked = minhalista.includes('{{ tag }}')">
             <a class="panel-block"
             hx-post={% url 'processar_tags' tag=tag %}
@@ -14,8 +12,8 @@
             hx-trigger="click"
             x-on:click="checked = !checked"
             >
-            <input type="checkbox" class="checkbox" x-bind:checked="checked" >            
-                    
+            <input type="checkbox" class="checkbox" x-bind:checked="checked">            
+
                     <span>
                         {{ tag }}
                     </span>
@@ -23,7 +21,7 @@
         </div>
         <div class="column is-1">
             <button class="button is-info is-small is-fullwidth is-focused"
-            hx-get="{%url 'botao_edicao_tag'%}"
+            hx-get="{%url 'tag_edicao'%}"
             hx-vals='{"tag" : "{{ tag }}"}'
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
             hx-target="#editar-tag-modal"
