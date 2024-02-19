@@ -29,7 +29,7 @@
 </div>
 
 <div class="block" style="margin: 1.5rem;">
-  <h1 class="title is-3">Revise sua questão antes de postá-la</h1>
+  <h1 class="title is-3">Revise a questão antes de postá-la</h1>
 </div>
 
 
@@ -51,11 +51,11 @@ hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
               <div class="control" style="width: 20px;">
                 {% render_field form.confirm class="checkbox" placeholder="" name="confirm"%}
               </div>
-            </div>                 
-            <div class="column">  
-              <label class="label" for="{{ form.confirm.id_for_label }}">
+            </div>
+            <div class="column">
+              <p class="has-text-black ">
                 Confirme que não existe essa questão no espaço {{espaco.title}}
-              </label>
+              </p>
             </div>
               {% if form.confirm.errors %}
                   <p class="help is-danger">{{ form.confirm.errors|first }}</p>
@@ -66,11 +66,13 @@ hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
     </div>
 
     
-    <nav class="panel" style="margin: 1.5rem;">
+    <nav class="panel is-dark" style="margin: 1.5rem;">
       <div class="panel-heading">
         <div class="columns is-mobile">
           <div class="column">
-            Marque as tags que melhor identifiquem a questão
+            <p class="is-size-5" style="font-weight: normal;">
+            Selecione as tags que melhor identifiquem a questão
+            </p>
           </div>
           <div class="column is-narrow">
             <div class="buttons is-right">
@@ -181,22 +183,29 @@ hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
     
       <div class="box">
           <label class="label is-size-5">Alternativas</label>
-          <div class="column is-4">
-            <article class="message is-dark">              
-              <div class="message-body">
-                Insira alternativas apenas se a questão for de <strong>múltipla escolha</strong>!
+          <div class="columns is-mobile">
+            <div class="column ">
+              <article class="message is-dark">              
+                <div class="message-body">
+                  Insira alternativas apenas se a questão for de <strong>múltipla escolha</strong>!
+                </div>
+              </article>
+            </div>
+            <div class="column is-narrow">
+              <div class="block">
+              <button class="button is-info"
+              hx-get="{% url 'create_alternativa' %}"
+              hx-target='#alternativas_criadas'
+              hx-trigger="click"
+              name="alternativa"
+              hx-swap="beforeend"                        
+              >
+              <span class="icon is-small">
+                <i class="fa-solid fa-circle-plus"></i>
+              </span>
+              <p>Adicionar nova alternativa</p></button>
               </div>
-            </article>
-          </div>
-          <div class="block">
-          <button class="button is-info"
-          hx-get="{% url 'create_alternativa' %}"
-          hx-target='#alternativas_criadas'
-          hx-trigger="click"
-          name="alternativa"
-          hx-swap="beforeend"                        
-          >
-          Adicionar nova alternativa</button>
+            </div>
           </div>
           
           <div id="alternativas_criadas"></div>
@@ -218,14 +227,15 @@ hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
         </div>      
       </div>
     </div>
-
+      <div class="block" style="margin: 1.5rem;">
         <div class="field">
             <div class="control">
                 <button class="button is-info"
                 type="submit"                                                                                              
-                >Criar</button>                
+                >Postar questão</button>                
             </div>
         </div>
+      </div>
 </form>
      
         
