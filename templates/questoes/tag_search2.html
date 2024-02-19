@@ -1,14 +1,13 @@
-
 {% if results %}
 <div class="columns is-gapless is-multiline is-mobile">
 {% for tag in results %}
     <div class="column is-11"
         x-cloak
         x-data="{ checked: false,}"
-        x-init="checked = minhalista.includes('{{ tag }}')">
+        x-init="checked = minhalista2.includes('{{ tag }}')">
         <a class="panel-block"
-            hx-post={% url 'selecionar_desselecionar' tag=tag %}
-            hx-target="#tags_selected"
+            hx-post={% url 'selecionar_desselecionar2' tag=tag %}
+            hx-target="#tags_selected2"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
             hx-trigger="click"
             x-on:click="checked = !checked"
@@ -22,10 +21,10 @@
     </div>
     <div class="column is-1">
         <button class="button is-info is-small is-fullwidth is-focused"
-            hx-get="{%url 'tag_edicao'%}"
+            hx-get="{%url 'tag_edicao2'%}"
             hx-vals='{"tag" : "{{ tag }}"}'
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-            hx-target="#editar-tag-modal"
+            hx-target="#editar-tag-modal2"
             x-cloak
             @click.stop="modaltageditopen = !modaltageditopen"
             >

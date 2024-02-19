@@ -1,0 +1,47 @@
+<div class="panel-tabs-scrollable">
+  
+    <p class="panel-tabs">
+      {% if quantidade_tags_por_categoria|length > 0 %}
+        <button class="button is-info is-small is-outlined is-responsive"
+        hx-get="{% url 'lista_tags2' %}"
+        hx-vals='{"espaco": "{{espaco.id}}","categoria": "all"}'        
+        hx-target="#tag_selection2"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-trigger="click"
+        hx-swap="innerHTML"
+        >
+        
+        <span class="icon">
+          <i class="fa-regular fa-square-check"></i>
+        </span>
+          <p>All</p>
+          <p>({{quantidade_total_tags}})</p>
+          <span class="icon">
+            <i class="fa-solid fa-caret-down"></i>
+          </span>
+        </button>
+          {% for tag in quantidade_tags_por_categoria %}                    
+            <button class="button is-info is-small is-outlined is-responsive"
+            hx-get="{% url 'lista_tags2' %}"
+            hx-vals='{"espaco": "{{espaco.id}}","categoria": "{{tag.category}}"}'            
+            hx-target="#tag_selection2"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            hx-trigger="click"
+            hx-swap="innerHTML"
+            >
+            
+            <span class="icon">
+              <i class="fa-regular fa-square-check"></i>
+            </span>
+          <p>{{ tag.category }}</p>
+          <p>({{ tag.quantidade_tags }})</p>
+          <span class="icon">
+            <i class="fa-solid fa-caret-down"></i>
+          </span>
+            </button>
+          {% endfor %}
+      {% else %}
+        <p>Você não possui nenhuma tag adicionada</p>
+      {% endif %}
+    </p>
+  </div> 

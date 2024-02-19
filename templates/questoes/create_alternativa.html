@@ -1,0 +1,34 @@
+<form class="form" name="form"
+      hx-get = {{request.path}}
+      hx-trigger="submit"
+      hx-target="#alternativa_create"
+      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+      >
+<div class="control">
+    <div class="columns is-mobile ">
+        <div class="column is-10">
+            <textarea class="textarea is-primary is-fullwidth"
+                    rows="1"
+                    placeholder=""
+                    name="text"
+                    >
+            </textarea>
+        </div>
+        <div class="column is-narrow" style="width: 20px;">
+            <label class="checkbox" >
+                <input type="checkbox" name="correct">                
+            </label>
+        </div>
+        <div class="column">
+            <p>Correta</p>
+        </div>
+        <div class="column">
+            <button id="botao_remover" type="button" class="button is-danger" hx-on="click: this.closest('form').remove()">Remover</button>
+        </div>
+    </div>
+  {% if form.text.errors %}
+      <p class="help is-danger">{{ form.text.errors|first }}</p>
+  {% endif %}    
+</div>
+</form>
+

@@ -2,7 +2,7 @@
 {% with WIDGET_ERROR_CLASS='is-invalid' %}
 <div class="modal" x-bind:class="modaltagopen ? 'is-active' : ''" @taglistcreated="modaltagopen = false" @taglistchangededit="modaltagopen = false" @taglistchangeddelete="modaltagopen = false">
     <div class="modal-background" ></div>
-    <div class="modal-content has-background-white py-5 px-5" id="tag-modal" @click.stop.outside="modaltagopen = false">
+    <div class="modal-content has-background-white py-5 px-5" id="tag-modal2" @click.stop.outside="modaltagopen = false">
 
         <div class="box">
             
@@ -12,7 +12,7 @@
             <form class="form" name="form"        
             hx-post = {{request.path}} 
             hx-trigger="submit"            
-            hx-target="#tag-modal"                                                  
+            hx-target="#tag-modal2"                                                  
             
             >
                 {% csrf_token %}
@@ -22,12 +22,12 @@
                     <label class="label is-size-5">Categoria</label>
                     <p class="is-size-6">Selecione uma categoria ou escreva uma nova:</p>
                     <div class="control has-icons-left">
-                        <input class="input is-primary" id="modal-tag-category-form"                        
+                        <input class="input is-primary" id="modal-tag-category-form2"                        
                                type="text"
                                placeholder="Digite para pesquisar..."
                                name="category"
-                               hx-post="{% url 'search_category' %}"
-                               hx-target='#category_selection'
+                               hx-post="{% url 'search_category2' %}"
+                               hx-target='#category_selection2'
                                hx-vals='{"espaco": "{{espaco_desejado.id}}"}'
                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                                hx-trigger="keyup changed delay:500ms"                                                                                            
@@ -38,9 +38,10 @@
                         {% if form.category.errors %}
                         <p class="help is-danger">{{ form.category.errors|first }}</p>
                         {% endif %}
+                               
                     </div>
                 </div>
-                <div id="category_selection">
+                <div id="category_selection2">
                 </div>
 
                 <div class="field">

@@ -10,6 +10,22 @@
         <script src="{% static 'js/all.min.js' %}"></script>
         <link href="{% static 'css/all.min.css' %}" rel="stylesheet">       
         <link rel="stylesheet" href="{% static 'css/bulma.min.css' %}">
+        <style>
+            #tag_selection, #tags_selected, #tag_selection2, #tags_selected2 {
+              max-height: 300px; /* Adjust this height as needed */
+              overflow-y: auto;  /* Enable vertical scrollbar */
+          }
+          .panel-tabs-scrollable {
+            overflow-x: auto;
+            white-space: nowrap;
+            text-align: center;
+          }
+          
+          .panel-tabs {
+            display: inline-block;
+            white-space: nowrap;
+          }
+          </style>
     </head>
     <body>
         <div id="div para incluir modais" 

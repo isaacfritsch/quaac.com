@@ -130,19 +130,46 @@ def lista_tags(request):
             'nomes_tags': sorted(nomes_tags)
         }
         return render(request, 'espaco/lista_tags.html', context)
+    
+def selecionar_desselecionar(request, tag):
+
+    selected_tags = request.session['selected_tags']
+    #caso de criar tag
+    if tag in selected_tags:
+        selected_tags.remove(tag)
+    else:
+        selected_tags.append(tag)    
+
+    tag_obj = Tag.objects.get(name=tag)      
+    espaco = tag_obj.space
+    espaco_desejado = Espaco.objects.get(title=espaco.title)
+    categoria = tag_obj.category
+
+
+    request.session['selected_tags'] = selected_tags
+    selected_tags_json = json.dumps(request.session['selected_tags'])
+
+
+    
+
+    # Add HX-Trigger to the response
+    response = HttpResponse(status=204)
+    response["Hx-Trigger"] = json.dumps({"selecionardesselecionar": json.dumps({"espaco": espaco_desejado.id, "categoria": categoria}),
+                                        "eventupdateselectedtags": {"selected_tags_json": selected_tags_json}
+                                                 })
+    return response
 
 def processar_tags(request, tag):
 
     selected_tags = request.session['selected_tags']
     #caso de criar tag
-    if tag not in selected_tags:
-        selected_tags.append(tag)
-    else:
+    if tag in selected_tags:
         selected_tags.remove(tag)
+    else:
+        selected_tags.append(tag)
 
 
-    if None in selected_tags:
-        selected_tags.remove(None)
+    
 
     tag_obj = Tag.objects.get(name=tag)      
     espaco = tag_obj.space

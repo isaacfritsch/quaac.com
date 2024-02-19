@@ -29,3 +29,21 @@ class QuestaoForm(forms.ModelForm):
         self.fields['current_answer'].required = False
         self.fields['times_solved'].required = False
         self.fields['tags'].required = True
+        
+class AlternativaForm(forms.ModelForm):   
+
+    class Meta:
+        model = Alternativa
+        fields = ['question', 'text', 'correct']
+        widgets = {
+        'question': forms.HiddenInput(),        
+        }
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        self.fields['question'].required = False
+        self.fields['text'].required = True
+        self.fields['correct'].required = True
+        
