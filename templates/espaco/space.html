@@ -3,11 +3,13 @@
 <div id="selectedTagsData" style="display: none;">
   {{ selected_tags_json }}
 </div>
+
 <script type="text/javascript">
   function updateMinhalista(updatedData) {
     window.minhalista = JSON.parse(updatedData);
 
 }
+
 
   document.addEventListener('eventupdateselectedtags', function(evt) {
     updateMinhalista(evt.detail.selected_tags_json)
@@ -16,7 +18,8 @@
   window.addEventListener('load', function(evt) { 
     selectedTagsJson = document.getElementById('selectedTagsData').textContent;
     updateMinhalista(selectedTagsJson);    
-});
+});  
+
 </script>
 
 <!-- Modal tag-->
@@ -108,7 +111,7 @@
         <span class="icon is-left">
           <i class="fas fa-search" aria-hidden="true"></i>
         </span>
-      </p>      
+      </p>
     </div>
     <div hx-get="{% url 'lista_categorias' %}"
     hx-vals='{"espaco": "{{espaco.id}}"}'

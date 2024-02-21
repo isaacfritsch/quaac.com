@@ -2,9 +2,9 @@ from django.db import models
 from django.conf import settings
 from autoslug import AutoSlugField
 from espaco.models import Espaco, Tag
-from ckeditor.fields import RichTextField
 
-class Questao(models.Model):    
+
+class Questao(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
@@ -13,15 +13,15 @@ class Questao(models.Model):
         Espaco,
         on_delete=models.CASCADE,
     )
-    body = RichTextField()
-    current_answer = RichTextField(default=None, blank=True)
+    body = models.TextField()
+    current_answer = models.TextField(default=None, blank=True)
     times_solved = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag)
-    
-    
+
+
 class Alternativa(models.Model):
     question = models.ForeignKey(
-        Questao, 
+        Questao,
         on_delete=models.CASCADE)
-    text = RichTextField()
+    text = models.TextField()
     correct = models.BooleanField(default=False)

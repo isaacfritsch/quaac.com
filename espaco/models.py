@@ -32,7 +32,7 @@ class Tag(models.Model):
     )
     name = models.CharField(max_length=45, unique=False)  
     
-    category = models.CharField(max_length=255)  
+    category = models.CharField(max_length=255)
     
     def __str__(self):
         return self.name

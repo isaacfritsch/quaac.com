@@ -380,6 +380,7 @@ def tag_edicao(request):
 
 
         error_messages = form.errors
+        print(form.errors)
         return render(request, 'espaco/tag_modal_edit.html', {'form': form, 
                                                          'error_messages': error_messages,
                                                          'espaco_desejado': espaco_desejado, 

@@ -2,243 +2,32 @@
 {%block content%}
 {% load widget_tweaks %}
 {% with WIDGET_ERROR_CLASS='is-invalid' %}
-
 <div id="selectedTagsData2" style="display: none;">
   {{ selected2_tags_json }}
 </div>
-
-<script type="text/javascript">
+<script>
   function updateMinhalista2(updatedData) {
     window.minhalista2 = JSON.parse(updatedData);
-
-}
-
-  document.addEventListener('eventupdateselectedtags', function(evt) {
+  
+  }
+  
+  document.addEventListener('eventupdateselectedtags2', function(evt) {
     updateMinhalista2(evt.detail.selected2_tags_json)
-});
-
+  });
+  
   window.addEventListener('load', function(evt) { 
     selectedTagsJson2 = document.getElementById('selectedTagsData2').textContent;
     updateMinhalista2(selectedTagsJson2);    
-});
+  });
 </script>
 
 <div id="modal-tag2">
 </div>
 <div id="editar-tag-modal2">
 </div>
-
-<div class="block" style="margin: 1.5rem;">
-  <h1 class="title is-3">Revise a questão antes de postá-la</h1>
+<div>
+{% include 'questoes/create_question_form.html' %}
 </div>
-
-
-<form class="form" name="form"
-hx-post = {{request.path}}
-hx-trigger="submit"
-hx-target="#question_create"
-hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
->
-    {% csrf_token %}
-    <div class="box" style="margin: 1.5rem;">
-      <article class="message is-info">
-        <div class="message-header">
-          <p>Atenção!</p>
-        </div>
-        <div class="message-body">
-          <div class="columns is-mobile is-gapless">
-            <div class="column is-narrow">
-              <div class="control" style="width: 20px;">
-                {% render_field form.confirm class="checkbox" placeholder="" name="confirm"%}
-              </div>
-            </div>
-            <div class="column">
-              <p class="has-text-black ">
-                Confirme que não existe essa questão no espaço {{espaco.title}}
-              </p>
-            </div>
-              {% if form.confirm.errors %}
-                  <p class="help is-danger">{{ form.confirm.errors|first }}</p>
-              {% endif %}
-          </div>
-        </div>
-      </article>
-    </div>
-
-    
-    <nav class="panel is-dark" style="margin: 1.5rem;">
-      <div class="panel-heading">
-        <div class="columns is-mobile">
-          <div class="column">
-            <p class="is-size-5" style="font-weight: normal;">
-            Selecione as tags que melhor identifiquem a questão
-            </p>
-          </div>
-          <div class="column is-narrow">
-            <div class="buttons is-right">
-              <button class="button is-info"
-              hx-get="{% url 'tag_creation2' espaco=espaco.id %}"             
-              hx-target="#modal-tag2"
-              hx-trigger="click"
-              x-cloak
-              @click.stop="modaltagopen = !modaltagopen">
-              <span class="icon is-small">
-                <i class="fa-solid fa-circle-plus"></i>
-              </span>
-              <p>Criar nova tag</p></button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="panel-block has-background-success has-text-white p-2 has-border-success"
-        x-cloak
-        x-show="successmessage"
-        @taglistcreated.window = "successmessage = !successmessage"
-        @taglistcreated.window.debounce.3000ms="successmessage = !successmessage"
-        @taglistchangededit.window = "successmessage = !successmessage"
-        @taglistchangededit.window.debounce.3000ms="successmessage = !successmessage"
-        @taglistchangeddelete.window = "successmessage = !successmessage"
-        @taglistchangeddelete.window.debounce.3000ms="successmessage = !successmessage"
-        >
-        <span class="icon">
-          <i class="fa-solid fa-circle-check"></i>
-        </span>
-        <p>Alterações salvas com sucesso!</p>
-      </div>
-      <div class="panel-block">
-        <p class="control has-icons-left">
-          <input class="input is-primary"
-            type="text"
-            placeholder="Pesquisar entre todas as tags"
-            hx-post="{% url 'search_tag2' %}"
-            hx-target='#tag_selection2'
-            hx-vals='{"espaco": "{{espaco.id}}"}'
-            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-            hx-trigger="keyup changed delay:500ms"
-            name="search"
-            hx-swap="innerHTML"
-            >
-          <span class="icon is-left">
-            <i class="fas fa-search" aria-hidden="true"></i>
-          </span>
-        </p>
-      </div>
-              <div hx-get="{% url 'lista_categorias2' %}"
-              hx-vals='{"espaco": "{{espaco.id}}"}'
-              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-              hx-trigger="load, taglistcreated from:window, taglistchangededit from:window, taglistchangeddelete from:window"
-              hx-swap="innerHTML"
-              hx-target="#categoria_lista2"
-              >
-              </div>
-              <div id="categoria_lista2">
-              </div>
-              <br>
-
-              {% comment %} Atualiza o tags_selecionadas {% endcomment %}
-              <div hx-get="{% url 'update_tags_selecionadas2' %}"
-              hx-target="#tags_selected2"
-              hx-trigger="taglistchangededit from:body, taglistchanged from:body, taglistchangeddelete from:body, selecionardesselecionar from:body">
-              </div>
-
-              {% comment %} Atualiza o lista_tags para a categoria que foi criada ou editada ou deletada {% endcomment %}
-              <div hx-get="{% url 'lista_tags2' %}"
-                  hx-vals='js:{"total": event.detail.value}'
-                  hx-target="#tag_selection2"
-                  hx-trigger="taglistcreated from:body, taglistchangededit from:body, taglistchangeddelete from:body, taglistchanged from:body">
-              </div>
-              
-          
-              <div class="columns is-gapless is-multiline is-mobile">
-                <div class="column is-7">
-                  <div id="tag_selection2">
-                  </div>
-                </div>
-        <div class="column is-5">
-          <div class="box"> 
-            <div id="tags_selected2">
-            {% include 'questoes/tags_selecionadas2.html' %} 
-            </div>   
-          </div>
-        </div>
-      </div>
-    </nav>
-    
-
-    <div class="box">      
-      <div class="field">
-        <label class="label is-size-5">Enunciado</label>
-        <div class="control">
-          <textarea class="textarea is-primary is-fullwidth"
-                    rows="10"
-                    placeholder=""
-                    name="body">
-          </textarea>
-        {% if form.body.errors %}
-            <p class="help is-danger">{{ form.body.errors|first }}</p>
-        {% endif %}
-        </div>
-      </div>
-    </div>
-    
-      <div class="box">
-          <label class="label is-size-5">Alternativas</label>
-          <div class="columns is-mobile">
-            <div class="column ">
-              <article class="message is-dark">              
-                <div class="message-body">
-                  Insira alternativas apenas se a questão for de <strong>múltipla escolha</strong>!
-                </div>
-              </article>
-            </div>
-            <div class="column is-narrow">
-              <div class="block">
-              <button class="button is-info"
-              hx-get="{% url 'create_alternativa' %}"
-              hx-target='#alternativas_criadas'
-              hx-trigger="click"
-              name="alternativa"
-              hx-swap="beforeend"                        
-              >
-              <span class="icon is-small">
-                <i class="fa-solid fa-circle-plus"></i>
-              </span>
-              <p>Adicionar nova alternativa</p></button>
-              </div>
-            </div>
-          </div>
-          
-          <div id="alternativas_criadas"></div>
-      </div>
-        
-    <div class="box">
-      <div class="field">
-        <label class="label is-size-5">Resolução</label>
-        <p class="is-size-6">Caso não tenha a resolução dessa questão você ainda poderá submetê-la, outros usuários poderão adicionar uma resolução!</p>
-        <div class="control">
-          <textarea class="textarea is-primary is-fullwidth"
-                    rows="10"
-                    placeholder=""
-                    name="current_answer">
-          </textarea>
-        {% if form.current_answer.errors %}
-            <p class="help is-danger">{{ form.current_answer.errors|first }}</p>
-        {% endif %}            
-        </div>      
-      </div>
-    </div>
-      <div class="block" style="margin: 1.5rem;">
-        <div class="field">
-            <div class="control">
-                <button class="button is-info"
-                type="submit"                                                                                              
-                >Postar questão</button>                
-            </div>
-        </div>
-      </div>
-</form>
-     
-        
  
 {% endwith %}
 

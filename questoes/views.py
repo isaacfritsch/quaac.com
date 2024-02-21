@@ -4,7 +4,7 @@ import ast
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from django.http import HttpResponse
+from django.http import HttpResponse, QueryDict
 from urllib.parse import unquote
 from django.db.models import Count, Q
 from django.urls import reverse
@@ -18,52 +18,7 @@ from django.views.generic.list import ListView
 from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
 from django.core.paginator import Paginator
 
-def question_create(request, espaco):
 
-    espaco_desejado = Espaco.objects.get(title=espaco)
-    
-    request.session['selected_tags_questoes'] = []
-
-    if request.method == 'POST':
-
-        # create a form instance and populate it with data from the request:
-        form = QuestaoForm(request.POST)        
-                
-        
-        error_messages = form.errors                 
-        
-        # check whether it's valid:
-        if form.is_valid():
-            nomes_tags = Tag.objects.filter(space=espaco_desejado.id).values_list('name', flat=True)
-        
-            if form.instance.name in nomes_tags:            
-                form.add_error('name', 'Essa tag já existe. Escolha outro nome.')
-                error_messages = form.errors
-                return render(request, 'questoes/create_question.html', {'form': form, 
-                                                         'error_messages': error_messages,
-                                                         'espaco_desejado': espaco_desejado,                                                                                                                  
-                                                         })
-            form.instance.space = espaco_desejado
-            form.instance.user = request.user
-            tag_instance = form.save(commit=False)
-            tag_instance.save()
-            
-            response = HttpResponse(status=204)            
-            return response
-        
-        return render(request, 'questoes/create_question.html', {'form': form, 
-                                                         'error_messages': error_messages,
-                                                         'espaco_desejado': espaco_desejado,                                                                                                                  
-                                                         })
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        
-        form = QuestaoForm()        
-
-
-    return render(request, 'questoes/create_question.html', {'form': form,                                                     
-                                                     'espaco': espaco_desejado,})
     
 def tag_creation2(request, espaco):
     
@@ -184,7 +139,7 @@ def processar_tags2(request, tag):
     # Add HX-Trigger to the response
     response = HttpResponse(status=204)
     response["Hx-Trigger"] = json.dumps({"taglistchanged": json.dumps({"espaco": espaco_desejado.id, "categoria": categoria}),
-                                        "eventupdateselectedtags": {"selected2_tags_json": selected2_tags_json}
+                                        "eventupdateselectedtags2": {"selected2_tags_json": selected2_tags_json}
                                                  })
     return response
 
@@ -247,7 +202,7 @@ def tag_edicao2(request):
             
             response = HttpResponse(status=204)
             response["Hx-Trigger"] = json.dumps({"taglistchangededit": json.dumps({"espaco": espaco_desejado.id, "categoria": form.instance.category}),
-                                                 "eventupdateselectedtags": {"selected2_tags_json": selected2_tags_json}
+                                                 "eventupdateselectedtags2": {"selected2_tags_json": selected2_tags_json}
                                                  })
             return response
 
@@ -348,7 +303,7 @@ def selecionar_desselecionar2(request, tag):
     # Add HX-Trigger to the response
     response = HttpResponse(status=204)
     response["Hx-Trigger"] = json.dumps({"selecionardesselecionar": json.dumps({"espaco": espaco_desejado.id, "categoria": categoria}),
-                                        "eventupdateselectedtags": {"selected2_tags_json": selected2_tags_json}
+                                        "eventupdateselectedtags2": {"selected2_tags_json": selected2_tags_json}
                                                  })
     return response
 
@@ -374,17 +329,170 @@ def botao_tag_confirmar_deletar2(request):
         
         response = HttpResponse(status=204)
         response["Hx-Trigger"] = json.dumps({"taglistchangeddelete": json.dumps({"espaco": espaco_desejado.id, "categoria": categoria}),
-                                                 "eventupdateselectedtags": {"selected2_tags_json": selected2_tags_json}
+                                                 "eventupdateselectedtags2": {"selected2_tags_json": selected2_tags_json}
                                                  })
         return response
     
 def create_alternativa(request):
     
-    if request.method == 'GET':
+        
+    if request.method == 'GET': 
+        
+        espaco = request.GET.get("espaco")      
+        
+        espaco_desejado = Espaco.objects.get(title=espaco)
 
-        form = AlternativaForm()
+        form_alternativa = AlternativaForm()
 
-        return render(request, 'questoes/create_alternativa.html', {'form': form})
+        return render(request, 'questoes/create_alternativa.html', {'form_alternativa': form_alternativa,
+                                                                    'espaco': espaco_desejado})
+        
+    if request.method == 'POST':
+        
+        question_data = request.POST.get("question")
+        text_data = request.POST.get("text")
+        
+        question_literal = ast.literal_eval(question_data)
+                
+        question_id = question_literal["question.id"]        
+        
+        question = Questao.objects.get(id=question_id)
+        
+        if any(key.startswith('correct') for key in request.POST.keys()):
+            correct = True
+        else:
+            correct = False
+            
+        new_post_data = {
+                        'text': text_data,
+                        'question': question,
+        }
+            
+        request.POST = QueryDict('', mutable=True)
+        request.POST.update(new_post_data)
+
+        # Set the question on the form instance
+        form_alternativa = AlternativaForm(request.POST)        
+        print(form_alternativa.errors)    
+        if form_alternativa.is_valid():
+            alternativa = form_alternativa.save(commit=False)
+            alternativa.question = question
+            alternativa.text = text_data
+            if correct == True:
+                alternativa.correct = True
+
+            
+
+            form_alternativa.save()
+            
+            print("DEU TUDO CERTO")
+            response = HttpResponse(status=204)
+                
+            return response
+        print("DEU TUDO ERRADO")
+        response = HttpResponse(status=204)
+                
+        return response
+                        
+            
+        # return render(request, 'questoes/create_question_form.html', {'form_alternativa':form_alternativa,                                                                                                               
+        #                                                 'espaco': espaco_desejado,                                                                                                                  
+        #                                                  }) 
+                
+                                        
+    
+def question_create(request, espaco):
+
+    espaco_desejado = Espaco.objects.get(title=espaco)   
+
+    if request.method == 'POST':
+        
+        form_questao = QuestaoForm(request.POST)        
+        
+        
+        if not any(key.startswith('confirm_multipla_escolha') for key in request.POST.keys()):    
+            #QUESTÃO DISCURSIVA   
+            if request.session['selected_tags_questoes'] == []:
+                form_questao.add_error('tags', 'A questão precisa ter pelo menos uma tag selecionada')
+                
+                return render(request, 'questoes/create_question_form.html', {'form_questao': form_questao,                                                                                                                
+                                                            'espaco': espaco_desejado,                                                                                                                  
+                                                            })          
+
+
+            # check whether it's valid:
+            if form_questao.is_valid():
+                
+                question = form_questao.save(commit=False)  # Create instance, don't save yet
+                question.user = request.user
+                question.space = espaco_desejado  # Assign the "espaco"            
+                tags = request.session['selected_tags_questoes']      
+                
+                    
+                question.save()  # Now save to the database  
+                
+                question_obj = Questao.objects.get(id=question.id)
+                
+                for tag_name in tags:
+
+                    tag_obj = Tag.objects.get(name=tag_name, space=espaco_desejado.id)
+
+                    question_obj.tags.add(tag_obj)
+
+                response = HttpResponse(status=204)
+                
+                return response
+            
+            return render(request, 'questoes/create_question_form.html', {'form_questao': form_questao,                                                                                                                                                                         
+                                                        'espaco': espaco_desejado,                                                                                                                  
+                                                         })
+        else:
+            #QUESTÃO MÚLTIPLA ESCOLHA
+            if request.session['selected_tags_questoes'] == []:
+                form_questao.add_error('tags', 'A questão precisa ter pelo menos uma tag selecionada')
+                
+                return render(request, 'questoes/create_question_form.html', {'form_questao': form_questao,                                                                                                                
+                                                            'espaco': espaco_desejado,                                                                                                                  
+                                                            })          
+
+
+            # check whether it's valid:
+            if form_questao.is_valid():
+                
+                question = form_questao.save(commit=False)  # Create instance, don't save yet
+                question.user = request.user
+                question.space = espaco_desejado  # Assign the "espaco"            
+                tags = request.session['selected_tags_questoes']      
+                
+                    
+                question.save()  # Now save to the database  
+                
+                question_obj = Questao.objects.get(id=question.id)
+                
+                
+                for tag_name in tags:
+
+                    tag_obj = Tag.objects.get(name=tag_name, space=espaco_desejado.id)
+
+                    question_obj.tags.add(tag_obj)
+                
+                
+                return HttpResponse(status=204, headers={
+                    'HX-Trigger': json.dumps({"questioncreatedmultiplechoses": json.dumps({"question.id": question.id})})})
+            
+            return render(request, 'questoes/create_question_form.html', {'form_questao': form_questao,                                                                                                                                                                         
+                                                        'espaco': espaco_desejado,                                                                                                                  
+                                                         })
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        
+        form_questao = QuestaoForm()
+        
+    request.session['selected_tags_questoes'] = []     
+
+
+    return render(request, 'questoes/create_question.html', {'form_questao': form_questao,                                                                                                                  
+                                                     'espaco': espaco_desejado,})
 
 
 
