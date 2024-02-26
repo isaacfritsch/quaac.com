@@ -4,6 +4,7 @@ from autoslug import AutoSlugField
 from espaco.models import Espaco, Tag
 
 
+
 class Questao(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

@@ -1,18 +1,24 @@
 {% load widget_tweaks %}
-<form class="form" name="form_alternativa"
-      hx-post = "{% url 'create_alternativa' %}"
+
+
+<form class="form" name="form_alternativa" class="form_alternativa"
+      hx-post = "{% url 'create_alternativa' espaco=espaco.title %}"
       hx-vals='js:{"question": event.detail.value}'
-      hx-trigger="questioncreatedmultiplechoses from:window,"      
+      hx-trigger="questioncreatedmultiplechoses from:window,"
       hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+           
       >
       
 <div class="control">
-    <div class="columns is-mobile">
+    {% if form_questao.text.errors %}
+          <p class="help is-danger">{{ form_questao.text.errors|first }}</p>
+    {% endif %} 
+    <div class="columns is-mobile has-background-info-light">
         <div class="column is-9">
-            <textarea class="textarea" name="text"></textarea>            
+            {% render_field form_alternativa.text  style=" height: 291px;" name="text"%}            
         </div>
         <div class="column is-narrow" style="width: 20px;">
-            <label class="checkbox" >
+            <label class="checkbox">
                 <input type="checkbox" name="correct">
             </label>
         </div>
@@ -22,7 +28,9 @@
         <div class="column is-1">
             <button id="botao_remover" type="button" class="button is-info" hx-on="click: this.closest('form').remove()">Remover</button>
         </div>
-    </div>    
+        
+    </div>
 </div>
+<hr>
 </form>
 

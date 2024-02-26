@@ -16,5 +16,6 @@ urlpatterns = [
     path('update_tags_selecionadas2/', views.update_tags_selecionadas2, name='update_tags_selecionadas2'),
     path('selecionar_desselecionar2/<str:tag>/', views.selecionar_desselecionar2, name='selecionar_desselecionar2'),
     path('botao_tag_confirmar_deletar2/', views.botao_tag_confirmar_deletar2, name='botao_tag_confirmar_deletar2'),
-    path('create_alternativa/', views.create_alternativa, name='create_alternativa'),        
+    path('create_alternativa/<str:espaco>/', views.create_alternativa, name='create_alternativa'),
+    path('questao/<str:question>/', views.questao, name='questao'),        
 ]

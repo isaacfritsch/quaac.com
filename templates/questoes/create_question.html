@@ -5,7 +5,7 @@
 <div id="selectedTagsData2" style="display: none;">
   {{ selected2_tags_json }}
 </div>
-<script>
+<script defer>
   function updateMinhalista2(updatedData) {
     window.minhalista2 = JSON.parse(updatedData);
   
@@ -18,14 +18,14 @@
   window.addEventListener('load', function(evt) { 
     selectedTagsJson2 = document.getElementById('selectedTagsData2').textContent;
     updateMinhalista2(selectedTagsJson2);    
-  });
+  });  
 </script>
 
 <div id="modal-tag2">
 </div>
 <div id="editar-tag-modal2">
 </div>
-<div>
+<div id="forms-container">
 {% include 'questoes/create_question_form.html' %}
 </div>
  
