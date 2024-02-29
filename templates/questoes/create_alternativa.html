@@ -1,36 +1,30 @@
 {% load widget_tweaks %}
-
-
-<form class="form" name="form_alternativa" class="form_alternativa"
-      hx-post = "{% url 'create_alternativa' espaco=espaco.title %}"
-      hx-vals='js:{"question": event.detail.value}'
-      hx-trigger="questioncreatedmultiplechoses from:window,"
-      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-           
-      >
-      
-<div class="control">
-    {% if form_questao.text.errors %}
-          <p class="help is-danger">{{ form_questao.text.errors|first }}</p>
-    {% endif %} 
-    <div class="columns is-mobile has-background-info-light">
-        <div class="column is-9">
-            {% render_field form_alternativa.text  style=" height: 291px;" name="text"%}            
-        </div>
-        <div class="column is-narrow" style="width: 20px;">
-            <label class="checkbox">
-                <input type="checkbox" name="correct">
-            </label>
-        </div>
-        <div class="column is-1">
-            <p>Alternativa correta</p>
-        </div>
-        <div class="column is-1">
-            <button id="botao_remover" type="button" class="button is-info" hx-on="click: this.closest('form').remove()">Remover</button>
-        </div>
+    <section class="section" style=" padding-top:0px" name="form_form_form">
         
-    </div>
-</div>
-<hr>
-</form>
+        
+        <div class="columns is-mobile has-background-info-light">
+            <div class="column is-9">
+                <div class="form_form">  {% comment %}  VERY important class  {% endcomment %}
+                
+                {{ form_alternativa.management_form }}
+                {{ form_alternativa.0.text  }}                
+                </div>
+            </div>            
+            <div class="column is-narrow" style="width: 20px;">
+                <label class="checkbox">
+                    {{form_alternativa.0.correct  }}
+                </label>
+                
+            </div>
+            <div class="column is-1">
+                <p>Alternativa correta</p>
+            </div>
+            <div class="column is-1">
+                <button id="botao_remover" type="button" class="button is-info" hx-on="click: this.closest('section').remove()">Remover</button>
+            </div>
+        
+        </div>              
+    </section>
+    
+
 

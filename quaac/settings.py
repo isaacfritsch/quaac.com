@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'users',
     'widget_tweaks',
     'questoes', 
-    'django_summernote',          
+    'django_summernote',           
 ]
 
 
@@ -141,6 +141,8 @@ LOGIN_REDIRECT_URL = "/"
 
 LOGOUT_REDIRECT_URL = "/"
 
+
+
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 SUMMERNOTE_CONFIG = {
@@ -154,9 +156,19 @@ SUMMERNOTE_CONFIG = {
         'height': '291',
         'width': '100%',
         
+        'toolbar': [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['fullscreen', 'codeview', 'help']],
+        ],
+        
     } 
 }
-
 
 
 

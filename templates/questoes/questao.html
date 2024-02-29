@@ -6,7 +6,7 @@
         
         <div class= "column">
         <div class="box">
-            <div class="columns is-mobile">
+            <div class="columns is-mobile has-background-white-ter">
                 <div class="column is-narrow">
                     <a href="" style=" width : 20px" > {{ question.id }}</a>
                 </div>
@@ -35,7 +35,7 @@
             </div>
             <hr>
         <div class="content">
-            <p>{{ question.body | safe }}</p>
+            <div>{{ question.body|safe }}</div>
         </div>
 
         {% if alternativas %}
@@ -43,7 +43,7 @@
                 <div class="block" style="text-align:left">
             {% for alternativa in alternativas %}
                 <div class="column is-full">
-                    <button class="button is-outlined is-responsive is-fullwidth left-align-text" >{{ alternativa.text | safe }}</button>
+                    <div  >{{ alternativa.text|safe }}</div>
                 </div>
             {% endfor %}
                 </div>

@@ -1,20 +1,32 @@
 {% load widget_tweaks %}
 {% with WIDGET_ERROR_CLASS='is-invalid' %}
 <script defer>
-  function validateForm() {
-    textInputs = document.getElementsByName("text");
+ function validateForm(event) {
     
-    const errorMessageDiv = document.getElementById("error_message_text");
-    for (input of textInputs) {          
-        if (input.value === "") {              
+  if (event.detail.elt.id === 'form_question') {
+    fields = document.querySelectorAll('.new_class');
+    errorMessageDiv = document.getElementById("error_message_text");
+    console.log(fields.length);
+    
+    
+    for (field of fields) {
+        console.log(field)
+        summernoteTextarea = field.previousElementSibling;
+        console.log(summernoteTextarea)
+        console.log(field.value)
+                  
+        if (field.value === "") {              
             errorMessageDiv.textContent = "Erro! Pelo menos uma alternativa está em branco"
+            console.log("ERRO")
+            event.preventDefault();
             return false; 
         }
     }
     errorMessageDiv.textContent = "";
-    return true; 
-}
-
+    console.log("SUCESSO!")
+    return true;
+  }
+} 
   function submitForms() {
     textInputs = document.getElementsByName("text");
     for (text of textInputs) {
@@ -23,16 +35,12 @@
   }
 
 </script>
-{% comment %} <div
-hx-get = "{% url 'questao' espaco=espaco.title %}"
-hx-vals='js:{"question": event.detail.value}'
-hx-trigger="questioncreatedmultiplechoses from:window,">
-</div> {% endcomment %}
 
-<form class="form" 
+
+<form class="form"
 name="form_questao" 
 id="form_question"
-onsubmit="return validateForm()"
+hx-vals='js:{totalForms: document.querySelectorAll(".form_form").length}'
 hx-post = {{request.path}}
 >
     {% csrf_token %}
@@ -175,7 +183,10 @@ hx-post = {{request.path}}
             <p class="help is-danger is-size-5">{{ form_questao.body.errors|first }}</p>
         {% endif %}
         <div class="control" required>
-          {% render_field form_questao.body  style=" height: 291px;" name="body" %}        
+          
+          {% render_field form_questao.body  style=" height: 291px;" name="body" %}
+          
+                  
         
         </div>
       </div>
@@ -206,6 +217,7 @@ hx-post = {{request.path}}
               hx-target='#alternativas_criadas'
               hx-trigger="click"
               name="alternativa"
+              hx-vals='js:{totalForms: document.querySelectorAll(".form_form").length}'
               hx-swap="beforeend"                                     
               >
               <span class="icon is-small">
@@ -239,8 +251,7 @@ hx-post = {{request.path}}
               <div class="control">
                   <button class="button is-info"
                   type="submit"
-                  value="Submit"
-                  id="submit-all"                                                                                                               
+                  value="Submit"                                                                                                                                
                   >SALVAR</button>                
               </div>
           </div>
