@@ -21,5 +21,6 @@ urlpatterns = [
     path('lista_categorias/', views.lista_categorias, name='lista_categorias'),
     path('tag_edicao/', views.tag_edicao, name='tag_edicao'),
     path('botao_tag_confirmar_deletar/', views.botao_tag_confirmar_deletar, name='botao_tag_confirmar_deletar'),      
-    path('update_tags_selecionadas/', views.update_tags_selecionadas, name='update_tags_selecionadas'),      
+    path('update_tags_selecionadas/', views.update_tags_selecionadas, name='update_tags_selecionadas'),
+    path('ultimas_questoes_adicionadas/', views.ultimas_questoes_adicionadas, name='ultimas_questoes_adicionadas'),      
 ]

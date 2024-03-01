@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'users',
     'widget_tweaks',
     'questoes', 
-    'django_summernote',           
+    'django_summernote',          
 ]
 
 
@@ -141,9 +141,11 @@ LOGIN_REDIRECT_URL = "/"
 
 LOGOUT_REDIRECT_URL = "/"
 
-
-
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+
+
+
 
 SUMMERNOTE_CONFIG = {
     'iframe': True,   
@@ -169,6 +171,9 @@ SUMMERNOTE_CONFIG = {
         
     } 
 }
+
+
+
 
 
 

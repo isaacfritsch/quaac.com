@@ -152,7 +152,50 @@
     </div>
   </nav>
 </div>
+<div class="container is-flex is-justify-content-center" style=" padding-top:1.5rem;padding-botton:1.5rem;">
+  <button class="button is-black  is-outlined is-responsive"
+  hx-get="{% url 'ultimas_questoes_adicionadas' %}"
+  hx-vals='{"espaco": "{{espaco.id}}", "page":"{{ page }}"}'            
+  hx-target="#questoes_infinitas"  
+  hx-trigger="load, click"
+  hx-swap="innerHTML"  
+  >
+    <span class="icon">
+      <i class="fa-solid fa-upload"></i>
+    </span>
+    
+    <p>Últimas questões adicionadas</p>
+      
+    <span class="icon">
+      <i class="fa-solid fa-caret-down"></i>
+    </span>
+  </button>
+  <button class="button is-black  is-outlined is-responsive">
+    <span class="icon">
+      <i class="fa-regular fa-circle-question"></i>
+    </span>
+    
+    <p>Questões sem resolução</p>
+      
+    <span class="icon">
+      <i class="fa-solid fa-caret-down"></i>
+    </span>
+  </button>
+  <button class="button is-black  is-outlined is-responsive">
+    <span class="icon">
+      <i class="fa-regular fa-star"></i>
+    </span>
+    
+    <p>As melhores</p>
+      
+    <span class="icon">
+      <i class="fa-solid fa-caret-down"></i>
+    </span>
+  </button>
+</div>
 
- 
-  
+<div id="questoes_infinitas">
+</div>
+
+
 {%endblock content%}

@@ -58,5 +58,3 @@ class AlternativaForm(forms.ModelForm):
         self.fields['text'].required = True
         self.fields['correct'].required = False
         self.fields['text'] = SummernoteTextFormField(required = True)
-        
-        

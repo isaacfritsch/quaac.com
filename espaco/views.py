@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from urllib.parse import unquote
 from django.db.models import Count, Q
 from django.urls import reverse
+from questoes.models import Questao, Alternativa
 from django.contrib.auth.decorators import login_required
 from .models import Espaco, Tag
 from .forms import CreateSpaceForm, TagForm
@@ -433,6 +434,49 @@ def update_tags_selecionadas(request):
     })
 
     return response
+
+def ultimas_questoes_adicionadas(request):
+    
+    espaco = request.GET.get("espaco")
+    page = request.GET.get("page")    
+    
+    espaco_desejado = Espaco.objects.get(id=espaco)
+    question = Questao.objects.all().filter(space=espaco_desejado).order_by('-id')
+    paginator = Paginator(question, 1)
+    
+    if not page:        
+        page = 1
+         
+    else:        
+        page = int(page)
+        page += 1       
+    try:
+        question = paginator.page(page)
+    except:
+        return HttpResponse('')
+    
+    index = len(question.object_list) - 1  # Index of the last question on the page
+    latest_question = question.object_list[index]
+
+    tags = latest_question.tags.all()  
+    alternativas = Alternativa.objects.filter(question=latest_question).order_by('text')
+    
+    
+    
+    
+    
+
+    context = {
+        'espaco': espaco_desejado,
+        'questions' : question,
+        'page' : page,
+        'tags': tags,
+        'alternativas': alternativas,
+    }
+    
+    
+
+    return render(request, 'espaco/ultimas_questoes_adicionadas.html', context)
     
 
 

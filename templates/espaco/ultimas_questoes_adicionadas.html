@@ -1,0 +1,15 @@
+
+{% for question in questions%}
+{% include 'questoes/questao_int.html' %}
+{% endfor %}
+
+<div class="button is-dark is-outlined is-responsive"
+hx-get="{% url 'ultimas_questoes_adicionadas' %}"
+hx-vals='{"espaco": "{{espaco.id}}", "page":"{{ page }}"}'            
+hx-target="this"  
+hx-trigger="revealed"
+hx-swap="outerHTML"  
+>
+</div> 
+
+

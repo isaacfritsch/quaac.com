@@ -13,3 +13,4 @@ admin.site.register( models.Alternativa, AlternativaAdmin)
 admin.site.register(models.Questao, QuestaoAdmin,)
 
 
+

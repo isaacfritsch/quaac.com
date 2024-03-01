@@ -1,42 +1,5 @@
 {% load widget_tweaks %}
 {% with WIDGET_ERROR_CLASS='is-invalid' %}
-<script defer>
- function validateForm(event) {
-    
-  if (event.detail.elt.id === 'form_question') {
-    fields = document.querySelectorAll('.new_class');
-    errorMessageDiv = document.getElementById("error_message_text");
-    console.log(fields.length);
-    
-    
-    for (field of fields) {
-        console.log(field)
-        summernoteTextarea = field.previousElementSibling;
-        console.log(summernoteTextarea)
-        console.log(field.value)
-                  
-        if (field.value === "") {              
-            errorMessageDiv.textContent = "Erro! Pelo menos uma alternativa está em branco"
-            console.log("ERRO")
-            event.preventDefault();
-            return false; 
-        }
-    }
-    errorMessageDiv.textContent = "";
-    console.log("SUCESSO!")
-    return true;
-  }
-} 
-  function submitForms() {
-    textInputs = document.getElementsByName("text");
-    for (text of textInputs) {
-
-    }
-  }
-
-</script>
-
-
 <form class="form"
 name="form_questao" 
 id="form_question"
@@ -182,12 +145,9 @@ hx-post = {{request.path}}
         {% if form_questao.body.errors %}
             <p class="help is-danger is-size-5">{{ form_questao.body.errors|first }}</p>
         {% endif %}
-        <div class="control" required>
-          
+        <div class="control"> 
+          {{form_questao.media}}        
           {% render_field form_questao.body  style=" height: 291px;" name="body" %}
-          
-                  
-        
         </div>
       </div>
     </div>
@@ -239,7 +199,7 @@ hx-post = {{request.path}}
         {% endif %}
         <p class="is-size-6">Caso não tenha a resolução dessa questão você ainda poderá submetê-la, outros usuários poderão adicionar uma resolução!</p>
         <div class="control" >
-          {% render_field form_questao.current_answer style=" height: 291px;" name="current_answer"%}
+          {% render_field form_questao.current_answer class="style" name="current_answer"%}
           
                    
         </div>      

@@ -1,14 +1,14 @@
 {% load widget_tweaks %}
     <section class="section" style=" padding-top:0px" name="form_form_form">
         
-        
+        <div class="form_form">    
         <div class="columns is-mobile has-background-info-light">
-            <div class="column is-9">
-                <div class="form_form">  {% comment %}  VERY important class  {% endcomment %}
-                
+            <div class="column is-9 ">
+                  {% comment %}  VERY important class  {% endcomment %}
+                {{form_alternativa.media}} 
                 {{ form_alternativa.management_form }}
                 {{ form_alternativa.0.text  }}                
-                </div>
+                
             </div>            
             <div class="column is-narrow" style="width: 20px;">
                 <label class="checkbox">
@@ -22,7 +22,7 @@
             <div class="column is-1">
                 <button id="botao_remover" type="button" class="button is-info" hx-on="click: this.closest('section').remove()">Remover</button>
             </div>
-        
+        </div>
         </div>              
     </section>
     

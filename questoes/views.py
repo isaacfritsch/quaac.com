@@ -407,12 +407,14 @@ def question_create(request, espaco):
             question.save()  # Now save to the database 
             question_obj = Questao.objects.get(id=question.id)  
             form_alternativa.instance = question_obj
-            form_alternativa.save()
-            
             # for form in form_alternativa:
             #     print(form.data)           
             #     form.instance.question = question_obj
             #     form.save() 
+            
+            form_alternativa.save()
+            
+            
              
             
             
@@ -457,12 +459,13 @@ def questao(request, question):
     
     tags = question1.tags.all()
     
-    alternativas = Alternativa.objects.filter(question=question1).order_by('text')    
+    alternativas = Alternativa.objects.filter(question=question1).order_by('text')
     
     return render(request, 'questoes/questao.html', {'question': question1,                                                                                                                  
                                                      'espaco': espaco_desejado,
                                                      'tags': tags,
-                                                     'alternativas': alternativas,})
+                                                     'alternativas': alternativas,
+                                                    })
     
     
 
