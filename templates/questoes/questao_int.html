@@ -1,4 +1,15 @@
 {% load static %}
+<style>
+  .alternative-button {
+    background-color: #FAFAFA; 
+    border: none; 
+    padding: 10px 20px;     
+    transition: background-color 0.3s ease;
+    width: 100%; 
+  }
+  
+</style>
+
 <section class="section">
     <div class="container is-flex is-justify-content-center">
     <div class="block"> 
@@ -38,8 +49,20 @@
             <div class="container">
                 <div class="block" style="text-align:left">
             {% for alternativa in alternativas %}
-                <div class="column is-full">
-                    <button class="has-background-white" style="width:100%;">{{ alternativa.text|safe }}</button>
+            
+                <div class="column is-full" x-data="{ selected : false,
+                                                    color: 'background-color: #8cb9f3;'
+                                                    }">
+                    <button class="alternative-button" x-on:click="selected=!selected" x-bind:style="selected ? color : ''" >
+                      <div class="columns is-mobile">
+                        <div class="column is-narrow">
+                          <input type="checkbox" class="checkbox" x-bind:checked="selected"  style="width : 20px">
+                        </div>
+                        <div class="column">
+                          {{ alternativa.text|safe }}
+                        </div>
+                      </div>
+                    </button>
                 </div>
             {% endfor %}
                 </div>
@@ -50,16 +73,8 @@
         </block>
         <hr>
         <div class="block">
-            <nav class="breadcrumb is-info" aria-label="breadcrumbs">
-                <ul>
-                  <li>
-                    <a href="#">
-                      <span class="icon is-small">
-                        <i class="fa-solid fa-puzzle-piece"></i>
-                      </span>
-                      <span>Resolução</span>
-                    </a>
-                  </li>
+            <div class="tabs is-boxed" >
+                <ul>                  
                   <li>
                     <a href="#">
                       <span class="icon is-small">

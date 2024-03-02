@@ -1,5 +1,17 @@
 {% extends 'base.html' %}
 {%block content%}
+<style>
+  /* Change default tab link color */
+.tabs li a {
+  color: var(--info); /* Use Bulma's 'info' color variable */
+}
+
+/* Change background color of active tab */
+.tabs li.is-active a {
+  color: var(--info-invert); /* Text color against the info background */
+  background-color: var(--info);
+} 
+</style>
 <div id="selectedTagsData" style="display: none;">
   {{ selected_tags_json }}
 </div>
@@ -152,47 +164,72 @@
     </div>
   </nav>
 </div>
-<div class="container is-flex is-justify-content-center" style=" padding-top:1.5rem;padding-botton:1.5rem;">
-  <button class="button is-black  is-outlined is-responsive"
-  hx-get="{% url 'ultimas_questoes_adicionadas' %}"
-  hx-vals='{"espaco": "{{espaco.id}}", "page":"{{ page }}"}'            
-  hx-target="#questoes_infinitas"  
-  hx-trigger="load, click"
-  hx-swap="innerHTML"  
-  >
-    <span class="icon">
-      <i class="fa-solid fa-upload"></i>
-    </span>
-    
-    <p>Últimas questões adicionadas</p>
-      
-    <span class="icon">
-      <i class="fa-solid fa-caret-down"></i>
-    </span>
-  </button>
-  <button class="button is-black  is-outlined is-responsive">
-    <span class="icon">
-      <i class="fa-regular fa-circle-question"></i>
-    </span>
-    
-    <p>Questões sem resolução</p>
-      
-    <span class="icon">
-      <i class="fa-solid fa-caret-down"></i>
-    </span>
-  </button>
-  <button class="button is-black  is-outlined is-responsive">
-    <span class="icon">
-      <i class="fa-regular fa-star"></i>
-    </span>
-    
-    <p>As melhores</p>
-      
-    <span class="icon">
-      <i class="fa-solid fa-caret-down"></i>
-    </span>
-  </button>
-</div>
+
+<div class="container is-flex is-justify-content-center" style="padding-top:1.5rem;padding-bottom:1.5rem;">
+  <div class="tabs is-toggle" x-data="{ one: false, 
+                                        two: false,
+                                        three: false, 
+                                        four: true,
+                                        backgroundcolor: 'background-color: #3298dc;' 
+                                        
+                                      }">
+     <ul>
+        <li x-bind:class="one ? 'is-active' : ''" >         
+         <a x-on:click="one = true; two = false; three = false;four= false;"
+            x-bind:style="one ? backgroundcolor : ''">
+           <span class="icon">
+             <i class="fa-solid fa-puzzle-piece"></i>
+           </span>
+           <p>Para você</p>
+           <span class="icon">
+             <i class="fa-solid fa-caret-down"></i>
+           </span>
+         </a>
+       </li>
+       <li x-bind:class="two ? 'is-active' : ''" >
+        <a x-on:click="two = true; one = false; three = false; four= false;"
+           x-bind:style="two ? backgroundcolor : ''">
+          <span class="icon">
+            <i class="fa-regular fa-comment-dots"></i>
+          </span>
+          <p>Não comentadas</p>
+          <span class="icon">
+            <i class="fa-solid fa-caret-down"></i>
+          </span>
+        </a>
+      </li>
+       <li x-bind:class="three ? 'is-active' : ''" >
+         <a x-on:click="three = true; one = false; two = false; four= false;"
+            x-bind:style="three ? backgroundcolor : ''">
+           <span class="icon">
+             <i class="fa-regular fa-star"></i>
+           </span>
+           <p>As melhores</p>
+           <span class="icon">
+             <i class="fa-solid fa-caret-down"></i>
+           </span>
+         </a>
+       </li>
+       <li x-bind:class="four ? 'is-active' : ''" >
+         <a x-on:click="four = true; one = false; two = false; three = false;"
+            x-bind:style="four ? backgroundcolor : ''"
+            hx-get="{% url 'ultimas_questoes_adicionadas' %}"
+            hx-vals='{"espaco": "{{espaco.id}}", "page":"{{ page }}"}'
+            hx-target="#questoes_infinitas"
+            hx-trigger="load, click"
+            hx-swap="innerHTML">
+           <span class="icon">
+             <i class="fa-solid fa-upload"></i>
+           </span>
+           <p>Últimas questões adicionadas</p>
+           <span class="icon">
+             <i class="fa-solid fa-caret-down"></i>
+           </span>
+         </a>
+       </li>
+     </ul>
+  </div>
+ </div>
 
 <div id="questoes_infinitas">
 </div>
