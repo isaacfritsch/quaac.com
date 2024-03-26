@@ -267,6 +267,22 @@ def search_category(request):
     
     return render(request, 'espaco/category_search.html', context)
 
+def search_category_edit(request):
+    
+    search_text = request.POST.get("category")
+    
+    espaco = request.POST.get("espaco")  
+    
+    espaco_desejado = Espaco.objects.get(id=espaco)
+        
+    results = Tag.objects.filter(space=espaco_desejado.id, category__icontains=search_text).values_list('category', flat=True)
+    
+    results = sorted(set(results)) 
+    
+    context = {'results': results, "search_text" : search_text}
+    
+    return render(request, 'espaco/category_search_edit.html', context)
+
 
 def processar_categoria(request):
     if request.method == 'POST':
@@ -279,6 +295,23 @@ def processar_categoria(request):
     f'value="{categoria}" '
     f'hx-post="{{% url \'search_category\' %}}" '
     f'hx-target=\'#category_selection\' '
+    f'hx-vals=\'{{"espaco": {{"{{espaco_desejado.id}}"}}}}\' '
+    f'hx-headers=\'{{"X-CSRFToken": "{{ csrf_token }}"}}\' '
+    f'hx-trigger="keyup changed delay:500ms"> '   
+    
+))
+        
+def processar_categoria_edit(request):
+    if request.method == 'POST':
+        categoria = request.POST.get("category")        
+        return HttpResponse((
+    f'<input class="input is-primary" id="modal-tag-category-form_edit" readonly '
+    f'type="text" '
+    f'placeholder="Selecione ou crie uma categoria" '
+    f'name="category" '
+    f'value="{categoria}" '
+    f'hx-post="{{% url \'search_category\' %}}" '
+    f'hx-target=\'#category_selection_edit\' '
     f'hx-vals=\'{{"espaco": {{"{{espaco_desejado.id}}"}}}}\' '
     f'hx-headers=\'{{"X-CSRFToken": "{{ csrf_token }}"}}\' '
     f'hx-trigger="keyup changed delay:500ms"> '   
@@ -345,7 +378,7 @@ def tag_edicao(request):
         nomes_tags = Tag.objects.filter(space = espaco_desejado.id).values_list('name', flat=True)
 
 
-        if request.POST['name'] in nomes_tags:
+        if request.POST['name'] in nomes_tags and request.POST['name'] != tag.name:
 
             form.add_error('name', 'Essa tag já existe. Escolha outro nome.')            
             tag = Tag.objects.get(name=tag_original)
@@ -477,6 +510,8 @@ def ultimas_questoes_adicionadas(request):
     
 
     return render(request, 'espaco/ultimas_questoes_adicionadas.html', context)
+
+
     
 
 

@@ -25,12 +25,12 @@
                     <label class="label is-size-5">Categoria</label>
                     <p class="is-size-6">Editar "{{tag.category}}" para:</p>
                     <div class="control has-icons-left">                        
-                        <input class="input is-primary" id="modal-tag-category-form"                        
+                        <input class="input is-primary" id="modal-tag-category-form_edit"                        
                                type="text"
                                placeholder="Digite para pesquisar..."
                                name="category"
-                               hx-post="{% url 'search_category' %}"
-                               hx-target='#category_selection'
+                               hx-post="{% url 'search_category_edit' %}"
+                               hx-target='#category_selection_edit'
                                hx-vals='{"espaco": "{{espaco_desejado.id}}"}'
                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                                hx-trigger="keyup changed delay:500ms"                                                                                            
@@ -43,7 +43,7 @@
                         {% endif %}                              
                     </div>
                 </div>
-                <div id="category_selection">
+                <div id="category_selection_edit">
                 </div>
 
                 <div class="field">

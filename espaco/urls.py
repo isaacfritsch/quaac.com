@@ -16,11 +16,14 @@ urlpatterns = [
     path('tag_creation/<str:espaco>/', views.tag_creation, name='tag_creation'),
     path('search_tag/', views.search_tag, name='search_tag'), 
     path('search_category/', views.search_category, name='search_category'),
+    path('search_category_edit/', views.search_category_edit, name='search_category_edit'),
     path('search_space/', views.search_space, name='search_space'),#
-    path('processar_categoria/', views.processar_categoria, name='processar_categoria'), 
+    path('processar_categoria/', views.processar_categoria, name='processar_categoria'),
+    path('processar_categoria_edit/', views.processar_categoria_edit, name='processar_categoria_edit'), 
     path('lista_categorias/', views.lista_categorias, name='lista_categorias'),
     path('tag_edicao/', views.tag_edicao, name='tag_edicao'),
     path('botao_tag_confirmar_deletar/', views.botao_tag_confirmar_deletar, name='botao_tag_confirmar_deletar'),      
     path('update_tags_selecionadas/', views.update_tags_selecionadas, name='update_tags_selecionadas'),
-    path('ultimas_questoes_adicionadas/', views.ultimas_questoes_adicionadas, name='ultimas_questoes_adicionadas'),      
+    path('ultimas_questoes_adicionadas/', views.ultimas_questoes_adicionadas, name='ultimas_questoes_adicionadas'),
+         
 ]

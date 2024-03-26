@@ -85,6 +85,22 @@ def search_category2(request):
     
     return render(request, 'questoes/category_search2.html', context)
 
+def search_category2_edit(request):
+    
+    search_text = request.POST.get("category")
+    
+    espaco = request.POST.get("espaco")  
+    
+    espaco_desejado = Espaco.objects.get(id=espaco)
+        
+    results = Tag.objects.filter(space=espaco_desejado.id, category__icontains=search_text).values_list('category', flat=True)
+    
+    results = sorted(set(results)) 
+    
+    context = {'results': results, "search_text" : search_text}
+    
+    return render(request, 'questoes/category_search2_edit.html', context)
+
 
 def processar_categoria2(request):
     if request.method == 'POST':
@@ -97,6 +113,22 @@ def processar_categoria2(request):
     f'value="{categoria}" '
     f'hx-post="{{% url \'search_category2\' %}}" '
     f'hx-target=\'#category_selection2\' '
+    f'hx-vals=\'{{"espaco": {{"{{espaco_desejado.id}}"}}}}\' '
+    f'hx-headers=\'{{"X-CSRFToken": "{{ csrf_token }}"}}\' '
+    f'hx-trigger="keyup changed delay:500ms"> '
+))
+        
+def processar_categoria2_edit(request):
+    if request.method == 'POST':
+        categoria = request.POST.get("category")        
+        return HttpResponse((
+    f'<input class="input is-primary" id="modal-tag-category-form2_edit" readonly '
+    f'type="text" '
+    f'placeholder="Selecione ou crie uma categoria" '
+    f'name="category" '
+    f'value="{categoria}" '
+    f'hx-post="{{% url \'search_category2_edit\' %}}" '
+    f'hx-target=\'#category_selection2_edit\' '
     f'hx-vals=\'{{"espaco": {{"{{espaco_desejado.id}}"}}}}\' '
     f'hx-headers=\'{{"X-CSRFToken": "{{ csrf_token }}"}}\' '
     f'hx-trigger="keyup changed delay:500ms"> '

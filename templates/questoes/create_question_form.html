@@ -163,7 +163,7 @@ hx-post = {{request.path}}
                   <div class="columns is-mobile">                    
                     <div class="column">
                       <p class="has-text-black ">
-                      Adicione alternativas apenas se a questões for de <strong>múltipla escolha</strong>:
+                      Se a questão for de <strong>múltipla escolha</strong> e preferir colocar cada alternativa num campo individual de seleção:
                       </p>
                     </div>
                   </div>
@@ -197,7 +197,7 @@ hx-post = {{request.path}}
         {% if form_questao.current_answer.errors %}
             <p class="help is-danger is-size-5">{{ form_questao.current_answer.errors|first }}</p>
         {% endif %}
-        <p class="is-size-6">Caso não tenha a resolução dessa questão você ainda poderá submetê-la, outros usuários poderão adicionar uma resolução!</p>
+        <p class="is-size-6">A resolução será adicionada como um comentário, mas caso não a tenha você ainda poderá submeter a questão, outros usuários poderão adicionar uma resolução nos comentários!</p>
         <div class="control" >
           {% render_field form_questao.current_answer class="style" name="current_answer"%}
           

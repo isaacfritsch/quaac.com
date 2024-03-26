@@ -1,0 +1,21 @@
+{% if results %}
+{% for category in results %}
+    <a 
+    hx-post={% url 'processar_categoria2_edit' %}
+    hx-target='#modal-tag-category-form2_edit'
+    hx-vals='{"category": "{{category}}"}'
+    hx-swap="outerHTML"
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+    hx-trigger="click"
+    >
+        <span class="icon">
+            <i class="fa-regular fa-square-check"></i>
+        </span>
+        <span>
+            {{ category }}
+        </span>
+    </a>
+{% endfor %}
+{% else %}
+<p>Nenhuma categoria correspondente, você irá criar a categoria: "{{search_text}}"</p>
+{% endif %}

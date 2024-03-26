@@ -2,7 +2,14 @@
 {%block content%}
 
     <div class="container has-text-centered">
-        <p class="title is-4">Projeto de compartilhamento de questões</p>
+        <p class="title is-4">O que é o Quaac e por que foi criado?</p>
+        <p>O quaac é uma plataforma colaborativa de questões totalmente gratuita com o intuito de ajudar estudante a estudarem por questões para sua provas e obejtivos</p>
+        <br>
+        <p class="title is-4">Como utilizar o Quaac?</p>
+        <p> Você pode procurar um espaço abaixo para adicionar questões, resolvê-las e interagir com a comunidade, não se esqueça de fazer o login :) </p>
+        <p> Caso não encontra algo que procura você pode adicionar um novo espaço e começar a estudar, outros estudantes com o mesmo objetivo irão se unir a você e engajar o espaço</p>
+        <br>
+
         <div x-data="{ openNotificationspaceerror: true }">
 
             {% if error_messages %}
@@ -45,8 +52,55 @@
                 </span>
               </p>
             </div>
-
-            <div id="space_selection"
+            <div class="panel-tabs-scrollable">  
+              <p class="panel-tabs">      
+                  <button class="button is-black is-small is-outlined is-responsive"
+                  hx-get="{% url 'espaco_list_view' %}"                
+                  hx-target="#space_selection"        
+                  hx-trigger="click"
+                  hx-swap="innerHTML"
+                  >        
+                  <span class="icon">
+                      <i class="fa-solid fa-users-line"></i>
+                  </span>
+                    <p>Todos</p>          
+                    <span class="icon">
+                      <i class="fa-solid fa-caret-down"></i>
+                    </span>
+                  </button>                             
+                      <button class="button is-black is-small is-outlined is-responsive"
+                      hx-get="{% url 'espaco_list_view' %}"                      
+                      hx-target="#space_selection"            
+                      hx-trigger="click"
+                      hx-swap="innerHTML"
+                      >            
+                      <span class="icon">
+                          <i class="fa-solid fa-users-line"></i>
+                      </span>
+                    <p>Mais populares</p>          
+                    <span class="icon">
+                      <i class="fa-solid fa-caret-down"></i>
+                    </span>
+                      </button>
+                      <button class="button is-black is-small is-outlined is-responsive"
+                      hx-get="{% url 'espaco_list_view' %}"                      
+                      hx-target="#space_selection"            
+                      hx-trigger="click"
+                      hx-swap="innerHTML"
+                      >            
+                      <span class="icon">
+                          <i class="fa-solid fa-users-line"></i>
+                      </span>
+                    <p>Mais questões</p>          
+                    <span class="icon">
+                      <i class="fa-solid fa-caret-down"></i>
+                    </span>
+                      </button>          
+              </p>
+            </div>
+            <br>
+            <div             
+            id="space_selection"
             hx-get="{% url 'espaco_list_view' %}"
             hx-trigger="load"
             >
