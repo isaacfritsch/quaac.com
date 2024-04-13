@@ -154,10 +154,7 @@ def processar_tags2(request, tag):
     if tag in selected_tags:
         selected_tags.remove(tag)
     else:
-        selected_tags.append(tag)
-
-
-    
+        selected_tags.append(tag)    
 
     tag_obj = Tag.objects.get(name=tag)      
     espaco = tag_obj.space
@@ -498,6 +495,21 @@ def questao(request, question):
                                                      'tags': tags,
                                                      'alternativas': alternativas,
                                                     })
+    
+def comentario_resolucao(request):
+    
+    question = request.GET.get("question")
+
+    question1 = Questao.objects.get(id=question)
+    
+    comentarios = question1.comment_set.all()
+    
+    context = {
+        'comentarios':comentarios
+        
+    }
+
+    return render(request, 'questoes/comentario_resolucao.html', context)
     
     
 

@@ -8,9 +8,13 @@ class QuestaoAdmin(SummernoteModelAdmin):
     
 class AlternativaAdmin(SummernoteModelAdmin):
     summernote_fields = ('text',)
+    
+class ComentarioAdmin(SummernoteModelAdmin):
+    summernote_fields = ('body',)
 
 admin.site.register( models.Alternativa, AlternativaAdmin)
 admin.site.register(models.Questao, QuestaoAdmin,)
+admin.site.register(models.Comment, ComentarioAdmin,)
 
 
 

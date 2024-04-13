@@ -3,8 +3,6 @@ from django.conf import settings
 from autoslug import AutoSlugField
 from espaco.models import Espaco, Tag
 
-
-
 class Questao(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -26,3 +24,21 @@ class Alternativa(models.Model):
         on_delete=models.CASCADE)
     text = models.TextField()
     correct = models.BooleanField(default=False)
+    
+class Comment(models.Model):
+    autor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    questao = models.ForeignKey(Questao, on_delete=models.CASCADE)
+    body = models.CharField(max_length=150)
+    data = models.DateTimeField(auto_now_add=True)   
+
+    def __str__(self):
+        try:
+            return f'{self.autor.name} : {self.body[:30]}' 
+        except:
+            return f'no author : {self.body[:30]}' 
+        
+    class Meta:
+        ordering = ['-data']

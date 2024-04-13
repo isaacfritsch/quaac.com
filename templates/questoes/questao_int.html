@@ -10,8 +10,8 @@
   
 </style>
 
-<section class="section">
-    <div class="container is-flex is-justify-content-center">
+<section class="section ">
+    <div class="container is-justify-content-center is-fullwidth">
     <div class="block"> 
       <div class="columns is-mobile">      
         <div class= "column">
@@ -22,7 +22,7 @@
                 </div>
                 <div class="column">
                     <p class="is-size-7">Created by: {{ question.user.name }}</p>
-                </div> 
+                </div>
                 <div class="column is-narrow">                    
                     <button class="button is-small is-info">
                         <span class="icon">
@@ -73,14 +73,28 @@
         </block>
         <hr>
         <div class="block">
-            <div class="tabs is-boxed" >
-                <ul>                  
+            <div class="tabs is-boxed">
+                <ul>
+                  <li>
+                    <a
+                    hx-get="{% url 'comentario_resolucao' %}"
+                    hx-vals='{"question": "{{question.id}}"}'        
+                    hx-target="#comentarios_anotacao"                    
+                    hx-trigger="click"
+                    hx-swap="innerHTML"
+                    >
+                      <span class="icon is-small">
+                        <i class="fa-solid fa-users-gear"></i>
+                      </span>
+                      <span>Resoluções</span>
+                    </a>
+                  </li>
                   <li>
                     <a href="#">
                       <span class="icon is-small">
                         <i class="fa-regular fa-comments"></i>
                       </span>
-                      <span>Comentários</span>
+                      <span>Dúvidas e discussões</span>
                     </a>
                   </li>
                   <li>
@@ -88,13 +102,17 @@
                       <span class="icon is-small">
                         <i class="fa-regular fa-pen-to-square"></i>
                       </span>
-                      <span>Anotações</span>
+                      <span>Criar anotação</span>
                     </a>
                   </li>                  
-                </ul>
-            </nav>              
-        </div>    
-        </div>
+                </ul>                        
+              </div>
+              <div id="comentarios_anotacao">
+
+
+
+              </div>    
+          </div>
         </div> 
       </div>       
     </div>
