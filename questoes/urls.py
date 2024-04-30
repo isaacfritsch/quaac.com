@@ -20,5 +20,5 @@ urlpatterns = [
     path('botao_tag_confirmar_deletar2/', views.botao_tag_confirmar_deletar2, name='botao_tag_confirmar_deletar2'),
     path('create_alternativa/<str:espaco>/', views.create_alternativa, name='create_alternativa'),
     path('questao/<str:question>/', views.questao, name='questao'),
-    path('comentario_resolucao/', views.comentario_resolucao, name='comentario_resolucao'),           
+    path('comentario/', views.comentario, name='comentario'),
 ]

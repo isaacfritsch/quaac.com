@@ -1,4 +1,6 @@
 {% load static %}
+
+
 <style>
   .alternative-button {
     background-color: #FAFAFA; 
@@ -76,13 +78,7 @@
             <div class="tabs is-boxed">
                 <ul>
                   <li>
-                    <a
-                    hx-get="{% url 'comentario_resolucao' %}"
-                    hx-vals='{"question": "{{question.id}}"}'        
-                    hx-target="#comentarios_anotacao"                    
-                    hx-trigger="click"
-                    hx-swap="innerHTML"
-                    >
+                    <a href="#">
                       <span class="icon is-small">
                         <i class="fa-solid fa-users-gear"></i>
                       </span>
@@ -90,27 +86,22 @@
                     </a>
                   </li>
                   <li>
-                    <a href="#">
+                    <a
+                    hx-get="{% url 'comentario' %}"
+                    hx-vals='{"question": "{{question.id}}"}'        
+                    hx-target="#question_{{ question.id }}"                    
+                    hx-trigger="click, comentariosalvo from:body"
+                    hx-swap="innerHTML"
+                    >                    
                       <span class="icon is-small">
                         <i class="fa-regular fa-comments"></i>
                       </span>
                       <span>Dúvidas e discussões</span>
                     </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <span class="icon is-small">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                      </span>
-                      <span>Criar anotação</span>
-                    </a>
-                  </li>                  
+                  </li>                                 
                 </ul>                        
               </div>
-              <div id="comentarios_anotacao">
-
-
-
+              <div id="question_{{ question.id }}">
               </div>    
           </div>
         </div> 
@@ -118,3 +109,4 @@
     </div>
     </div>
   </section>
+  

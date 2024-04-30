@@ -228,7 +228,7 @@ def tag_creation(request, espaco):
                                                          'espaco_desejado': espaco_desejado,                                                                                                                  
                                                          })
 
-    # if a GET (or any other method) we'll create a blank form
+   
     else:
         
         form = TagForm()        

@@ -137,8 +137,6 @@ hx-post = {{request.path}}
         </div>
       </div>
     </nav>
-    
-
     <div class="box">      
       <div class="field">
         <label class="label is-size-5">Enunciado</label>
@@ -150,12 +148,10 @@ hx-post = {{request.path}}
           {% render_field form_questao.body  style=" height: 291px;" name="body" %}
         </div>
       </div>
-    </div>
-    
+    </div>    
       <div class="box">
           <label class="label is-size-5">Alternativas</label>
-          <div class="help is-danger is-size-5" id="error_message_text"></div>
-           
+          <div class="help is-danger is-size-5" id="error_message_text"></div>           
           <div class="columns is-mobile">
             <div class="column">
               <article class="message is-info">              
@@ -186,23 +182,18 @@ hx-post = {{request.path}}
               <p>Adicionar nova alternativa</p></button>
               </div>
             </div>
-          </div>
-          
+          </div>          
           <div id="alternativas_criadas"></div>
-      </div>
-        
+      </div>        
     <div class="box">
       <div class="field">
         <label class="label is-size-5">Resolução</label>
         {% if form_questao.current_answer.errors %}
-            <p class="help is-danger is-size-5">{{ form_questao.current_answer.errors|first }}</p>
+            <p class="help is-danger is-size-5">{{form_questao.current_answer.errors|first }}</p>
         {% endif %}
-        <p class="is-size-6">A resolução será adicionada como um comentário, mas caso não a tenha você ainda poderá submeter a questão, outros usuários poderão adicionar uma resolução nos comentários!</p>
-        <div class="control" >
+        <div class="control">
           {% render_field form_questao.current_answer class="style" name="current_answer"%}
-          
-                   
-        </div>      
+        </div>
       </div>
     </div>
       <div class="columns is-mobile">

@@ -13,7 +13,7 @@ from django.forms.models import inlineformset_factory
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from espaco.models import Espaco, Tag
-from .forms import QuestaoForm, AlternativaForm
+from .forms import QuestaoForm, AlternativaForm, CommentForm
 from espaco.forms import CreateSpaceForm, TagForm
 from questoes.models import Questao, Alternativa
 from django.views.decorators.http import require_POST
@@ -193,13 +193,10 @@ def tag_edicao2(request):
         tag_original = tag.name  
              
         espaco = tag.space        
-        espaco_desejado = Espaco.objects.get(title=espaco.title)
-        
+        espaco_desejado = Espaco.objects.get(title=espaco.title)        
         
         # create a form instance and populate it with data from the request:
-        form = TagForm(request.POST, instance=tag)       
-        
-           
+        form = TagForm(request.POST, instance=tag)
         
         nomes_tags = Tag.objects.filter(space = espaco_desejado.id).values_list('name', flat=True)
 
@@ -423,8 +420,7 @@ def question_create(request, espaco):
                 
             return render(request, 'questoes/create_question_form.html', {'form_questao': form_questao,                                                                                                                
                                                             'espaco': espaco_desejado,                                                                                                                  
-                                                            }) 
-                
+                                                            })                
         
         if form_questao.is_valid() and form_alternativa.is_valid():
 
@@ -442,11 +438,7 @@ def question_create(request, espaco):
             #     form.save() 
             
             form_alternativa.save()
-            
-            
-             
-            
-            
+                        
             tags = request.session['selected_tags_questoes']
             
             for tag_name in tags:
@@ -496,20 +488,42 @@ def questao(request, question):
                                                      'alternativas': alternativas,
                                                     })
     
-def comentario_resolucao(request):
+def comentario(request):
     
-    question = request.GET.get("question")
-
-    question1 = Questao.objects.get(id=question)
+    question_id = request.GET.get("question")
+    if not question_id:
+       question_id = request.POST.get("question")     
+    question = Questao.objects.get(id=question_id)    
+    comentarios = question.comment_set.all()
     
-    comentarios = question1.comment_set.all()
     
-    context = {
-        'comentarios':comentarios
+    
+    if request.method == 'POST' and request.user.is_authenticated:
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.autor = request.user            
+            comment.questao = question
+            comment.save()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'comentariosalvo'})
+    else:
+        form = CommentForm()
         
+    context = {
+        'comentarios':comentarios,
+        'question': question,        
+        'form': form        
     }
+    
+    
 
-    return render(request, 'questoes/comentario_resolucao.html', context)
+    return render(request, 'questoes/comentario.html', context)
+
+
+
+
+
+
     
     
 

@@ -1,0 +1,59 @@
+<div x-data="{ isOpen: true }">
+  <div x-show="isOpen">
+    <div class="column" style="background-color: #f5f5f5; padding: 10px;"> 
+      <div class="column has-text-right">          
+        <button @click="isOpen = !isOpen" class="delete"></button>
+      </div> 
+        {% for comentario in comentarios %}
+          <div class="columns is-mobile">
+            <article class="media">
+              <div class="column is-4">
+                <p class="media-left">
+                  <strong>{{ comentario.autor.name }}</strong>
+                </p>
+              </div>
+              <div class="column is-8">
+                <div class="box" style="text-align: left !important;">
+                  <div class="media-content">
+                    <p class="is-size-7">{{ comentario.data }}</p>
+                    <div class="content">
+                      {{ comentario.body|safe }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>            
+            <hr>
+          </div>
+        {% endfor %}          
+        {% if request.user.is_authenticated %}
+        
+        <form class="form" name="form"      
+            hx-post = {{request.path}}
+            hx-vals='{"question": "{{question.id}}"}'
+            hx-trigger="submit"                                  
+          >
+          {% csrf_token %}
+          <article class="media">
+            <p class="media-left" style="width: 150px;">      
+              <strong>{{ request.user.name }}</strong>     
+            </p>
+            <div class="media-content">
+              {{ form.body }} 
+              {% if form.body.errors %}
+                <p class="help is-danger">{{ form.body.errors.as_text }}</p>
+              {% endif %}
+              <div class="field">
+                <p class="control">
+                  <button type="submit" class="button is-info">Postar</button>
+                </p>
+              </div>
+            </div>
+          </article>
+        </form>
+        {% else %}
+          <div class="notification is-danger">Faça login para postar um comentário</div>
+        {% endif %}    
+    </div>
+  </div>
+</div>
