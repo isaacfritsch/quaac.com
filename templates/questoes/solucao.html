@@ -14,121 +14,117 @@
         <button @click="isOpens = !isOpens" class="delete"></button>
       </div> 
       {% for solucao in solucoes %}
-      <div class="columns">
-        <div class="column is-2">
-          <article class="media">
-            <div class="media-content">
-              <p class="title is-6">{{ solucao.autor.name }}</p>
-              <p class="subtitle is-7">{{ solucao.data }}</p>
-            </div>
-          </article>
-        </div>
-        <div class="column is-10">
-          <div class="box">
+        <div class="columns">
+          <div class="column is-2">
             <article class="media">
               <div class="media-content">
-                <div class="content">
-                  <p>{{ solucao.bodysol|safe }}</p>
-                  <div class="buttons">
-                    <button class="button is-ghost">
-                      <span class="icon is-small">
-                        <i class="fa-regular fa-thumbs-up"></i>
-                      </span>
-                      <span>Like (0)</span>
-                    </button>
-                    <button class="button is-ghost"
-                    hx-get="{% url 'add_reply_solucao' %}"
-                    hx-vals='{"solucao": "{{solucao.id}}"}'        
-                    hx-target="#solucao_{{ solucao.id }}"                    
-                    hx-trigger="click, replysolucaosalvo from:body"
-                    hx-swap="innerHTML">
-                      <span class="icon is-small">
-                        <i class="fa-solid fa-reply"></i>
-                      </span>
-                      <span>Respostas ({{ solucao.replies_solucao.count }})</span>
-                    </button>
-                  </div>
-                </div>
-                <div id="solucao_{{ solucao.id }}">
-                </div>
+                <p class="title is-6">{{ solucao.autor.name }}</p>
+                <p class="subtitle is-7">{{ solucao.data }}</p>
               </div>
-              {% if user.is_authenticated and solucao.autor == user %}
-              <div x-data="{solucaoconfirmardeletar : false}">
-                <div class="media-right">
-                  <div class="buttons">
-                    <button class="button is-ghost">
-                      <span class="icon is-small">
-                        <i class="fa-solid fa-edit"></i>
-                      </span>
-                    </button>
-                    <button class="button is-ghost" @click="solucaoconfirmardeletar = true">
-                      <span class="icon is-small">
-                        <i class="fa-solid fa-trash"></i>
-                      </span>
-                    </button>
-                  </div>
-                </div>
-                <div x-cloak x-show="solucaoconfirmardeletar" class="notification is-info is-light">
-                  <h1 class="title is-5">Tem certeza que deseja excluir o comentário?</h1>
-                  <div class="columns is-mobile">
-                    <div class="column">
-                      <button class="button is-danger"
-                      hx-post="{% url 'delete_solucao' %}"
-                      hx-vals='{"solucao": "{{solucao.id}}"}'                                       
-                      hx-trigger="click"
-                      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                      @click.stop.prevent="solucaoconfirmardeletar = false">
-                        Deletar
-                      </button>
-                    </div>
-                    <div class="column is-narrow">
-                      <button class="button is-light" @click.stop.prevent="solucaoconfirmardeletar = false">
-                        Cancelar
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {% endif %}
             </article>
           </div>
+          <div class="column is-10">
+            <div class="box">
+              <article class="media">
+                <div class="media-content">
+                  <div class="content">
+                    <p>{{ solucao.bodysol|safe }}</p>
+                    <div class="block">
+                      <div class="columns is-mobile">
+                        <div class="column">
+                          <div class="buttons"                  
+                            hx-get="{% url 'solucao_tab' %}"
+                            hx-trigger="atualizatabsolucao from:body"
+                            hx-vals='{"solucao": "{{solucao.id}}"}'
+                            hx-swap="innerHTML"
+                            >
+                            {%include 'questoes/solucao_tab.html'%}
+                          </div>
+                        </div>
+                        <div class="column has-text-right">
+                          <button class="button is-danger is-inverted">
+                            Reportar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="solucao_{{ solucao.id }}"></div>
+                  </div>
+                </div>
+                {% if user.is_authenticated and solucao.autor == user %}
+                <div x-data="{ solucaoconfirmardeletar: false }">
+                  <div class="media-right">
+                    <div class="buttons">
+                      <button class="button is-ghost">
+                        <span class="icon is-small">
+                          <i class="fa-solid fa-edit"></i>
+                        </span>
+                      </button>
+                      <button class="button is-ghost" @click="solucaoconfirmardeletar = true">
+                        <span class="icon is-small">
+                          <i class="fa-solid fa-trash"></i>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                  <div x-cloak x-show="solucaoconfirmardeletar" class="notification is-info is-light">
+                    <h1 class="title is-5">Tem certeza que deseja excluir o comentário?</h1>
+                    <div class="columns is-mobile">
+                      <div class="column">
+                        <button class="button is-danger"
+                                hx-post="{% url 'delete_solucao' %}"
+                                hx-vals='{"solucao": "{{solucao.id}}"}'
+                                hx-trigger="click"
+                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                @click.stop.prevent="solucaoconfirmardeletar = false">
+                          Deletar
+                        </button>
+                      </div>
+                      <div class="column is-narrow">
+                        <button class="button is-light" @click.stop.prevent="solucaoconfirmardeletar = false">
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+              </article>
+            </div>
+          </div>
+          <hr>
         </div>
-        <hr>
-      </div>
-    {% endfor %}
+      {% endfor %}
               
-        {% if request.user.is_authenticated %}
+      {% if request.user.is_authenticated %}
+      <form class="form" name="formsolucao"      
+          hx-post="{{ request.path }}"
+          hx-vals='{"question": "{{question.id}}"}'
+          hx-trigger="submit">
+        {% csrf_token %}
         
-        <form class="form" name="formsolucao"      
-            hx-post = {{request.path}}
-            hx-vals='{"question": "{{question.id}}"}'
-            hx-trigger="submit"                                  
-          >
-          {% csrf_token %}
-          
-          <article class="media">
-            <div class="media-left">
-              <p class="title is-5">{{ request.user.name }}</p>
-            </div>
-            <div class="media-content">
-              <form action="" method="post">
-                {% csrf_token %}
-                <div class="field">
-                  {{ formsolucao.bodysol }}                  
-                </div>
-                <div class="field">
-                  <p class="control">
-                    <button type="submit" class="button is-info">Postar</button>
-                  </p>
-                </div>
-              </form>
-            </div>
-          </article>         
-
-        </form>
-        {% else %}
-          <div class="notification is-danger">Faça login para postar um comentário</div>
-        {% endif %}    
+        <article class="media">
+          <div class="media-left">
+            <p class="title is-5">{{ request.user.name }}</p>
+          </div>
+          <div class="media-content">
+            <form action="" method="post">
+              {% csrf_token %}
+              <div class="field">
+                {{ formsolucao.bodysol }}                  
+              </div>
+              <div class="field">
+                <p class="control">
+                  <button type="submit" class="button is-info">Postar</button>
+                </p>
+              </div>
+            </form>
+          </div>
+        </article>         
+      </form>
+      {% else %}
+        <div class="notification is-danger">Faça login para postar um comentário</div>
+      {% endif %}    
     </div>
   </div>
 </div>

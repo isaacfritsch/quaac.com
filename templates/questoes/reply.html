@@ -19,54 +19,59 @@
           <div class="media-content">
             <div class="content">
               <p>{{ reply.body|safe }}</p>
-              <div class="buttons">
-                <button class="button is-ghost">
-                  <span class="icon is-small">
-                    <i class="fa-regular fa-thumbs-up"></i>
-                  </span>
-                  <span>Like (0)</span>
-                </button>                
+              <div class="buttons"
+              hx-get="{% url 'reply_tab' %}"
+              hx-trigger="atualizatabreply from:body"
+              hx-vals='{"reply": "{{reply.id}}"}'
+              hx-swap="innerHTML"
+              >
+                {%include 'questoes/reply_tab.html'%}                 
               </div>
             </div>
           </div>
           
-          {% if user.is_authenticated and reply.autor == user %}
-          <div x-data="{comentarioreplyconfirmardeletar : false}">
-              <div class="media-right">
-                <div class="buttons">
-                  <button class="button is-ghost">
-                    <span class="icon is-small">
-                      <i class="fa-solid fa-edit"></i>
-                    </span>
-                  </button>
-                  <button class="button is-ghost" @click="comentarioreplyconfirmardeletar = true">
-                    <span class="icon is-small">
-                      <i class="fa-solid fa-trash"></i>
-                    </span>
-                  </button>
-                </div>
-              </div>
-              <div x-cloak x-show="comentarioreplyconfirmardeletar" class="notification is-info is-light">
-                <h1 class="title is-5">Tem certeza que deseja excluir o comentário?</h1>
-                <div class="columns is-mobile">
-                  <div class="column">
-                    <button class="button is-danger"
-                    hx-post="{% url 'delete_reply' %}"
-                    hx-vals='{"reply": "{{reply.id}}"}'                                       
-                    hx-trigger="click"
-                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                    @click.stop.prevent="comentarioreplyconfirmardeletar = false">
-                      Deletar
-                    </button>
+          {% if user.is_authenticated and comentario.autor == user %}
+              <div x-data="{ comentarioconfirmardeletar: false }">
+                <div class="media">
+                  <div class="media-content">
+                    <!-- Seu conteúdo aqui -->
                   </div>
-                  <div class="column is-narrow">
-                    <button class="button is-light" @click.stop.prevent="comentarioreplyconfirmardeletar = false">
-                      Cancelar
-                    </button>
+                  <div class="media-right">
+                    <div class="buttons">
+                      <button class="button is-ghost">
+                        <span class="icon is-small">
+                          <i class="fa-solid fa-edit"></i>
+                        </span>
+                      </button>
+                      <button class="button is-ghost" @click="comentarioconfirmardeletar = true">
+                        <span class="icon is-small">
+                          <i class="fa-solid fa-trash"></i>
+                        </span>
+                      </button>
+                    </div>
                   </div>
                 </div>
+                <div x-cloak x-show="comentarioconfirmardeletar" class="notification is-info is-light">
+                  <h1 class="title is-5">Tem certeza que deseja excluir o comentário?</h1>
+                  <div class="columns is-mobile">
+                    <div class="column">
+                      <button class="button is-danger"
+                              hx-post="{% url 'delete_comentario' %}"
+                              hx-vals='{"comentario": "{{comentario.id}}"}'
+                              hx-trigger="click"
+                              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                              @click.stop.prevent="comentarioconfirmardeletar = false">
+                        Deletar
+                      </button>
+                    </div>
+                    <div class="column is-narrow">
+                      <button class="button is-light" @click.stop.prevent="comentarioconfirmardeletar = false">
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
             {% endif %}
         </article>
       </div>

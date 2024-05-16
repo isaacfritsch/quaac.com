@@ -1,0 +1,44 @@
+{% load static %}
+<div class="tabs is-boxed">
+    <ul>
+      <li>                    
+        <a class="button is-info is-inverted"
+        hx-post="{% url 'like_question' %}" 
+        hx-vals='{"question": "{{question.id}}"}'
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-trigger="click"
+        >
+          <span class="icon">
+            <i class="fa-regular fa-thumbs-up"></i>
+          </span>
+          <span>Like ({{ question.likes.count }})</span>
+        </a>
+      </li>
+      <li>
+        <a 
+        hx-get="{% url 'solucao' %}"
+        hx-vals='{"question": "{{question.id}}"}'        
+        hx-target="#question_{{ question.id }}"                    
+        hx-trigger="click, solucaosalvo from:body"
+        hx-swap="innerHTML">
+          <span class="icon is-small">
+            <i class="fa-solid fa-users-gear"></i>
+          </span>
+          <span>Resoluções ({{question.solucao_set.count}})</span>
+        </a>
+      </li>
+      <li>
+        <a
+        hx-get="{% url 'comentario' %}"
+        hx-vals='{"question": "{{question.id}}"}'        
+        hx-target="#question_{{ question.id }}"                    
+        hx-trigger="click, comentariosalvo from:body"
+        hx-swap="innerHTML">
+          <span class="icon is-small">
+            <i class="fa-regular fa-comments"></i>
+          </span>
+          <span>Dúvidas e discussões ({{question.comment_set.count}})</span>
+        </a>
+      </li>                                 
+    </ul>                        
+</div>

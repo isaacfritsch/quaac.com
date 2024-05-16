@@ -1,0 +1,22 @@
+<button class="button is-ghost"
+hx-post="{% url 'like_solucao' %}" 
+hx-vals='{"solucao": "{{solucao.id}}"}'
+hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+hx-trigger="click"                    
+>
+  <span class="icon is-small">
+    <i class="fa-regular fa-thumbs-up"></i>
+  </span>
+  <span>Like ({{ solucao.likes.count }})</span>
+</button>
+<button class="button is-ghost"
+  hx-get="{% url 'add_reply_solucao' %}"
+  hx-vals='{"solucao": "{{solucao.id}}"}'
+  hx-target="#solucao_{{ solucao.id }}"
+  hx-trigger="click, replysolucaosalvo from:body"
+  hx-swap="innerHTML">
+  <span class="icon is-small">
+    <i class="fa-solid fa-reply"></i>
+  </span>
+  <span>Respostas ({{ solucao.replies_solucao.count }})</span>
+</button>

@@ -29,66 +29,55 @@
               <div class="media-content">
                 <div class="content">
                   <p>{{ comentario.body|safe }}</p>
-                  <div class="buttons">
-                    <button class="button is-ghost">
-                      <span class="icon is-small">
-                        <i class="fa-regular fa-thumbs-up"></i>
-                      </span>
-                      <span>Like (0)</span>
-                    </button>
-                    <button class="button is-ghost"
-                    hx-get="{% url 'add_reply' %}"
-                    hx-vals='{"comentario": "{{comentario.id}}"}'        
-                    hx-target="#comentario_{{ comentario.id }}"                    
-                    hx-trigger="click, replysalvo from:body"
-                    hx-swap="innerHTML">
-                      <span class="icon is-small">
-                        <i class="fa-solid fa-reply"></i>
-                      </span>
-                      <span >Respostas ({{ comentario.replies.count }}) </span>
-                    </button>
+                  <div class="buttons"                  
+                  hx-get="{% url 'comment_tab' %}"
+                  hx-trigger="atualizatabcomentario from:body"
+                  hx-vals='{"comentario": "{{comentario.id}}"}'
+                  hx-swap="innerHTML"
+                  >                  
+                    {% include 'questoes/comment_tab.html'%}
                   </div>
                 </div>
                 <div id="comentario_{{ comentario.id }}">
                 </div>
               </div>
-              {% if user.is_authenticated and comentario.autor == settings.AUTH_USER_MODEL %}
-              <div x-data="{comentarioconfirmardeletar : false}">
-                <div class="media-right">
-                  <div class="buttons">
-                    <button class="button is-ghost">
-                      <span class="icon is-small">
-                        <i class="fa-solid fa-edit"></i>
-                      </span>
-                    </button>
-                    <button class="button is-ghost" @click="comentarioconfirmardeletar = true">
-                      <span class="icon is-small">
-                        <i class="fa-solid fa-trash"></i>
-                      </span>
-                    </button>
-                  </div>
-                </div>
-                <div x-cloak x-show="comentarioconfirmardeletar" class="notification is-info is-light">
-                  <h1 class="title is-5">Tem certeza que deseja excluir o comentário?</h1>
-                  <div class="columns is-mobile">
-                    <div class="column">
-                      <button class="button is-danger"
-                      hx-post="{% url 'delete_comentario' %}"
-                      hx-vals='{"comentario": "{{comentario.id}}"}'                                       
-                      hx-trigger="click"
-                      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                      @click.stop.prevent="comentarioconfirmardeletar = false">
-                        Deletar
+              {% if user.is_authenticated and comentario.autor == user %}
+                <div x-data="{ comentarioconfirmardeletar: false }">
+                  <div class="media-right">
+                    <div class="buttons">
+                      <button class="button is-ghost">
+                        <span class="icon is-small">
+                          <i class="fa-solid fa-edit"></i>
+                        </span>
                       </button>
-                    </div>
-                    <div class="column is-narrow">
-                      <button class="button is-light" @click.stop.prevent="comentarioconfirmardeletar = false">
-                        Cancelar
+                      <button class="button is-ghost" @click="comentarioconfirmardeletar = true">
+                        <span class="icon is-small">
+                          <i class="fa-solid fa-trash"></i>
+                        </span>
                       </button>
                     </div>
                   </div>
+                  <div x-cloak x-show="comentarioconfirmardeletar" class="notification is-info is-light">
+                    <h1 class="title is-5">Tem certeza que deseja excluir o comentário?</h1>
+                    <div class="columns is-mobile">
+                      <div class="column">
+                        <button class="button is-danger"
+                                hx-post="{% url 'delete_comentario' %}"
+                                hx-vals='{"comentario": "{{comentario.id}}"}'
+                                hx-trigger="click"
+                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                @click.stop.prevent="comentarioconfirmardeletar = false">
+                          Deletar
+                        </button>
+                      </div>
+                      <div class="column is-narrow">
+                        <button class="button is-light" @click.stop.prevent="comentarioconfirmardeletar = false">
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
               {% endif %}
             </article>
           </div>

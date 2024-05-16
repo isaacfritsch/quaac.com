@@ -1,0 +1,22 @@
+<button class="button is-ghost"                    
+                    hx-post="{% url 'like_comment' %}" 
+                    hx-vals='{"comentario": "{{comentario.id}}"}'
+                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                    hx-trigger="click"
+                    >
+                      <span class="icon is-small">
+                        <i class="fa-regular fa-thumbs-up"></i>
+                      </span>
+                      <span>Like ({{ comentario.likes.count }})</span>
+                    </button>
+                    <button class="button is-ghost"
+                    hx-get="{% url 'add_reply' %}"
+                    hx-vals='{"comentario": "{{comentario.id}}"}'        
+                    hx-target="#comentario_{{ comentario.id }}"                    
+                    hx-trigger="click, replysalvo from:body"
+                    hx-swap="innerHTML">
+                      <span class="icon is-small">
+                        <i class="fa-solid fa-reply"></i>
+                      </span>
+                      <span >Respostas ({{ comentario.replies.count }}) </span>
+                    </button>

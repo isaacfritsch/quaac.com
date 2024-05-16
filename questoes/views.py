@@ -6,6 +6,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.http import HttpResponse, QueryDict
 from django.forms import formset_factory
+from django.contrib.contenttypes.models import ContentType
 from urllib.parse import unquote
 from django.db.models import Count, Q
 from django.utils.crypto import get_random_string
@@ -15,7 +16,7 @@ from django.contrib.auth.decorators import login_required
 from espaco.models import Espaco, Tag
 from .forms import QuestaoForm, CommentForm, SolucaoForm, ReplyForm, ReplysolucaoForm
 from espaco.forms import CreateSpaceForm, TagForm
-from questoes.models import Questao, Comment, Reply, Solucao, Replysolucao
+from questoes.models import Questao, Comment, Reply, Solucao, Replysolucao, Like
 from django.views.decorators.http import require_POST
 from django.views.generic.list import ListView
 from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
@@ -725,7 +726,135 @@ def delete_reply_solucao(request):
             return HttpResponse(status=204, headers={'HX-Trigger': 'replysolucaosalvo'})
         return HttpResponse()
 
+def like_question(request):
+    question_id = request.POST.get("question")
+    question = Questao.objects.get(id=question_id) 
+    
+    content_type = ContentType.objects.get_for_model(question)
+    like, created = Like.objects.get_or_create(
+        user=request.user,
+        content_type=content_type,
+        object_id=question.id,
+    )
+    if not created:
+        # If like already exists, remove it
+        like.delete()
+    return HttpResponse(status=204, headers={'HX-Trigger': 'atualizatabquestao'})
 
+def questao_int_tab(request):
+    question_id = request.GET.get("question")
+         
+    question = Questao.objects.get(id=question_id)
+    
+    context = {
+        'question': question
+    }
+    
+    return render(request, 'questoes/questao_int_tab.html', context)
+
+def like_comment(request):
+    comentario_id = request.POST.get("comentario")
+    comentario = Comment.objects.get(id=comentario_id) 
+    
+    content_type = ContentType.objects.get_for_model(comentario)
+    like, created = Like.objects.get_or_create(
+        user=request.user,
+        content_type=content_type,
+        object_id=comentario.id,
+    )
+    if not created:
+        # If like already exists, remove it
+        like.delete()
+    return HttpResponse(status=204, headers={'HX-Trigger': 'atualizatabcomentario'})
+
+def comment_tab(request):
+    comentario_id = request.GET.get("comentario")
+         
+    comentario = Comment.objects.get(id=comentario_id)
+    
+    context = {
+        'comentario': comentario
+    }
+    
+    return render(request, 'questoes/comment_tab.html', context)
+
+def like_reply(request):
+    reply_id = request.POST.get("reply")
+    reply = Reply.objects.get(id=reply_id) 
+    
+    content_type = ContentType.objects.get_for_model(reply)
+    like, created = Like.objects.get_or_create(
+        user=request.user,
+        content_type=content_type,
+        object_id=reply.id,
+    )
+    if not created:
+        # If like already exists, remove it
+        like.delete()
+    return HttpResponse(status=204, headers={'HX-Trigger': 'atualizatabreply'})
+
+def reply_tab(request):
+    reply_id = request.GET.get("reply")
+         
+    reply = Reply.objects.get(id=reply_id)
+    
+    context = {
+        'reply': reply
+    }
+    
+    return render(request, 'questoes/reply_tab.html', context)
+
+def like_solucao(request):
+    solucao_id = request.POST.get("solucao")
+    solucao = Solucao.objects.get(id=solucao_id) 
+    
+    content_type = ContentType.objects.get_for_model(solucao)
+    like, created = Like.objects.get_or_create(
+        user=request.user,
+        content_type=content_type,
+        object_id=solucao.id,
+    )
+    if not created:
+        # If like already exists, remove it
+        like.delete()
+    return HttpResponse(status=204, headers={'HX-Trigger': 'atualizatabsolucao'})
+
+def solucao_tab(request):
+    solucao_id = request.GET.get("solucao")
+         
+    solucao = Solucao.objects.get(id=solucao_id)
+    
+    context = {
+        'solucao': solucao
+    }
+    
+    return render(request, 'questoes/solucao_tab.html', context)
+
+def like_reply_solucao(request):
+    reply_id = request.POST.get("reply")
+    reply = Replysolucao.objects.get(id=reply_id) 
+    
+    content_type = ContentType.objects.get_for_model(reply)
+    like, created = Like.objects.get_or_create(
+        user=request.user,
+        content_type=content_type,
+        object_id=reply.id,
+    )
+    if not created:
+        # If like already exists, remove it
+        like.delete()   
+    return HttpResponse(status=204, headers={'HX-Trigger': 'atualizatabsolucaoreply'})
+
+def reply_solucao_tab(request):
+    reply_id = request.GET.get("reply")
+
+    reply = Replysolucao.objects.get(id=reply_id)
+    
+    context = {
+        'reply': reply
+    }
+    
+    return render(request, 'questoes/reply_solucao_tab.html', context)
 
 
 

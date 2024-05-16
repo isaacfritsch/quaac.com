@@ -2,7 +2,25 @@ from django.db import models
 from django.conf import settings
 from autoslug import AutoSlugField
 from espaco.models import Espaco, Tag
+from users.models import User
+from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
+
+class Like(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+    liked_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'content_type', 'object_id')
+        
 class Questao(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -15,7 +33,8 @@ class Questao(models.Model):
     body = models.TextField()    
     times_solved = models.IntegerField(default=0)
     tags = models.ManyToManyField(Tag)
-
+    likes = GenericRelation(Like)
+      
 
 # class Alternativa(models.Model):
 #     question = models.ForeignKey(
@@ -32,7 +51,8 @@ class Comment(models.Model):
     )
     questao = models.ForeignKey(Questao, on_delete=models.CASCADE)
     body = models.TextField()
-    data = models.DateTimeField(auto_now_add=True)   
+    data = models.DateTimeField(auto_now_add=True) 
+    likes = GenericRelation(Like)
 
     def __str__(self):
         try:
@@ -42,6 +62,8 @@ class Comment(models.Model):
         
     class Meta:
         ordering = ['-data']
+        
+
 
 class Reply(models.Model):
     autor = models.ForeignKey(
@@ -52,6 +74,7 @@ class Reply(models.Model):
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='replies')
     body = models.TextField()
     data = models.DateTimeField(auto_now_add=True)
+    likes = GenericRelation(Like)
 
     def __str__(self):
         return f'{self.autor} - {self.body[:20]}'
@@ -65,7 +88,8 @@ class Solucao(models.Model):
     )
     questao = models.ForeignKey(Questao, on_delete=models.CASCADE)
     bodysol = models.TextField()
-    data = models.DateTimeField(auto_now_add=True)   
+    data = models.DateTimeField(auto_now_add=True)
+    likes = GenericRelation(Like)   
 
     def __str__(self):
         try:
@@ -85,8 +109,11 @@ class Replysolucao(models.Model):
     solucao = models.ForeignKey(Solucao, on_delete=models.CASCADE, related_name='replies_solucao')
     body = models.TextField()
     data = models.DateTimeField(auto_now_add=True)
+    likes = GenericRelation(Like)
 
     def __str__(self):
         return f'{self.autor} - {self.body[:20]}'
+    
+
         
 

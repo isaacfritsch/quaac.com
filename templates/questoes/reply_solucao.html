@@ -19,13 +19,13 @@
           <div class="media-content">
             <div class="content">
               <p>{{ reply.body|safe }}</p>
-              <div class="buttons">
-                <button class="button is-ghost">
-                  <span class="icon is-small">
-                    <i class="fa-regular fa-thumbs-up"></i>
-                  </span>
-                  <span>Like (0)</span>
-                </button>                
+              <div class="buttons"
+              hx-get="{% url 'reply_solucao_tab' %}"
+              hx-trigger="atualizatabsolucaoreply from:body"
+              hx-vals='{"reply": "{{reply.id}}"}'
+              hx-swap="innerHTML"
+              >
+                {%include 'questoes/reply_solucao_tab.html'%}
               </div>
             </div>
           </div>
