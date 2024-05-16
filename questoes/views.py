@@ -13,9 +13,9 @@ from django.forms.models import inlineformset_factory
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from espaco.models import Espaco, Tag
-from .forms import QuestaoForm, CommentForm, SolucaoForm, ReplyForm
+from .forms import QuestaoForm, CommentForm, SolucaoForm, ReplyForm, ReplysolucaoForm
 from espaco.forms import CreateSpaceForm, TagForm
-from questoes.models import Questao, Comment, Reply
+from questoes.models import Questao, Comment, Reply, Solucao, Replysolucao
 from django.views.decorators.http import require_POST
 from django.views.generic.list import ListView
 from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
@@ -675,6 +675,55 @@ def solucao(request):
     }   
 
     return render(request, 'questoes/solucao.html', context)
+
+def delete_solucao(request):
+    solucao_id = request.POST.get("solucao")
+    solucao = Solucao.objects.get(id=solucao_id)
+    
+    if request.user == solucao.autor:
+        if request.method == 'POST':
+            solucao.delete()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'solucaosalvo'})
+        return HttpResponse()
+
+def add_reply_solucao(request):
+    
+    solucao_id = request.GET.get("solucao")
+    if not solucao_id:
+       solucao_id = request.POST.get("solucao")     
+    solucao = Solucao.objects.get(id=solucao_id)    
+    replys_solucao = solucao.replies_solucao.all()   
+    
+    if request.method == 'POST' and request.user.is_authenticated:
+        formreplysolucao = ReplysolucaoForm(request.POST)
+        if formreplysolucao.is_valid():
+            reply_solucao = formreplysolucao.save(commit=False)
+            reply_solucao.autor = request.user            
+            reply_solucao.solucao = solucao
+            reply_solucao.save()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'replysolucaosalvo'})
+        else:
+            return HttpResponse()
+    else:
+        formreplysolucao = ReplysolucaoForm()
+        
+    context = {
+        'replys_solucao':replys_solucao,
+        'solucao': solucao,        
+        'formreply': formreplysolucao        
+    }   
+
+    return render(request, 'questoes/reply_solucao.html', context)
+
+def delete_reply_solucao(request):
+    reply_id = request.POST.get("replysolucao")
+    reply = Replysolucao.objects.get(id=reply_id)
+    
+    if request.user == reply.autor:
+        if request.method == 'POST':
+            reply.delete()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'replysolucaosalvo'})
+        return HttpResponse()
 
 
 

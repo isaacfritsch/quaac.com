@@ -24,4 +24,7 @@ urlpatterns = [
     path('add_reply/', views.add_reply, name='add_reply'),
     path('delete_reply/', views.delete_reply, name='delete_reply'),
     path('solucao/', views.solucao, name='solucao'),
+    path('delete_solucao/', views.delete_solucao, name='delete_solucao'),
+    path('add_reply_solucao/', views.add_reply_solucao, name='add_reply_solucao'),
+    path('delete_reply_solucao/', views.delete_reply_solucao, name='delete_reply_solucao'),
 ]

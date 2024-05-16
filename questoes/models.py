@@ -76,4 +76,17 @@ class Solucao(models.Model):
     class Meta:
         ordering = ['-data']
         
+class Replysolucao(models.Model):
+    autor = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.SET_NULL,
+        null=True
+    )
+    solucao = models.ForeignKey(Solucao, on_delete=models.CASCADE, related_name='replies_solucao')
+    body = models.TextField()
+    data = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.autor} - {self.body[:20]}'
+        
 

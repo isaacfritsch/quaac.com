@@ -1,0 +1,116 @@
+<div x-data="{ isOpenss: true }">
+    <div x-show="isOpenss">
+        <div class="column has-text-right">
+          <button @click="isOpenss = !isOpenss" class="delete"></button>
+        </div>
+{% for reply in replys_solucao %}
+<div class="columns">
+    <div class="column is-2">
+      <article class="media">
+        <div class="media-content">
+          <p class="title is-6">{{ reply.autor.name }}</p>
+          <p class="subtitle is-7">{{ reply.data }}</p>
+        </div>
+      </article>
+    </div>
+    <div class="column is-10">
+      <div class="box">
+        <article class="media">
+          <div class="media-content">
+            <div class="content">
+              <p>{{ reply.body|safe }}</p>
+              <div class="buttons">
+                <button class="button is-ghost">
+                  <span class="icon is-small">
+                    <i class="fa-regular fa-thumbs-up"></i>
+                  </span>
+                  <span>Like (0)</span>
+                </button>                
+              </div>
+            </div>
+          </div>
+          
+          {% if user.is_authenticated and reply.autor == user %}
+          <div x-data="{comentarioreplysconfirmardeletar : false}">
+              <div class="media-right">
+                <div class="buttons">
+                  <button class="button is-ghost">
+                    <span class="icon is-small">
+                      <i class="fa-solid fa-edit"></i>
+                    </span>
+                  </button>
+                  <button class="button is-ghost" @click="comentarioreplysconfirmardeletar = true">
+                    <span class="icon is-small">
+                      <i class="fa-solid fa-trash"></i>
+                    </span>
+                  </button>
+                </div>
+              </div>
+              <div x-cloak x-show="comentarioreplysconfirmardeletar" class="notification is-info is-light">
+                <h1 class="title is-5">Tem certeza que deseja excluir o comentário?</h1>
+                <div class="columns is-mobile">
+                  <div class="column">
+                    <button class="button is-danger"
+                    hx-post="{% url 'delete_reply_solucao' %}"
+                    hx-vals='{"replysolucao": "{{reply.id}}"}'                                       
+                    hx-trigger="click"
+                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                    @click.stop.prevent="comentarioreplysconfirmardeletar = false">
+                      Deletar
+                    </button>
+                  </div>
+                  <div class="column is-narrow">
+                    <button class="button is-light" @click.stop.prevent="comentarioreplysconfirmardeletar = false">
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+        </article>
+      </div>
+    </div>    
+      </article>            
+      
+    </div>
+  {% endfor %} 
+  
+  {% if request.user.is_authenticated %}
+        
+        <form class="form" name="formreplay"      
+            hx-post = {{request.path}}
+            hx-vals='{"solucao": "{{solucao.id}}"}'
+            hx-trigger="submit"                                  
+          >
+          {% csrf_token %}
+          
+          <article class="media">
+            <div class="media-left">
+              <p class="title is-6">{{ request.user.name }}</p>
+            </div>
+            <div class="media-content">
+              <form action="" method="post">
+                {% csrf_token %}
+                <div class="field">
+                  {{ formreply.body }}                  
+                </div>
+                <div class="field">
+                  <p class="control">
+                    <button type="submit" class="button is-info is-small">Postar</button>
+                  </p>
+                </div>
+              </form>
+            </div>
+          </article>         
+
+        </form>
+        {% else %}
+          <div class="notification is-danger">Faça login para postar uma resposta</div>
+        {% endif %}    
+    </div>
+  </div>
+</div>
+</div>
+</div>
+

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Questao, Comment, Solucao, Reply
+from .models import Questao, Comment, Solucao, Reply, Replysolucao
 from django_summernote.fields import SummernoteTextFormField, SummernoteTextField
 
 
@@ -85,4 +85,14 @@ class SolucaoForm(forms.ModelForm):
         self.fields['autor'].required = False       
         
         self.fields['bodysol'] = SummernoteTextFormField(required = False)
+        
+class ReplysolucaoForm(forms.ModelForm):
+    class Meta:
+        model = Replysolucao
+        fields = ['body']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)        
+        
+        self.fields['body'] = SummernoteTextFormField(required = True)
         

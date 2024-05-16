@@ -7,11 +7,11 @@
   hyphens: auto; /* add hyphens when breaking words */
 }
 </style>
-<div x-data="{ isOpen: true }">
-  <div x-show="isOpen">
+<div x-data="{ isOpens: true }">
+  <div x-show="isOpens">
     <div class="column" style="background-color: #f5f5f5; padding: 10px;"> 
       <div class="column has-text-right">          
-        <button @click="isOpen = !isOpen" class="delete"></button>
+        <button @click="isOpens = !isOpens" class="delete"></button>
       </div> 
       {% for solucao in solucoes %}
       <div class="columns">
@@ -37,23 +37,23 @@
                       <span>Like (0)</span>
                     </button>
                     <button class="button is-ghost"
-                    hx-get="{% url 'add_reply' %}"
-                    hx-vals='{"comentario": "{{comentario.id}}"}'        
-                    hx-target="#comentario_{{ comentario.id }}"                    
-                    hx-trigger="click, replysalvo from:body"
+                    hx-get="{% url 'add_reply_solucao' %}"
+                    hx-vals='{"solucao": "{{solucao.id}}"}'        
+                    hx-target="#solucao_{{ solucao.id }}"                    
+                    hx-trigger="click, replysolucaosalvo from:body"
                     hx-swap="innerHTML">
                       <span class="icon is-small">
                         <i class="fa-solid fa-reply"></i>
                       </span>
-                      {% comment %} <span>Respostas ({{ solucao.replies.count }})</span> {% endcomment %}
+                      <span>Respostas ({{ solucao.replies_solucao.count }})</span>
                     </button>
                   </div>
                 </div>
-                {% comment %} <div id="comentario_{{ comentario.id }}"> {% endcomment %}
-                {% comment %} </div> {% endcomment %}
+                <div id="solucao_{{ solucao.id }}">
+                </div>
               </div>
-              {% if user.is_authenticated and comentario.autor == settings.AUTH_USER_MODEL %}
-              <div x-data="{comentarioconfirmardeletar : false}">
+              {% if user.is_authenticated and solucao.autor == user %}
+              <div x-data="{solucaoconfirmardeletar : false}">
                 <div class="media-right">
                   <div class="buttons">
                     <button class="button is-ghost">
@@ -61,28 +61,28 @@
                         <i class="fa-solid fa-edit"></i>
                       </span>
                     </button>
-                    <button class="button is-ghost" @click="comentarioconfirmardeletar = true">
+                    <button class="button is-ghost" @click="solucaoconfirmardeletar = true">
                       <span class="icon is-small">
                         <i class="fa-solid fa-trash"></i>
                       </span>
                     </button>
                   </div>
                 </div>
-                <div x-cloak x-show="comentarioconfirmardeletar" class="notification is-info is-light">
+                <div x-cloak x-show="solucaoconfirmardeletar" class="notification is-info is-light">
                   <h1 class="title is-5">Tem certeza que deseja excluir o comentário?</h1>
                   <div class="columns is-mobile">
                     <div class="column">
                       <button class="button is-danger"
-                      hx-post="{% url 'delete_comentario' %}"
-                      hx-vals='{"comentario": "{{comentario.id}}"}'                                       
+                      hx-post="{% url 'delete_solucao' %}"
+                      hx-vals='{"solucao": "{{solucao.id}}"}'                                       
                       hx-trigger="click"
                       hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                      @click.stop.prevent="comentarioconfirmardeletar = false">
+                      @click.stop.prevent="solucaoconfirmardeletar = false">
                         Deletar
                       </button>
                     </div>
                     <div class="column is-narrow">
-                      <button class="button is-light" @click.stop.prevent="comentarioconfirmardeletar = false">
+                      <button class="button is-light" @click.stop.prevent="solucaoconfirmardeletar = false">
                         Cancelar
                       </button>
                     </div>
