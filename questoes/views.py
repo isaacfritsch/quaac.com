@@ -13,9 +13,9 @@ from django.forms.models import inlineformset_factory
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from espaco.models import Espaco, Tag
-from .forms import QuestaoForm, AlternativaForm, CommentForm
+from .forms import QuestaoForm, CommentForm, SolucaoForm, ReplyForm
 from espaco.forms import CreateSpaceForm, TagForm
-from questoes.models import Questao, Alternativa
+from questoes.models import Questao, Comment, Reply
 from django.views.decorators.http import require_POST
 from django.views.generic.list import ListView
 from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
@@ -362,115 +362,198 @@ def botao_tag_confirmar_deletar2(request):
                                                  })
         return response
     
-def create_alternativa(request, espaco):
+# def create_alternativa(request, espaco):
     
-    espaco_desejado = Espaco.objects.get(title=espaco)    
+#     espaco_desejado = Espaco.objects.get(title=espaco)    
     
-    if request.method == 'GET':
+#     if request.method == 'GET':
         
-        form_alternativa_factory = inlineformset_factory(Questao, Alternativa, form=AlternativaForm, extra=1, max_num=10)
+#         form_alternativa_factory = inlineformset_factory(Questao, Alternativa, form=AlternativaForm, extra=1, max_num=10)
         
-        form_alternativa = form_alternativa_factory()        
+#         form_alternativa = form_alternativa_factory()        
         
-        form_number = request.GET.get("totalForms")
+#         form_number = request.GET.get("totalForms")
         
-        if form_number == None:
-            form_number = 0       
+#         if form_number == None:
+#             form_number = 0       
         
-        for form in form_alternativa:
-            form.prefix =  form.prefix.replace(form.prefix[-1], form_number)
+#         for form in form_alternativa:
+#             form.prefix =  form.prefix.replace(form.prefix[-1], form_number)
         
-        return render(request, 'questoes/create_alternativa.html', {'form_alternativa': form_alternativa,                                                                                                                                                                                                                                                                                                                                                  
-                                                                    'espaco': espaco_desejado}) 
+#         return render(request, 'questoes/create_alternativa.html', {'form_alternativa': form_alternativa,                                                                                                                                                                                                                                                                                                                                                  
+#                                                                     'espaco': espaco_desejado}) 
         
  
   
-def question_create(request, espaco):
+# def question_create(request, espaco):
 
-    espaco_desejado = Espaco.objects.get(title=espaco)   
+#     espaco_desejado = Espaco.objects.get(title=espaco)   
     
-    if request.method == 'POST': 
+#     if request.method == 'POST': 
         
-        form_number = request.POST.get("totalForms")
+#         form_number = request.POST.get("totalForms")
         
-        data = {
-         "alternativa_set-TOTAL_FORMS": form_number,
-        "alternativa_set-INITIAL_FORMS": "0",
-        }
+#         data = {
+#          "alternativa_set-TOTAL_FORMS": form_number,
+#         "alternativa_set-INITIAL_FORMS": "0",
+#         }
                
-        form_questao = QuestaoForm(request.POST)
+#         form_questao = QuestaoForm(request.POST)
         
-        form_alternativa_factory = inlineformset_factory(Questao, Alternativa, form=AlternativaForm, max_num=10)
-        post_data = request.POST.copy()
+#         form_alternativa_factory = inlineformset_factory(Questao, Alternativa, form=AlternativaForm, max_num=10)
+#         post_data = request.POST.copy()
 
-        # Update post_data with the contents of dict2
-        post_data.update(data)
+#         # Update post_data with the contents of dict2
+#         post_data.update(data)
 
-        # Convert post_data to a normal Python dictionary
-        post_dict = {key: value for key, value in post_data.items()}
+#         # Convert post_data to a normal Python dictionary
+#         post_dict = {key: value for key, value in post_data.items()}
 
-        # Now pass the combined dictionary to the form
+#         # Now pass the combined dictionary to the form
         
-        form_alternativa = form_alternativa_factory(post_dict)
+#         form_alternativa = form_alternativa_factory(post_dict)
         
-        form_questao = QuestaoForm(request.POST)      
+#         form_questao = QuestaoForm(request.POST)      
         
-        if request.session['selected_tags_questoes'] == []:
-            form_questao.add_error('tags', 'A questão precisa ter pelo menos uma tag selecionada')
+#         if request.session['selected_tags_questoes'] == []:
+#             form_questao.add_error('tags', 'A questão precisa ter pelo menos uma tag selecionada')
                 
-            return render(request, 'questoes/create_question_form.html', {'form_questao': form_questao,                                                                                                                
-                                                            'espaco': espaco_desejado,                                                                                                                  
-                                                            })                
+#             return render(request, 'questoes/create_question_form.html', {'form_questao': form_questao,                                                                                                                
+#                                                             'espaco': espaco_desejado,                                                                                                                  
+#                                                             })                
         
-        if form_questao.is_valid() and form_alternativa.is_valid():
+#         if form_questao.is_valid() and form_alternativa.is_valid():
 
-            question = form_questao.save(commit=False)  # Create instance, don't save yet
+#             question = form_questao.save(commit=False)  # Create instance, don't save yet
             
-            question.user = request.user
-            question.space = espaco_desejado  # Assign the "espaco"
+#             question.user = request.user
+#             question.space = espaco_desejado  # Assign the "espaco"
                   
-            question.save()  # Now save to the database 
-            question_obj = Questao.objects.get(id=question.id)  
-            form_alternativa.instance = question_obj
-            # for form in form_alternativa:
-            #     print(form.data)           
-            #     form.instance.question = question_obj
-            #     form.save() 
+#             question.save()  # Now save to the database 
+#             question_obj = Questao.objects.get(id=question.id)  
+#             form_alternativa.instance = question_obj
+#             # for form in form_alternativa:
+#             #     print(form.data)           
+#             #     form.instance.question = question_obj
+#             #     form.save() 
             
-            form_alternativa.save()
+#             form_alternativa.save()
                         
-            tags = request.session['selected_tags_questoes']
+#             tags = request.session['selected_tags_questoes']
             
-            for tag_name in tags:
+#             for tag_name in tags:
 
-                tag_obj = Tag.objects.get(name=tag_name, space=espaco_desejado.id)
+#                 tag_obj = Tag.objects.get(name=tag_name, space=espaco_desejado.id)
 
-                question_obj.tags.add(tag_obj)
+#                 question_obj.tags.add(tag_obj)
              
-            response = HttpResponse(204)
+#             response = HttpResponse(204)
             
-            response["Hx-Redirect"] = reverse('questao', kwargs={'question': question.id})
-            return response
+#             response["Hx-Redirect"] = reverse('questao', kwargs={'question': question.id})
+#             return response
             
            
-        return render(request, 'questoes/create_question_form.html', {'form_questao': form_questao,                                                                                                                                                                                                                                               
-                                                    'espaco': espaco_desejado,                                                                                                                  
-                                                        })
+#         return render(request, 'questoes/create_question_form.html', {'form_questao': form_questao,                                                                                                                                                                                                                                               
+#                                                     'espaco': espaco_desejado,                                                                                                                  
+#                                                         })
         
+#     else:
+        
+#         form_questao = QuestaoForm()
+        
+#     request.session['selected_tags_questoes'] = []     
+
+
+#     return render(request, 'questoes/create_question.html', {'form_questao': form_questao,                                                                                                                  
+#                                                      'espaco': espaco_desejado,})  
+
+# def question_create(request, espaco):
+#     espaco_desejado = Espaco.objects.get(title=espaco)   
+    
+#     if request.method == 'POST': 
+#         form_questao = QuestaoForm(request.POST)
+
+#         if request.session.get('selected_tags_questoes', []) == []:
+#             form_questao.add_error('tags', 'A questão precisa ter pelo menos uma tag selecionada')
+#             return render(request, 'questoes/create_question_form.html', {'form_questao': form_questao, 'espaco': espaco_desejado})                
+        
+#         if form_questao.is_valid():
+#             question = form_questao.save(commit=False)
+#             question.user = request.user
+#             question.space = espaco_desejado
+#             question.save()
+
+#             tags = request.session['selected_tags_questoes']
+#             for tag_name in tags:
+#                 tag_obj = Tag.objects.get(name=tag_name, space=espaco_desejado.id)
+#                 question.tags.add(tag_obj)
+             
+#             response = HttpResponse(204)
+#             response["Hx-Redirect"] = reverse('questao', kwargs={'question': question.id})
+#             return response
+
+#         return render(request, 'questoes/create_question_form.html', {'form_questao': form_questao, 'espaco': espaco_desejado})
+        
+#     else:
+#         form_questao = QuestaoForm()
+#         form_solucao = SolucaoForm()
+#         request.session['selected_tags_questoes'] = []     
+
+#     return render(request, 'questoes/create_question.html', {'form_questao': form_questao, 'espaco': espaco_desejado, 'form_solucao': form_solucao})
+
+from django.http import HttpResponse
+from django.urls import reverse
+
+def question_create(request, espaco):
+    espaco_desejado = Espaco.objects.get(title=espaco)
+    
+    form_questao = QuestaoForm(request.POST or None)
+    form_solucao = SolucaoForm(request.POST or None)
+
+    if request.method == 'POST':       
+        
+        if form_questao.is_valid():
+            tags = request.session.get('selected_tags_questoes', [])
+            if tags == []:
+                form_questao.add_error('tags', 'A questão precisa ter pelo menos uma tag selecionada')
+                return render(request, 'questoes/create_question_form.html', {
+                    'form_questao': form_questao, 'form_solucao': form_solucao, 'espaco': espaco_desejado
+                })
+            
+            question = form_questao.save(commit=False)
+            question.user = request.user
+            question.space = espaco_desejado
+            question.save()
+
+            for tag_name in tags:
+                tag_obj = Tag.objects.get(name=tag_name, space=espaco_desejado.id)
+                question.tags.add(tag_obj)
+
+           
+            
+            if form_solucao.is_valid():
+                solution = form_solucao.save(commit=False)
+                solution.autor = request.user # Associando o autor
+                solution.questao = question # Associando a questão
+                solution.save()
+                
+            response = HttpResponse(204)
+            response["Hx-Redirect"] = reverse('questao', kwargs={'question': question.id})
+            return response
+        
+        else:
+            return render(request, 'questoes/create_question_form.html', {
+                'form_questao': form_questao, 'form_solucao': form_solucao, 'espaco': espaco_desejado
+            })
+    
     else:
-        
         form_questao = QuestaoForm()
-        
-    request.session['selected_tags_questoes'] = []     
+        form_solucao = SolucaoForm()
+        request.session['selected_tags_questoes'] = []     
 
-
-    return render(request, 'questoes/create_question.html', {'form_questao': form_questao,                                                                                                                  
-                                                     'espaco': espaco_desejado,})   
-    
-    
-    
-    
-    
+    return render(request, 'questoes/create_question.html', {
+        'form_questao': form_questao, 'form_solucao': form_solucao, 'espaco': espaco_desejado
+    })
     
 def questao(request, question):          
         
@@ -480,12 +563,9 @@ def questao(request, question):
     
     tags = question1.tags.all()
     
-    alternativas = Alternativa.objects.filter(question=question1).order_by('text')
-    
     return render(request, 'questoes/questao.html', {'question': question1,                                                                                                                  
                                                      'espaco': espaco_desejado,
-                                                     'tags': tags,
-                                                     'alternativas': alternativas,
+                                                     'tags': tags,                                                     
                                                     })
     
 def comentario(request):
@@ -494,9 +574,7 @@ def comentario(request):
     if not question_id:
        question_id = request.POST.get("question")     
     question = Questao.objects.get(id=question_id)    
-    comentarios = question.comment_set.all()
-    
-    
+    comentarios = question.comment_set.all()   
     
     if request.method == 'POST' and request.user.is_authenticated:
         form = CommentForm(request.POST)
@@ -506,6 +584,8 @@ def comentario(request):
             comment.questao = question
             comment.save()
             return HttpResponse(status=204, headers={'HX-Trigger': 'comentariosalvo'})
+        else:
+            return HttpResponse()
     else:
         form = CommentForm()
         
@@ -513,11 +593,88 @@ def comentario(request):
         'comentarios':comentarios,
         'question': question,        
         'form': form        
-    }
-    
-    
+    }   
 
     return render(request, 'questoes/comentario.html', context)
+
+
+def delete_comentario(request):
+    comentario_id = request.POST.get("comentario")
+    comentario = Comment.objects.get(id=comentario_id)
+    
+    if request.user == comentario.autor:
+        if request.method == 'POST':
+            comentario.delete()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'comentariosalvo'})
+        return HttpResponse()
+    
+def add_reply(request):
+    
+    comentario_id = request.GET.get("comentario")
+    if not comentario_id:
+       comentario_id = request.POST.get("comentario")     
+    comentario = Comment.objects.get(id=comentario_id)    
+    replys = comentario.replies.all()   
+    
+    if request.method == 'POST' and request.user.is_authenticated:
+        formreply = ReplyForm(request.POST)
+        if formreply.is_valid():
+            reply = formreply.save(commit=False)
+            reply.autor = request.user            
+            reply.comment = comentario
+            reply.save()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'replysalvo'})
+        else:
+            return HttpResponse()
+    else:
+        formreply = ReplyForm()
+        
+    context = {
+        'replys':replys,
+        'comentario': comentario,        
+        'formreply': formreply        
+    }   
+
+    return render(request, 'questoes/reply.html', context)
+
+def delete_reply(request):
+    reply_id = request.POST.get("reply")
+    reply = Reply.objects.get(id=reply_id)
+    
+    if request.user == reply.autor:
+        if request.method == 'POST':
+            reply.delete()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'replysalvo'})
+        return HttpResponse()
+    
+def solucao(request):
+    
+    question_id = request.GET.get("question")
+    if not question_id:
+       question_id = request.POST.get("question")     
+    question = Questao.objects.get(id=question_id)    
+    solucoes = question.solucao_set.all()   
+    
+    if request.method == 'POST' and request.user.is_authenticated:
+        formsolucao = SolucaoForm(request.POST)
+        if formsolucao.is_valid():
+            solucao = formsolucao.save(commit=False)
+            solucao.autor = request.user            
+            solucao.questao = question
+            solucao.save()
+            return HttpResponse(status=204, headers={'HX-Trigger': 'solucaosalvo'})
+        else:
+            return HttpResponse()
+    else:
+        formsolucao = SolucaoForm()
+        
+    context = {
+        'solucoes':solucoes,
+        'question': question,        
+        'formsolucao': formsolucao       
+    }   
+
+    return render(request, 'questoes/solucao.html', context)
 
 
 

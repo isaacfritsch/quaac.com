@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from urllib.parse import unquote
 from django.db.models import Count, Q
 from django.urls import reverse
-from questoes.models import Questao, Alternativa
+from questoes.models import Questao
 from django.contrib.auth.decorators import login_required
 from .models import Espaco, Tag
 from .forms import CreateSpaceForm, TagForm
@@ -491,23 +491,15 @@ def ultimas_questoes_adicionadas(request):
     index = len(question.object_list) - 1  # Index of the last question on the page
     latest_question = question.object_list[index]
 
-    tags = latest_question.tags.all()  
-    alternativas = Alternativa.objects.filter(question=latest_question).order_by('text')
-    
-    
-    
-    
-    
+    tags = latest_question.tags.all()    
 
     context = {
         'espaco': espaco_desejado,
         'questions' : question,
         'page' : page,
         'tags': tags,
-        'alternativas': alternativas,
+        
     }
-    
-    
 
     return render(request, 'espaco/ultimas_questoes_adicionadas.html', context)
 
