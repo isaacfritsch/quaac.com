@@ -584,7 +584,7 @@ def comentario(request):
             comment.autor = request.user            
             comment.questao = question
             comment.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'comentariosalvo'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'comentariosalvo, atualizatabquestao'})
         else:
             return HttpResponse()
     else:
@@ -606,7 +606,7 @@ def delete_comentario(request):
     if request.user == comentario.autor:
         if request.method == 'POST':
             comentario.delete()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'comentariosalvo'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'comentariosalvo, atualizatabquestao'})
         return HttpResponse()
     
 def add_reply(request):
@@ -624,7 +624,7 @@ def add_reply(request):
             reply.autor = request.user            
             reply.comment = comentario
             reply.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'replysalvo'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'replysalvo, atualizatabcomentario'})
         else:
             return HttpResponse()
     else:
@@ -645,7 +645,7 @@ def delete_reply(request):
     if request.user == reply.autor:
         if request.method == 'POST':
             reply.delete()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'replysalvo'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'replysalvo, atualizatabcomentario'})
         return HttpResponse()
     
 def solucao(request):
@@ -663,7 +663,7 @@ def solucao(request):
             solucao.autor = request.user            
             solucao.questao = question
             solucao.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'solucaosalvo'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'solucaosalvo, atualizatabquestao'})
         else:
             return HttpResponse()
     else:
@@ -684,7 +684,7 @@ def delete_solucao(request):
     if request.user == solucao.autor:
         if request.method == 'POST':
             solucao.delete()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'solucaosalvo'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'solucaosalvo, atualizatabquestao'})
         return HttpResponse()
 
 def add_reply_solucao(request):
@@ -702,7 +702,7 @@ def add_reply_solucao(request):
             reply_solucao.autor = request.user            
             reply_solucao.solucao = solucao
             reply_solucao.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'replysolucaosalvo'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'replysolucaosalvo, atualizatabsolucao'})
         else:
             return HttpResponse()
     else:
@@ -723,7 +723,7 @@ def delete_reply_solucao(request):
     if request.user == reply.autor:
         if request.method == 'POST':
             reply.delete()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'replysolucaosalvo'})
+            return HttpResponse(status=204, headers={'HX-Trigger': 'replysolucaosalvo, atualizatabsolucao'})
         return HttpResponse()
 
 def like_question(request):
@@ -842,7 +842,8 @@ def like_reply_solucao(request):
     )
     if not created:
         # If like already exists, remove it
-        like.delete()   
+        like.delete()
+           
     return HttpResponse(status=204, headers={'HX-Trigger': 'atualizatabsolucaoreply'})
 
 def reply_solucao_tab(request):
