@@ -2,9 +2,10 @@ from typing import Any
 import json
 import ast
 from django.db.models.query import QuerySet
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.http import HttpResponse, QueryDict
+from django.contrib import messages
 from django.forms import formset_factory
 from django.contrib.contenttypes.models import ContentType
 from urllib.parse import unquote
@@ -69,6 +70,8 @@ def tag_creation2(request, espaco):
     
     return render(request, 'questoes/tag_modal2.html', {'form': form,                                                     
                                                      'espaco_desejado': espaco_desejado,})
+    
+
     
 def search_category2(request):
     
@@ -502,8 +505,8 @@ def botao_tag_confirmar_deletar2(request):
 
 #     return render(request, 'questoes/create_question.html', {'form_questao': form_questao, 'espaco': espaco_desejado, 'form_solucao': form_solucao})
 
-from django.http import HttpResponse
-from django.urls import reverse
+
+
 
 def question_create(request, espaco):
     espaco_desejado = Espaco.objects.get(title=espaco)
@@ -528,18 +531,22 @@ def question_create(request, espaco):
 
             for tag_name in tags:
                 tag_obj = Tag.objects.get(name=tag_name, space=espaco_desejado.id)
-                question.tags.add(tag_obj)
-
-           
+                question.tags.add(tag_obj)           
             
             if form_solucao.is_valid():
-                solution = form_solucao.save(commit=False)
-                solution.autor = request.user # Associando o autor
-                solution.questao = question # Associando a questão
-                solution.save()
+                bodysol = form_solucao.cleaned_data.get('bodysol', '').strip()
+                if bodysol:  # Verifica se bodysol não está vazio
+                    solution = form_solucao.save(commit=False)
+                    solution.autor = request.user  # Associando o autor
+                    solution.questao = question  # Associando a questão
+                    solution.save()
+                    
+            if request.POST.get('action') == 'save_and_add_new':
+                return render(request, 'questoes/create_question_form.html', {
+                    'form_questao': QuestaoForm(), 'form_solucao': SolucaoForm(), 'espaco': espaco_desejado, 'questao_criada': True
+                }) 
                 
-            response = HttpResponse(204)
-            response["Hx-Redirect"] = reverse('questao', kwargs={'question': question.id})
+            response = render(request, 'questoes/questao_criada.html', {'question': question})            
             return response
         
         else:
@@ -555,6 +562,8 @@ def question_create(request, espaco):
     return render(request, 'questoes/create_question.html', {
         'form_questao': form_questao, 'form_solucao': form_solucao, 'espaco': espaco_desejado
     })
+    
+
     
 def questao(request, question):          
         

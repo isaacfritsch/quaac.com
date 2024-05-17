@@ -1,4 +1,4 @@
-{% load static %}
+
 <style>
 .block {
   word-wrap: break-word; /* fallback for older browsers */
@@ -8,7 +8,16 @@
 }
 
 </style>
-
+<div x-data="{ successq: true }" x-init="setTimeout(() => successq = false, 3000)">
+  <div class="panel-block has-background-success has-text-white p-2 has-border-success"
+       x-cloak
+       x-show="successq">
+    <span class="icon">
+      <i class="fa-solid fa-circle-check"></i>
+    </span>
+    <p>Questão criada com sucesso!</p>
+  </div>
+</div>
 <section class="section">
   <div class="container is-justify-content-center is-fullwidth">
     <div class="block">
@@ -17,7 +26,7 @@
           <div class="box">
             <div class="columns is-mobile has-background-white-ter">
               <div class="column is-narrow">
-                <div href="" style="width: 20px">{{ question.id }}</div>
+                <div style="width: 20px">{{ question.id }}</div>
               </div>
               <div class="column">
                 <p class="is-size-7">Created by: {{ question.user.name }}</p>

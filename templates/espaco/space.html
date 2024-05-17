@@ -19,14 +19,10 @@
 <script type="text/javascript">
   function updateMinhalista(updatedData) {
     window.minhalista = JSON.parse(updatedData);
-
 }
-
-
   document.addEventListener('eventupdateselectedtags', function(evt) {
     updateMinhalista(evt.detail.selected_tags_json)
 });
-
   window.addEventListener('load', function(evt) { 
     selectedTagsJson = document.getElementById('selectedTagsData').textContent;
     updateMinhalista(selectedTagsJson);    
