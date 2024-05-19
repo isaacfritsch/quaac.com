@@ -12,7 +12,8 @@
         <span class="tag is-primary">
             {{ tag }}
             <button class="delete is-small"
-            hx-post={% url 'processar_tags' tag=tag %}  
+            hx-post={% url 'processar_tags' tag=tag %}
+            hx-vals='{"espaco": "{{espaco.id}}"}'  
             hx-target="#tags_selected"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
             hx-trigger="click"            

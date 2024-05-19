@@ -12,9 +12,9 @@
             </div>
             
             <form class="form" name="form"        
-            hx-post = "{%url 'tag_edicao2'%}"
+            hx-post = "{%url 'tag_edicao2'%}"            
             hx-trigger="submit"
-            hx-vals='{"tag" : "{{ tag }}"}'           
+            hx-vals='{"tag" : "{{ tag }}", "espaco": "{{espaco.id}}"}'           
             hx-target="#tag-modal-edit2"            
             >
                 {% csrf_token %}
@@ -30,7 +30,7 @@
                                name="category"
                                hx-post="{% url 'search_category2_edit' %}"
                                hx-target='#category_selection2_edit'
-                               hx-vals='{"espaco": "{{espaco_desejado.id}}"}'
+                               hx-vals='{"espaco": "{{espaco.id}}"}'
                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                                hx-trigger="keyup changed delay:500ms"                                                                                            
                                >
@@ -77,7 +77,7 @@
                         <div class="column">
                             <button class="button is-danger"
                             hx-post="{%url 'botao_tag_confirmar_deletar2'%}"
-                            hx-vals='{"tag" : "{{ tag }}"}'
+                            hx-vals='{"tag" : "{{ tag }}", "espaco": "{{espaco.id}}"}'
                             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'                
                             x-cloak
                             @click.stop.prevent="modaltagconfirmardeletar = !modaltagconfirmardeletar"

@@ -7,6 +7,7 @@
             x-init="checked = minhalista2.includes('{{ tag }}')">
                 <a class="panel-block"
                 hx-post={% url 'selecionar_desselecionar2' tag=tag %}
+                hx-vals='{"espaco": "{{espaco.id}}"}'
                 hx-target="#tags_selected2"
                 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                 hx-trigger="click"
@@ -22,7 +23,7 @@
             <div class="column is-1">
                 <button class="button is-info is-small is-fullwidth is-focused"
                 hx-get="{%url 'tag_edicao2'%}"
-                hx-vals='{"tag" : "{{ tag }}"}'
+                hx-vals='{"tag" : "{{ tag }}", "espaco": "{{espaco.id}}"}'
                 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                 hx-target="#editar-tag-modal2"
                 x-cloak

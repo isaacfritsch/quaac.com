@@ -136,6 +136,7 @@
 
     {% comment %} Atualiza o tags_selecionadas {% endcomment %}
     <div hx-get="{% url 'update_tags_selecionadas' %}"
+        hx-vals='{"espaco": "{{espaco.id}}"}'
          hx-target="#tags_selected"
          hx-trigger="taglistchangededit from:body, taglistchanged from:body, taglistchangeddelete from:body, selecionardesselecionar from:body">
     </div>

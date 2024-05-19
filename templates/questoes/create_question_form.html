@@ -20,8 +20,8 @@
 
 <form class="form"
 name="form_questao"
-hx-post = {{request.path}}
->
+hx-post="{% url 'question_create' espaco=espaco.title %}">
+
     {% csrf_token %}
     <div class="block" style="margin: 1.5rem;">
       <h1 class="title is-3">Revise a questão antes de postá-la</h1>
@@ -122,6 +122,7 @@ hx-post = {{request.path}}
 
               {% comment %} Atualiza o tags_selecionadas {% endcomment %}
               <div hx-get="{% url 'update_tags_selecionadas2' %}"
+              hx-vals='{"espaco": "{{espaco.id}}"}'
               hx-target="#tags_selected2"
               hx-trigger="load, taglistchangededit from:body, taglistchanged from:body, taglistchangeddelete from:body, selecionardesselecionar from:body">
               </div>

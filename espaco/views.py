@@ -115,7 +115,8 @@ def lista_tags(request):
         else:
             nomes_tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria).values_list('name', flat=True) 
         context = {
-            'nomes_tags': sorted(nomes_tags)
+            'nomes_tags': sorted(nomes_tags),
+            'espaco':espaco_desejado
         }
         return render(request, 'espaco/lista_tags.html', context)
     else:
@@ -128,65 +129,58 @@ def lista_tags(request):
         espaco_desejado = Espaco.objects.get(id=espaco)
         nomes_tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria).values_list('name', flat=True) 
         context = {
-            'nomes_tags': sorted(nomes_tags)
+            'nomes_tags': sorted(nomes_tags),
+            'espaco':espaco_desejado
         }
         return render(request, 'espaco/lista_tags.html', context)
     
 def selecionar_desselecionar(request, tag):
-
+    espaco_id = request.POST.get("espaco")
+       
     selected_tags = request.session['selected_tags']
     #caso de criar tag
     if tag in selected_tags:
         selected_tags.remove(tag)
     else:
         selected_tags.append(tag)    
-
-    tag_obj = Tag.objects.get(name=tag)      
-    espaco = tag_obj.space
-    espaco_desejado = Espaco.objects.get(title=espaco.title)
+    
+    tag_obj = Tag.objects.get(space=espaco_id, name=tag)
+    
     categoria = tag_obj.category
 
 
     request.session['selected_tags'] = selected_tags
-    selected_tags_json = json.dumps(request.session['selected_tags'])
-
-
-    
+    selected_tags_json = json.dumps(request.session['selected_tags'])    
 
     # Add HX-Trigger to the response
     response = HttpResponse(status=204)
-    response["Hx-Trigger"] = json.dumps({"selecionardesselecionar": json.dumps({"espaco": espaco_desejado.id, "categoria": categoria}),
+    response["Hx-Trigger"] = json.dumps({"selecionardesselecionar": json.dumps({"espaco": espaco_id, "categoria": categoria}),
                                         "eventupdateselectedtags": {"selected_tags_json": selected_tags_json}
                                                  })
     return response
 
 def processar_tags(request, tag):
-
+    espaco_id = request.POST.get("espaco")
     selected_tags = request.session['selected_tags']
     #caso de criar tag
     if tag in selected_tags:
         selected_tags.remove(tag)
     else:
         selected_tags.append(tag)
-
-
     
 
-    tag_obj = Tag.objects.get(name=tag)      
-    espaco = tag_obj.space
-    espaco_desejado = Espaco.objects.get(title=espaco.title)
+    tag_obj = Tag.objects.get(space=espaco_id, name=tag)      
+    
     categoria = tag_obj.category
 
 
     request.session['selected_tags'] = selected_tags
     selected_tags_json = json.dumps(request.session['selected_tags'])
-
-
     
 
     # Add HX-Trigger to the response
     response = HttpResponse(status=204)
-    response["Hx-Trigger"] = json.dumps({"taglistchanged": json.dumps({"espaco": espaco_desejado.id, "categoria": categoria}),
+    response["Hx-Trigger"] = json.dumps({"taglistchanged": json.dumps({"espaco": espaco_id, "categoria": categoria}),
                                         "eventupdateselectedtags": {"selected_tags_json": selected_tags_json}
                                                  })
     return response
@@ -354,26 +348,21 @@ def tag_edicao(request):
     if request.method == 'GET':
                                
         tag = request.GET.get("tag")
-        tag = Tag.objects.get(name=tag)      
-        espaco = tag.space
-        espaco_desejado = Espaco.objects.get(title=espaco.title)
+        espaco_id = request.GET.get("espaco")
+        tag = Tag.objects.get(space=espaco_id, name=tag)
+        espaco_desejado = Espaco.objects.get(id=espaco_id)
     
     if request.method == 'POST':
         
         tag = request.POST.get("tag")
-                           
-        tag = Tag.objects.get(name=tag)
-        
-        tag_original = tag.name  
-             
-        espaco = tag.space        
-        espaco_desejado = Espaco.objects.get(title=espaco.title)
+        espaco_id = request.POST.get("espaco")
+        tag = Tag.objects.get(space=espaco_id, name=tag)
+        tag_original = tag.name                
+        espaco_desejado = Espaco.objects.get(id=espaco_id)
         
         
         # create a form instance and populate it with data from the request:
-        form = TagForm(request.POST, instance=tag)       
-        
-           
+        form = TagForm(request.POST, instance=tag)           
         
         nomes_tags = Tag.objects.filter(space = espaco_desejado.id).values_list('name', flat=True)
 
@@ -383,7 +372,7 @@ def tag_edicao(request):
             form.add_error('name', 'Essa tag já existe. Escolha outro nome.')            
             tag = Tag.objects.get(name=tag_original)
             return render(request, 'espaco/tag_modal_edit.html', {'form': form,                                                         
-                                                         'espaco_desejado': espaco_desejado,
+                                                         'espaco': espaco_desejado,
                                                          'tag':tag,                                                                                                                                                                         
                                                          })
 
@@ -417,7 +406,7 @@ def tag_edicao(request):
         print(form.errors)
         return render(request, 'espaco/tag_modal_edit.html', {'form': form, 
                                                          'error_messages': error_messages,
-                                                         'espaco_desejado': espaco_desejado, 
+                                                         'espaco': espaco_desejado, 
                                                          'tag': tag,                                                                                                                 
                                                          })
     else:
@@ -425,13 +414,14 @@ def tag_edicao(request):
         form = TagForm(instance=tag)         
     
     return render(request, 'espaco/tag_modal_edit.html', {'form': form,                                               
-                                                     'espaco_desejado': espaco_desejado,
+                                                     'espaco': espaco_desejado,
                                                      'tag': tag,})
 
 def botao_tag_confirmar_deletar(request):
     if request.method == 'POST':
         tag_name = request.POST.get("tag")
-        tag = Tag.objects.get(name=tag_name)
+        espaco_id = request.POST.get("espaco")
+        tag = Tag.objects.get(space=espaco_id, name=tag_name)
         tag.delete()
 
         selected_tags = request.session['selected_tags']
@@ -458,12 +448,14 @@ def botao_tag_confirmar_deletar(request):
 def update_tags_selecionadas(request):
     
     selected_tags = request.session['selected_tags'] 
-
+    espaco_id = request.GET.get("espaco")
+    espaco = Espaco.objects.get(id=espaco_id)
 
     request.session['selected_tags'] = selected_tags
 
     response = render(request, 'espaco/tags_selecionadas.html', {
          'selected_tags': selected_tags,
+         'espaco': espaco,
     })
 
     return response

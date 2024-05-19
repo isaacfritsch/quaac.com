@@ -1,4 +1,3 @@
-
 {% if results %}
 <div class="columns is-gapless is-multiline is-mobile">
 {% for tag in results %}
@@ -8,6 +7,7 @@
         x-init="checked = minhalista.includes('{{ tag }}')">
         <a class="panel-block"
             hx-post={% url 'selecionar_desselecionar' tag=tag %}
+            hx-vals='{"espaco": "{{espaco.id}}"}'
             hx-target="#tags_selected"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
             hx-trigger="click"
@@ -23,7 +23,7 @@
     <div class="column is-1">
         <button class="button is-info is-small is-fullwidth is-focused"
             hx-get="{%url 'tag_edicao'%}"
-            hx-vals='{"tag" : "{{ tag }}"}'
+            hx-vals='{"tag" : "{{ tag }}", "espaco": "{{espaco.id}}"}'
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
             hx-target="#editar-tag-modal"
             x-cloak
