@@ -63,12 +63,12 @@
                           hx-get="{% url 'marcar_resolvida' %}"
                           hx-trigger="click"
                           hx-vals='{"question": "{{question.id}}"}'
-                          hx-target="#marcar_resolvida"
+                          hx-target="#marcar_resolvida_{{ question.id }}"
                           hx-swap="innerHTML"
                           @click="resolved = true">
                     Responder</button>
                 </div>
-                <div id="marcar_resolvida">
+                <div id="marcar_resolvida_{{ question.id }}">
                 </div>
                 <div class="column has-text-right">
                   <button class="button is-danger is-inverted">
