@@ -114,6 +114,21 @@ class Replysolucao(models.Model):
     def __str__(self):
         return f'{self.autor} - {self.body[:20]}'
     
+class Resolucao(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    questao = models.ForeignKey(
+        'Questao',
+        on_delete=models.CASCADE,
+    )
+    resolvida = models.BooleanField(default=False)
+    resolved_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'questao')
+    
 
         
 

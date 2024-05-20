@@ -4,8 +4,7 @@ from django_summernote.admin import SummernoteModelAdmin
 
 
 class QuestaoAdmin(SummernoteModelAdmin):
-    summernote_fields = ('body','current_answer',)   
-
+    summernote_fields = ('body','current_answer',)
     
 class ComentarioAdmin(SummernoteModelAdmin):
     summernote_fields = ('body',)
@@ -25,6 +24,7 @@ admin.site.register(models.Comment, ComentarioAdmin,)
 admin.site.register(models.Solucao, SolucaoAdmin,)
 admin.site.register(models.Reply, ReplyAdmin,)
 admin.site.register(models.Replysolucao, ReplysolucaoAdmin,)
+admin.site.register(models.Resolucao)
 
 
 

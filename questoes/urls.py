@@ -36,5 +36,6 @@ urlpatterns = [
     path('like_solucao/', views.like_solucao, name='like_solucao'),
     path('solucao_tab/', views.solucao_tab, name='solucao_tab'),
     path('like_reply_solucao/', views.like_reply_solucao, name='like_reply_solucao'),
-    path('reply_solucao_tab/', views.reply_solucao_tab, name='reply_solucao_tab'),        
+    path('reply_solucao_tab/', views.reply_solucao_tab, name='reply_solucao_tab'),
+    path('marcar_resolvida/', views.marcar_resolvida, name='marcar_resolvida'),        
 ]

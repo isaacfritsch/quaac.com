@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 from espaco.models import Espaco, Tag
 from .forms import QuestaoForm, CommentForm, SolucaoForm, ReplyForm, ReplysolucaoForm
 from espaco.forms import CreateSpaceForm, TagForm
-from questoes.models import Questao, Comment, Reply, Solucao, Replysolucao, Like
+from questoes.models import Questao, Comment, Reply, Solucao, Replysolucao, Like, Resolucao
 from django.views.decorators.http import require_POST
 from django.views.generic.list import ListView
 from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
@@ -867,6 +867,22 @@ def reply_solucao_tab(request):
     }
     
     return render(request, 'questoes/reply_solucao_tab.html', context)
+
+def marcar_resolvida(request):
+    if request.method == "POST":
+        questao_id = request.POST.get("question")    
+        questao = Questao.objects.get(id=questao_id)
+        
+        resolucao, created = Resolucao.objects.get_or_create(
+            user=request.user,
+            questao=questao,
+            defaults={'resolvida': True}
+        )
+        if not created:
+            resolucao.resolvida = True
+            resolucao.save()
+
+        return render(request, 'questoes/marcar_resolvida.html')
 
 
 

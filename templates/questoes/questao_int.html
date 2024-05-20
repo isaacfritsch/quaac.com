@@ -49,9 +49,20 @@
             </div>      
             <div class="block">
               <div class="columns is-mobile">
-                <div class="column">
-                  <button class="button is-info is-focused">Responder</button>
+                <div class="column" x-data="{ resolved: false }">
+                  <button :class="{'button': true, 'is-focused': true, 'is-info': !resolved, 'is-success': resolved}"
+                          hx-post="{% url 'marcar_resolvida' %}"
+                          hx-trigger="click"
+                          hx-vals='{"question": "{{question.id}}"}'
+                          hx-target="#marcar_resolvida_{{ question.id }}"
+                          hx-swap="innerHTML"
+                          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                          @click="resolved = true">
+                    Responder</button>
                 </div>
+                <div id="marcar_resolvida_{{ question.id }}">
+                </div>
+                
                 <div class="column has-text-right">
                   <button class="button is-danger is-inverted">
                     Reportar
