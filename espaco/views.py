@@ -479,18 +479,11 @@ def ultimas_questoes_adicionadas(request):
         question = paginator.page(page)
     except:
         return HttpResponse('')
-    
-    index = len(question.object_list) - 1  # Index of the last question on the page
-    latest_question = question.object_list[index]
-
-    tags = latest_question.tags.all()    
 
     context = {
         'espaco': espaco_desejado,
         'questions' : question,
         'page' : page,
-        'tags': tags,
-        
     }
 
     return render(request, 'espaco/ultimas_questoes_adicionadas.html', context)

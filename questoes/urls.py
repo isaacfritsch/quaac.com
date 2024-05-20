@@ -37,5 +37,6 @@ urlpatterns = [
     path('solucao_tab/', views.solucao_tab, name='solucao_tab'),
     path('like_reply_solucao/', views.like_reply_solucao, name='like_reply_solucao'),
     path('reply_solucao_tab/', views.reply_solucao_tab, name='reply_solucao_tab'),
-    path('marcar_resolvida/', views.marcar_resolvida, name='marcar_resolvida'),        
+    path('marcar_resolvida/', views.marcar_resolvida, name='marcar_resolvida'),    
+    path('questoes_por_tag/', views.questoes_por_tag, name='questoes_por_tag'),    
 ]

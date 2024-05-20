@@ -21,7 +21,13 @@
         </span>
     {% endfor %}
         <div class="buttons is-right">
-            <button class="button is-info ">
+            <button class="button is-info "
+            hx-get={% url 'questoes_por_tag' %}
+            hx-vals='{"espaco": "{{espaco.id}}"}'  
+            hx-target="#questoes_infinitas"            
+            hx-trigger="click"
+            hx-swap="innerHTML"
+            >
                 <span class="icon">
                     <i class="fa-solid fa-filter"></i>
                 </span>

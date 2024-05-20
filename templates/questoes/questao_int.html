@@ -34,7 +34,7 @@
             <div class="columns is-mobile">
               <div class="column">
                 <div class="tags">
-                  {% for tag in tags %}
+                  {% for tag in question.tags.all %}
                     <span class="tag is-primary">{{ tag }}</span>
                   {% endfor %}
                 </div>

@@ -166,7 +166,7 @@
   <div class="tabs is-toggle" x-data="{ one: false, 
                                         two: false,
                                         three: false, 
-                                        four: true,
+                                        four: false,
                                         backgroundcolor: 'background-color: #3298dc;' 
                                         
                                       }">
@@ -213,7 +213,7 @@
             hx-get="{% url 'ultimas_questoes_adicionadas' %}"
             hx-vals='{"espaco": "{{espaco.id}}", "page":"{{ page }}"}'
             hx-target="#questoes_infinitas"
-            hx-trigger="load, click"
+            hx-trigger=" click"
             hx-swap="innerHTML">
            <span class="icon">
              <i class="fa-solid fa-upload"></i>

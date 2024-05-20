@@ -883,6 +883,36 @@ def marcar_resolvida(request):
             resolucao.save()
 
         return render(request, 'questoes/marcar_resolvida.html')
+    
+def questoes_por_tag(request):
+    espaco_id = request.GET.get("espaco")  
+    print(espaco_id)
+    espaco = Espaco.objects.get(id=espaco_id)
+    
+    selected_tags = request.session['selected_tags']
+    
+    page_num = request.GET.get("page")
+
+    if selected_tags:
+        
+        tags = Tag.objects.filter(name__in=selected_tags)
+        questoes = Questao.objects.filter(space=espaco, tags__in=tags).order_by('-id')
+    else:
+        # Se não houver tags selecionadas, retornar questões apenas pelo espaço
+        questoes = Questao.objects.filter(space=espaco)
+
+    # Adicionando paginação
+    
+    paginator = Paginator(questoes, 5)  # Mostrar 10 questões por página
+    page = paginator.get_page(page_num)    
+
+    context = {
+        'espaco': espaco,
+        'page': page,
+        'tags': selected_tags,  # Se desejar passar as tags exatas ao template
+    }
+
+    return render(request, 'questoes/questoes_filtradas.html', context)
 
 
 
