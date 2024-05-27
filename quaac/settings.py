@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'users',
     'widget_tweaks',
     'questoes', 
-    'django_summernote',          
+    'django_summernote',
+    'perfil',          
 ]
 
 

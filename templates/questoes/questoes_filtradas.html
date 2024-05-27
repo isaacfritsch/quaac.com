@@ -8,6 +8,15 @@
                 {% for tag in tags %}
                 <span class="tag is-primary">{{ tag }}</span>
                 {% endfor %}
+                {% if respondidas %}
+                <span class="tag is-primary">não respondidas</span>
+                {% endif %}
+                {% if comentadas %}
+                <span class="tag is-primary">com comentários</span>
+                {% endif %}
+                {% if resolucao%}
+                <span class="tag is-primary">com resolução</span>
+                {% endif %}
             </p>
         </div>
     </div>

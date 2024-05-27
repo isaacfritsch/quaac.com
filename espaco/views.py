@@ -22,7 +22,7 @@ from django.core.paginator import Paginator
 
 def test_view(request): 
     
-    return render(request, 'espaco/home.html')
+    return render(request, 'espaco/home.html',)
 
 def espaco_list_view(request):
     
@@ -251,7 +251,7 @@ def search_category(request):
     
     espaco = request.POST.get("espaco")  
     
-    espaco_desejado = Espaco.objects.get(id=espaco)
+    espaco_desejado = espaco.objects.get(id=espaco)
         
     results = Tag.objects.filter(space=espaco_desejado.id, category__icontains=search_text).values_list('category', flat=True)
     
@@ -267,7 +267,7 @@ def search_category_edit(request):
     
     espaco = request.POST.get("espaco")  
     
-    espaco_desejado = Espaco.objects.get(id=espaco)
+    espaco_desejado = espaco.objects.get(id=espaco)
         
     results = Tag.objects.filter(space=espaco_desejado.id, category__icontains=search_text).values_list('category', flat=True)
     
@@ -403,7 +403,7 @@ def tag_edicao(request):
 
 
         error_messages = form.errors
-        print(form.errors)
+        
         return render(request, 'espaco/tag_modal_edit.html', {'form': form, 
                                                          'error_messages': error_messages,
                                                          'espaco': espaco_desejado, 

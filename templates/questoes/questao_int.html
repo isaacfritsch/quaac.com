@@ -59,7 +59,11 @@
                           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                           @click="resolved = true">
                     Responder</button>
+                    <div class="is-size-7">
+                      respondida {{question.times_solved}} vezes pela espaco
+                    </div>
                 </div>
+                
                 <div id="marcar_resolvida_{{ question.id }}">
                 </div>
                 

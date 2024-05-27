@@ -14,7 +14,7 @@ from django.utils.crypto import get_random_string
 from django.forms.models import inlineformset_factory
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from espaco.models import Espaco, Tag
+from espaco.models import Tag, Espaco
 from .forms import QuestaoForm, CommentForm, SolucaoForm, ReplyForm, ReplysolucaoForm
 from espaco.forms import CreateSpaceForm, TagForm
 from questoes.models import Questao, Comment, Reply, Solucao, Replysolucao, Like, Resolucao
@@ -324,7 +324,7 @@ def selecionar_desselecionar2(request, tag):
         selected_tags.append(tag)    
     
     tag_obj = Tag.objects.get(space=espaco_id, name=tag)
-    
+
     categoria = tag_obj.category
 
 
@@ -369,7 +369,7 @@ def botao_tag_confirmar_deletar2(request):
     
 # def create_alternativa(request, espaco):
     
-#     espaco_desejado = Espaco.objects.get(title=espaco)    
+#     espaco_desejado = espaco.objects.get(title=espaco)    
     
 #     if request.method == 'GET':
         
@@ -392,7 +392,7 @@ def botao_tag_confirmar_deletar2(request):
   
 # def question_create(request, espaco):
 
-#     espaco_desejado = Espaco.objects.get(title=espaco)   
+#     espaco_desejado = espaco.objects.get(title=espaco)   
     
 #     if request.method == 'POST': 
         
@@ -473,7 +473,7 @@ def botao_tag_confirmar_deletar2(request):
 #                                                      'espaco': espaco_desejado,})  
 
 # def question_create(request, espaco):
-#     espaco_desejado = Espaco.objects.get(title=espaco)   
+#     espaco_desejado = espaco.objects.get(title=espaco)   
     
 #     if request.method == 'POST': 
 #         form_questao = QuestaoForm(request.POST)
@@ -510,7 +510,7 @@ def botao_tag_confirmar_deletar2(request):
 
 
 def question_create(request, espaco):
-    print(espaco)
+    
     espaco_desejado = Espaco.objects.get(title=espaco)
     
     form_questao = QuestaoForm(request.POST or None)
@@ -878,41 +878,77 @@ def marcar_resolvida(request):
             questao=questao,
             defaults={'resolvida': True}
         )
-        if not created:
+        if created:
+            questao.times_solved = questao.times_solved + 1
             resolucao.resolvida = True
+            
             resolucao.save()
+            questao.save()
 
-        return render(request, 'questoes/marcar_resolvida.html')
+        if not created and not resolucao.resolvida:            
+            questao.times_solved = questao.times_solved +1
+            resolucao.resolvida = True
+            
+            resolucao.save()
+            questao.save()
+            
+
+        response = render(request, 'questoes/marcar_resolvida.html')
+        response.status_code = 200
+        return response
+    else:
+        return HttpResponse("Invalid request method", status=400)
     
 def questoes_por_tag(request):
+    print(request)
     espaco_id = request.GET.get("espaco")  
-    print(espaco_id)
     espaco = Espaco.objects.get(id=espaco_id)
     
-    selected_tags = request.session['selected_tags']
+    selected_tags = request.session.get('selected_tags', [])
+    filter_nao_respondidas = request.GET.get("nao_respondidas") == 'true'
+    filter_com_comentarios = request.GET.get("com_comentarios") == 'true'
+    filter_com_resolucao = request.GET.get("com_resolucao") == 'true'
+    
     
     page_num = request.GET.get("page")
 
+    questoes = Questao.objects.filter(space=espaco)
+
     if selected_tags:
-        
         tags = Tag.objects.filter(name__in=selected_tags)
-        questoes = Questao.objects.filter(space=espaco, tags__in=tags).order_by('-id')
-    else:
-        # Se não houver tags selecionadas, retornar questões apenas pelo espaço
-        questoes = Questao.objects.filter(space=espaco)
+        questoes = questoes.filter(tags__in=tags)
+
+    if filter_nao_respondidas:
+        questoes = Questao.objects.filter(
+        Q(resolucao__resolvida=False) |
+        Q(resolucao__isnull=True),
+        space=espaco
+        )        
+
+    if filter_com_comentarios:
+        questoes = questoes.annotate(comentario_count=Count('comment')).filter(comentario_count__gt=0)
+
+    if filter_com_resolucao:
+        questoes = questoes.annotate(solucao_count=Count('solucao')).filter(solucao_count__gt=0)
+
+
+    questoes = questoes.order_by('-id')
 
     # Adicionando paginação
-    
-    paginator = Paginator(questoes, 5)  # Mostrar 10 questões por página
-    page = paginator.get_page(page_num)    
+    paginator = Paginator(questoes, 5)  # Mostrar 5 questões por página
+    page = paginator.get_page(page_num)
 
     context = {
-        'espaco': espaco,
-        'page': page,
-        'tags': selected_tags,  # Se desejar passar as tags exatas ao template
+        'espaco'       : espaco,
+        'page'         : page,
+        'tags'         : selected_tags,  # Se desejar passar as tags exatas ao template
+        'respondidas'  : filter_nao_respondidas,
+        'comentadas'   : filter_com_comentarios,
+        'resolucao'    : filter_com_resolucao,
     }
 
     return render(request, 'questoes/questoes_filtradas.html', context)
+
 
 
 

@@ -11,6 +11,8 @@
   color: var(--info-invert); /* Text color against the info background */
   background-color: var(--info);
 } 
+
+
 </style>
 <div id="selectedTagsData" style="display: none;">
   {{ selected_tags_json }}
@@ -26,8 +28,19 @@
   window.addEventListener('load', function(evt) { 
     selectedTagsJson = document.getElementById('selectedTagsData').textContent;
     updateMinhalista(selectedTagsJson);    
-});  
+}); 
+function updateHxValsAndTrigger(button) {
+  // Update hx-vals with the current checkbox states
+  button.setAttribute('hx-vals', JSON.stringify({
+      "espaco": "{{ espaco.id }}",
+      "nao_respondidas": document.querySelector("input[name='nao_respondidas']").checked,
+      "com_comentarios": document.querySelector("input[name='com_comentarios']").checked,
+      "com_resolucao": document.querySelector("input[name='com_resolucao']").checked,
+  }));
 
+  // Trigger the custom event to initiate the HTMX request
+  button.dispatchEvent(new CustomEvent('customEvent'));
+}
 </script>
 
 <!-- Modal tag-->
@@ -102,6 +115,41 @@
       </span>
       <p>Alterações salvas com sucesso!</p>
     </div>
+
+    
+    <div class="panel-block">
+      <strong>Questões</strong>
+      <div class="tabs " x-data="{ one: false, two: false, three: false }">
+        <ul>
+          <li :class="one ? 'is-active' : ''">
+            <a @click.prevent="one = !one">
+              <label class="checkbox has-hover-background">
+                <input type="checkbox" name="nao_respondidas" :checked="one">
+                não respondidas
+              </label>
+            </a>
+          </li>
+          <li :class="two ? 'is-active' : ''">
+            <a @click.prevent="two = !two">
+              <label class="checkbox has-hover-background">
+                <input type="checkbox" name="com_comentarios" :checked="two">
+                com comentários
+              </label>
+            </a>
+          </li>
+          <li :class="three ? 'is-active' : ''">
+            <a @click.prevent="three = !three">
+              <label class="checkbox has-hover-background">
+                <input type="checkbox" name="com_resolucao" :checked="three">
+                com resolução
+              </label>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    
     
     <div class="panel-block">
       <p class="control has-icons-left">

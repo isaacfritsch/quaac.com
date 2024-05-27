@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class espacoConfig(AppConfig):
+class PerfilConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'espaco'
+    name = 'perfil'
