@@ -147,8 +147,7 @@ def selecionar_desselecionar(request, tag):
     tag_obj = Tag.objects.get(space=espaco_id, name=tag)
     
     categoria = tag_obj.category
-
-
+    
     request.session['selected_tags'] = selected_tags
     selected_tags_json = json.dumps(request.session['selected_tags'])    
 
@@ -251,7 +250,7 @@ def search_category(request):
     
     espaco = request.POST.get("espaco")  
     
-    espaco_desejado = espaco.objects.get(id=espaco)
+    espaco_desejado = Espaco.objects.get(id=espaco)
         
     results = Tag.objects.filter(space=espaco_desejado.id, category__icontains=search_text).values_list('category', flat=True)
     
@@ -267,7 +266,7 @@ def search_category_edit(request):
     
     espaco = request.POST.get("espaco")  
     
-    espaco_desejado = espaco.objects.get(id=espaco)
+    espaco_desejado = Espaco.objects.get(id=espaco)
         
     results = Tag.objects.filter(space=espaco_desejado.id, category__icontains=search_text).values_list('category', flat=True)
     

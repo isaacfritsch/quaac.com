@@ -899,8 +899,7 @@ def marcar_resolvida(request):
     else:
         return HttpResponse("Invalid request method", status=400)
     
-def questoes_por_tag(request):
-    print(request)
+def questoes_por_tag(request):    
     espaco_id = request.GET.get("espaco")  
     espaco = Espaco.objects.get(id=espaco_id)
     
@@ -909,45 +908,47 @@ def questoes_por_tag(request):
     filter_com_comentarios = request.GET.get("com_comentarios") == 'true'
     filter_com_resolucao = request.GET.get("com_resolucao") == 'true'
     
-    
     page_num = request.GET.get("page")
 
+    # Base queryset para todas as questões do espaço
     questoes = Questao.objects.filter(space=espaco)
 
+    # Filtragem por tags
     if selected_tags:
         tags = Tag.objects.filter(name__in=selected_tags)
-        questoes = questoes.filter(tags__in=tags)
+        questoes = questoes.filter(tags__in=tags).distinct()
 
+    # Filtragem para questões não respondidas
     if filter_nao_respondidas:
-        questoes = Questao.objects.filter(
-        Q(resolucao__resolvida=False) |
-        Q(resolucao__isnull=True),
-        space=espaco
-        )        
+        questoes = questoes.filter(
+            Q(resolucao__resolvida=False) | 
+            Q(resolucao__isnull=True)
+        )
 
+    # Filtragem para questões com comentários
     if filter_com_comentarios:
         questoes = questoes.annotate(comentario_count=Count('comment')).filter(comentario_count__gt=0)
 
+    # Filtragem para questões com resolução
     if filter_com_resolucao:
         questoes = questoes.annotate(solucao_count=Count('solucao')).filter(solucao_count__gt=0)
 
-
+    # Ordenação e paginação
     questoes = questoes.order_by('-id')
-
-    # Adicionando paginação
     paginator = Paginator(questoes, 5)  # Mostrar 5 questões por página
     page = paginator.get_page(page_num)
 
     context = {
-        'espaco'       : espaco,
-        'page'         : page,
-        'tags'         : selected_tags,  # Se desejar passar as tags exatas ao template
-        'respondidas'  : filter_nao_respondidas,
-        'comentadas'   : filter_com_comentarios,
-        'resolucao'    : filter_com_resolucao,
+        'espaco': espaco,
+        'page': page,
+        'tags': selected_tags,
+        'respondidas': filter_nao_respondidas,
+        'comentadas': filter_com_comentarios,
+        'resolucao': filter_com_resolucao,
     }
 
     return render(request, 'questoes/questoes_filtradas.html', context)
+
 
 
 
