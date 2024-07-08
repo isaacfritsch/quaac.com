@@ -215,9 +215,9 @@ function updateHxValsAndTrigger(button) {
                                         two: false,
                                         three: false, 
                                         four: false,
-                                        backgroundcolor: 'background-color: #3298dc;' 
-                                        
-                                      }">
+                                        backgroundcolor: 'background-color: #3298dc;'                                        
+                                      }"
+                                      @click.outside="one = false; two = false; three = false; four = false;">
      <ul>
         <li x-bind:class="one ? 'is-active' : ''" >         
          <a x-on:click="one = true; two = false; three = false;four= false;"

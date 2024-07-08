@@ -851,8 +851,7 @@ def like_reply_solucao(request):
         content_type=content_type,
         object_id=reply.id,
     )
-    if not created:
-        # If like already exists, remove it
+    if not created:        
         like.delete()
            
     return HttpResponse(status=204, headers={'HX-Trigger': 'atualizatabsolucaoreply'})
