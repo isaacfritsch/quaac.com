@@ -5,7 +5,7 @@ from questoes import views
 
 urlpatterns = [
     path('question_create/<str:espaco>', views.question_create, name='question_create'),
-    path('tag_creation2/<str:espaco>/', views.tag_creation2, name='tag_creation2'),
+    path('tag_creation2/<str:espaco>/', views.tag_creation2, name='tag_creation2'),        
     path('search_category2/', views.search_category2, name='search_category2'),
     path('search_category2_edit/', views.search_category2_edit, name='search_category2_edit'),
     path('processar_categoria2/', views.processar_categoria2, name='processar_categoria2'),
@@ -38,5 +38,6 @@ urlpatterns = [
     path('like_reply_solucao/', views.like_reply_solucao, name='like_reply_solucao'),
     path('reply_solucao_tab/', views.reply_solucao_tab, name='reply_solucao_tab'),
     path('marcar_resolvida/', views.marcar_resolvida, name='marcar_resolvida'),    
-    path('questoes_por_tag/', views.questoes_por_tag, name='questoes_por_tag'),    
+    path('questoes_por_tag/', views.questoes_por_tag, name='questoes_por_tag'),
+    path('<str:id>/', views.questao_criada, name='questao_criada'),    
 ]

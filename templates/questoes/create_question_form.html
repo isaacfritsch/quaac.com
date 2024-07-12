@@ -173,6 +173,21 @@ hx-post="{% url 'question_create' espaco=espaco.title %}">
         </div>
       </div>
     </div>
+    <div x-data="{ successq: false }" x-init="
+        if ('{{ questao_criada|default:False }}' == 'True') {
+            successq = true;
+            setTimeout(() => successq = false, 5000);
+        }
+    ">
+        <div class="panel-block has-background-success has-text-white p-2 has-border-success"
+             x-cloak
+             x-show="successq">
+            <span class="icon">
+              <i class="fa-solid fa-circle-check"></i>
+            </span>
+            <p>Questão criada com sucesso!</p>
+        </div>
+    </div>
     <div class="columns is-mobile">
       <div class="column is-3" style="margin: 1.5rem;">
           <div class="field">

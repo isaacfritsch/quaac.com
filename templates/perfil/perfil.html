@@ -1,0 +1,58 @@
+{%extends 'base.html' %}
+{%block content%}
+<div class="columns">
+    <div class="column is-2">
+        <div class="block">
+            <div class="box">
+                {{user.name}}<br>
+                {{user.email}}<br><br>
+                <div class="button is-info is-small">Editar informações pessoais</div>
+            </div>
+        </div>
+    </div>
+    <div class="column is-10">
+        <div class="block">
+            <div class="box">
+                Todas as atividades<br><br>
+                   <div x-data="{ one: false, 
+                                 two: false,
+                                 three: false, 
+                                 four: false,
+                                 five: false,
+                                 backgroundcolor: 'background-color: #3298dc;',
+                                 textcolor: 'color: white;'                                       
+                                 }"
+                        @click.outside="one = false; two = false; three = false; four = false;">                       
+                          <div class="button is-rounded " x-bind:class="one ? 'is-active' : ''"         
+                            x-on:click="one = true; two = false; three = false;four= false;five= false;"
+                              x-bind:style="one ? backgroundcolor : ''">                             
+                             <p x-bind:style="one ? textcolor : ''">Comunidades</p>
+                        </div>
+                         <div class="button is-rounded " x-bind:class="two ? 'is-active' : ''" 
+                           x-on:click="two = true; one = false; three = false; four= false;five= false;"
+                             x-bind:style="two ? backgroundcolor : ''">                            
+                            <p x-bind:style="two ? textcolor : ''">Questões</p>
+                        </div>
+                         <div class="button is-rounded "x-bind:class="three ? 'is-active' : ''"
+                            x-on:click="three = true; one = false; two = false; four= false;five= false;"
+                              x-bind:style="three ? backgroundcolor : ''">                             
+                             <p x-bind:style="three ? textcolor : ''">Comentários e resoluções</p>
+                        </div>
+                         <div class="button is-rounded " x-bind:class="four ? 'is-active' : ''"
+                            x-on:click="four = true; one = false; two = false; three = false;five= false;"
+                           x-bind:style="four ? backgroundcolor : ''">                             
+                             <p x-bind:style="four ? textcolor : ''">Likes</p>
+                        </div>
+                        <div class="button is-rounded " x-bind:class="five ? 'is-active' : ''"
+                            x-on:click="five = true; one = false; two = false; three = false; four = false;"
+                           x-bind:style="five ? backgroundcolor : ''">                             
+                             <p x-bind:style="five ? textcolor : ''">Respondidas</p>
+                        </div>                          
+                    </div>                   
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{%endblock content%}

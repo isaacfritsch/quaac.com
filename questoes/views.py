@@ -512,7 +512,7 @@ def botao_tag_confirmar_deletar2(request):
 def question_create(request, espaco):
     
     espaco_desejado = Espaco.objects.get(title=espaco)
-    
+        
     form_questao = QuestaoForm(request.POST or None)
     form_solucao = SolucaoForm(request.POST or None)
 
@@ -546,10 +546,9 @@ def question_create(request, espaco):
             if request.POST.get('action') == 'save_and_add_new':
                 return render(request, 'questoes/create_question_form.html', {
                     'form_questao': QuestaoForm(), 'form_solucao': SolucaoForm(), 'espaco': espaco_desejado, 'questao_criada': True
-                }) 
-                
-            response = render(request, 'questoes/questao_criada.html', {'question': question})            
-            return response
+                })            
+            return render(request, 'questoes/questao_criada.html', {'question': question})
+            
         
         else:
             return render(request, 'questoes/create_question_form.html', {
@@ -559,13 +558,15 @@ def question_create(request, espaco):
     else:
         form_questao = QuestaoForm()
         form_solucao = SolucaoForm()
-        request.session['selected_tags_questoes'] = []     
+        request.session['selected_tags_questoes'] = []            
 
     return render(request, 'questoes/create_question.html', {
         'form_questao': form_questao, 'form_solucao': form_solucao, 'espaco': espaco_desejado
     })
     
-
+def questao_criada(request, id):
+    question = get_object_or_404(Questao, id=id)    
+    return render(request, 'questoes/questao_a.html', {'question': question})
     
 def questao(request, question):          
         
