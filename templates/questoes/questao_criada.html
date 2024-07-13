@@ -1,21 +1,22 @@
-
+{%extends 'base.html' %}
+{%block content%}
 <style>
 .block {
-  word-wrap: break-word; /* fallback for older browsers */
-  overflow-wrap: break-word; /* CSS3 property to break long words */
-  word-break: break-all; /* break at any character to prevent overflow */
-  hyphens: auto; /* add hyphens when breaking words */
+  word-wrap: break-word; 
+  overflow-wrap: break-word;
+  word-break: break-all; 
+  hyphens: auto; 
 }
-
 </style>
-<div x-data="{ successq: true }" x-init="setTimeout(() => successq = false, 3000)">
-  <div class="panel-block has-background-success has-text-white p-2 has-border-success"
+<div x-data="{ successq: '{{ questao_criada }}' === 'True' }">
+  <div class="panel-block has-background-success has-text-white p-2"
        x-cloak
-       x-show="successq">
-    <span class="icon">
-      <i class="fa-solid fa-circle-check"></i>
-    </span>
-    <p>Questão criada com sucesso!</p>
+       x-show.transition="successq"
+       x-init="setTimeout(() => successq = false, 5000)">
+      <span class="icon">
+        <i class="fa-solid fa-circle-check"></i>
+      </span>
+      <p>Questão criada com sucesso!</p>
   </div>
 </div>
 <section class="section">
@@ -100,3 +101,4 @@
     </div>
   </div>
 </section>
+{%endblock content%}

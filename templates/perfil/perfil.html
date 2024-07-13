@@ -26,12 +26,12 @@
                           <div class="button is-rounded " x-bind:class="one ? 'is-active' : ''"         
                             x-on:click="one = true; two = false; three = false;four= false;five= false;"
                               x-bind:style="one ? backgroundcolor : ''">                             
-                             <p x-bind:style="one ? textcolor : ''">Comunidades</p>
+                             <p x-bind:style="one ? textcolor : ''">Comunidades criadas</p>
                         </div>
                          <div class="button is-rounded " x-bind:class="two ? 'is-active' : ''" 
                            x-on:click="two = true; one = false; three = false; four= false;five= false;"
                              x-bind:style="two ? backgroundcolor : ''">                            
-                            <p x-bind:style="two ? textcolor : ''">Questões</p>
+                            <p x-bind:style="two ? textcolor : ''">Questões criadas</p>
                         </div>
                          <div class="button is-rounded "x-bind:class="three ? 'is-active' : ''"
                             x-on:click="three = true; one = false; two = false; four= false;five= false;"
@@ -45,13 +45,21 @@
                         </div>
                         <div class="button is-rounded " x-bind:class="five ? 'is-active' : ''"
                             x-on:click="five = true; one = false; two = false; three = false; four = false;"
-                           x-bind:style="five ? backgroundcolor : ''">                             
+                           x-bind:style="five ? backgroundcolor : ''"
+                           hx-get="{% url 'questoes_respondidas' %}"
+                           hx-vals='{"espaco": "{{espaco.id}}", "page":"{{ page }}"}'
+                           hx-target="#questoes_perfil"
+                           hx-trigger="click"
+                           hx-swap="innerHTML"
+                        >                             
                              <p x-bind:style="five ? textcolor : ''">Respondidas</p>
-                        </div>                          
-                    </div>                   
+                        </div>                        
+                    </div> 
             </div>
         </div>
     </div>
+</div>
+<div id="questoes_perfil">
 </div>
 
 

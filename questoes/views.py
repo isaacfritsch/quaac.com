@@ -547,8 +547,13 @@ def question_create(request, espaco):
                 return render(request, 'questoes/create_question_form.html', {
                     'form_questao': QuestaoForm(), 'form_solucao': SolucaoForm(), 'espaco': espaco_desejado, 'questao_criada': True
                 })            
-            return render(request, 'questoes/questao_criada.html', {'question': question})
+            question_id = question.id
             
+            request.session['questao_criada'] = True
+            url = reverse('questao_criada', kwargs={'id': question_id})            
+            response = HttpResponse()
+            response["Hx-Redirect"] = url            
+            return response     
         
         else:
             return render(request, 'questoes/create_question_form.html', {
@@ -565,9 +570,17 @@ def question_create(request, espaco):
     })
     
 def questao_criada(request, id):
-    question = get_object_or_404(Questao, id=id)    
-    return render(request, 'questoes/questao_a.html', {'question': question})
+    question = get_object_or_404(Questao, id=id)
     
+    # Retrieve the variable from the session
+    questao_criada = request.session.get('questao_criada', False)
+
+    # Optionally, clear the variable from the session if it shouldn't persist
+    if 'questao_criada' in request.session:
+        del request.session['questao_criada']
+    
+    return render(request, 'questoes/questao_criada.html', {'question': question, 'questao_criada': questao_criada})
+
 def questao(request, question):          
         
     question1 = Questao.objects.get(id=question)
