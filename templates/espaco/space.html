@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {%block content%}
+
 <style>
   /* Change default tab link color */
 .tabs li a {
@@ -19,6 +20,7 @@
 </div>
 
 <script type="text/javascript">
+  
   function updateMinhalista(updatedData) {
     window.minhalista = JSON.parse(updatedData);
 }
@@ -42,6 +44,7 @@ function updateHxValsAndTrigger(button) {
   button.dispatchEvent(new CustomEvent('customEvent'));
 }
 </script>
+
 
 <!-- Modal tag-->
 <div id="modal-tag">

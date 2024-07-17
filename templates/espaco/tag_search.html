@@ -6,8 +6,8 @@
         x-data="{ checked: false,}"
         x-init="checked = minhalista.includes('{{ tag }}')">
         <a class="panel-block"
-            hx-post={% url 'selecionar_desselecionar' tag=tag %}
-            hx-vals='{"espaco": "{{espaco.id}}"}'
+            hx-post={% url 'selecionar_desselecionar' %}
+            hx-vals='{"espaco": "{{espaco.id}}","tag": "{{tag}}"}'
             hx-target="#tags_selected"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
             hx-trigger="click"

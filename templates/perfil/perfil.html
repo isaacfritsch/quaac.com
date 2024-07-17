@@ -46,7 +46,7 @@
                         <div class="button is-rounded " x-bind:class="five ? 'is-active' : ''"
                             x-on:click="five = true; one = false; two = false; three = false; four = false;"
                            x-bind:style="five ? backgroundcolor : ''"
-                           hx-get="{% url 'questoes_respondidas' %}"
+                           
                            hx-vals='{"espaco": "{{espaco.id}}", "page":"{{ page }}"}'
                            hx-target="#questoes_perfil"
                            hx-trigger="click"

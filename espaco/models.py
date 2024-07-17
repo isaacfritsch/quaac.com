@@ -24,16 +24,16 @@ class Tag(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
-        null = False
+        null=False
     )
     space = models.ForeignKey(
         Espaco,
         on_delete=models.CASCADE,
-        null = False
+        null=False
     )
     name = models.CharField(max_length=45, unique=False)  
-    
     category = models.CharField(max_length=255)
-    
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.CASCADE)
+
     def __str__(self):
         return self.name

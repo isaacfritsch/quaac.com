@@ -1,11 +1,8 @@
 from typing import Any
 import json
 import ast
-from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
-from django.http import HttpResponse, QueryDict
-from django.contrib import messages
+from django.http import HttpResponse
 from django.forms import formset_factory
 from django.contrib.contenttypes.models import ContentType
 from urllib.parse import unquote
@@ -19,7 +16,6 @@ from .forms import QuestaoForm, CommentForm, SolucaoForm, ReplyForm, Replysoluca
 from espaco.forms import CreateSpaceForm, TagForm
 from questoes.models import Questao, Comment, Reply, Solucao, Replysolucao, Like, Resolucao
 from django.views.decorators.http import require_POST
-from django.views.generic.list import ListView
 from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
 from django.core.paginator import Paginator
 
@@ -275,10 +271,10 @@ def lista_tags2(request):
 
         espaco_desejado = Espaco.objects.get(id=espaco)
 
-        if categoria == 'all':
-            nomes_tags = Tag.objects.filter(space=espaco_desejado.id).values_list('name', flat=True)        
-        else:
-            nomes_tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria).values_list('name', flat=True) 
+        
+        nomes_tags = Tag.objects.filter(space=espaco_desejado.id).values_list('name', flat=True)        
+        
+        nomes_tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria).values_list('name', flat=True) 
         context = {
             'nomes_tags': sorted(nomes_tags),
             'espaco':espaco_desejado
@@ -553,18 +549,15 @@ def question_create(request, espaco):
             url = reverse('questao_criada', kwargs={'id': question_id})            
             response = HttpResponse()
             response["Hx-Redirect"] = url            
-            return response     
-        
+            return response
         else:
             return render(request, 'questoes/create_question_form.html', {
                 'form_questao': form_questao, 'form_solucao': form_solucao, 'espaco': espaco_desejado
             })
-    
     else:
         form_questao = QuestaoForm()
         form_solucao = SolucaoForm()
-        request.session['selected_tags_questoes'] = []            
-
+        request.session['selected_tags_questoes'] = []
     return render(request, 'questoes/create_question.html', {
         'form_questao': form_questao, 'form_solucao': form_solucao, 'espaco': espaco_desejado
     })
