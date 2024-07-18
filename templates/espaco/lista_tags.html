@@ -12,7 +12,11 @@
                     'icons': false  // Desativa os ícones
                 }
             },
-            'plugins': ['dnd', 'checkbox', 'wholerow']
+            'plugins': ['dnd', 'checkbox', 'wholerow'],
+            "checkbox": {
+                    "three_state": false, // to avoid that fact that checking a node also check others
+                    "cascade": "up" // to ensure selection is cascaded to children
+                }
         });
 
         $('#jstree').on('loaded.jstree', function() {

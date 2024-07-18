@@ -233,17 +233,28 @@ def update_hierarchy(hierarchy, parent=None):
         tag.save()
 
 
+from django.http import HttpResponse
+import json
+from .models import Tag
+
 def processar_tags(request, tag):
     espaco_id = request.POST.get("espaco")
     selected_tags = request.session.get('selected_tags', [])
+
+    def remover_tag_e_filhos(tag_obj, selected_tags):
+        """
+        Remove a tag e todos os seus filhos recursivamente da lista de tags selecionadas.
+        """
+        if tag_obj.name in selected_tags:
+            selected_tags.remove(tag_obj.name)
+        for filho in tag_obj.children.all():
+            remover_tag_e_filhos(filho, selected_tags)
 
     try:
         tag_obj = Tag.objects.get(space=espaco_id, name=tag)
         
         if tag in selected_tags:
-            selected_tags.remove(tag)
-        else:
-            selected_tags.append(tag)
+            remover_tag_e_filhos(tag_obj, selected_tags)     
 
         categoria = tag_obj.category
 
@@ -261,6 +272,7 @@ def processar_tags(request, tag):
         "eventupdateselectedtags": {"selected_tags_json": selected_tags_json}
     })
     return response
+
 
 def tag_creation(request, espaco):
     

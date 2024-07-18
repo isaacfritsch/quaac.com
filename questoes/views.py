@@ -149,31 +149,49 @@ def search_tag2(request):
     
     return render(request, 'questoes/tag_search2.html', context)
 
+from django.http import HttpResponse
+import json
+from .models import Tag
+
 def processar_tags2(request, tag):
     espaco_id = request.POST.get("espaco")
-    selected_tags = request.session['selected_tags_questoes']
-    #caso de criar tag
-    if tag in selected_tags:
-        selected_tags.remove(tag)
-    else:
-        selected_tags.append(tag)
-          
+    selected_tags = request.session.get('selected_tags_questoes', [])
 
-    tag_obj = Tag.objects.get(space=espaco_id, name=tag)
-    
-    categoria = tag_obj.category
+    def remover_tag_e_filhos(tag_obj, selected_tags):
+        """
+        Remove a tag e todos os seus filhos recursivamente da lista de tags selecionadas.
+        """
+        if tag_obj.name in selected_tags:
+            selected_tags.remove(tag_obj.name)
+        for filho in tag_obj.children.all():
+            remover_tag_e_filhos(filho, selected_tags)
 
+    # Busca a tag no banco de dados
+    try:
+        tag_obj = Tag.objects.get(space=espaco_id, name=tag)
+        
+        if tag in selected_tags:
+            remover_tag_e_filhos(tag_obj, selected_tags)
+        
+        categoria = tag_obj.category
 
+    except Tag.DoesNotExist:
+        selected_tags = []
+        categoria = ""
+
+      
+    # Atualiza a sessão com a lista de tags selecionadas
     request.session['selected_tags_questoes'] = selected_tags
-    selected2_tags_json = json.dumps(request.session['selected_tags_questoes'])
+    selected2_tags_json = json.dumps(selected_tags)
     
-
-    # Add HX-Trigger to the response
+    # Cria a resposta com os gatilhos necessários
     response = HttpResponse(status=204)
-    response["Hx-Trigger"] = json.dumps({"taglistchanged": json.dumps({"espaco": espaco_id, "categoria": categoria}),
-                                        "eventupdateselectedtags2": {"selected2_tags_json": selected2_tags_json}
-                                                 })
+    response["Hx-Trigger"] = json.dumps({
+        "taglistchanged": json.dumps({"espaco": espaco_id, "categoria": categoria}),
+        "eventupdateselectedtags2": {"selected2_tags_json": selected2_tags_json}
+    })
     return response
+
 
 def tag_edicao2(request):
     
