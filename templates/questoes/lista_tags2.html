@@ -1,41 +1,112 @@
-<div class="columns is-gapless is-multiline is-mobile">
+<script>
+    $(function() {
+        var selectedTags = {{ selected_tags_questoes|safe }};
+        var initialLoad = true;  // Sinalizador para o carregamento inicial
+        
+        $('#jstree').jstree({
+            'core': {
+                'data': {{ tags|safe }},
+                'check_callback': true,
+                'themes': {
+                    "variant" : "large",
+                    'icons': false  // Desativa os ícones
+                }
+            },
+            'plugins': ['dnd', 'checkbox', 'wholerow']
+        });
 
-    {% for tag in nomes_tags %}
-            <div class="column is-11"
-            x-cloak
-            x-data="{ checked: false }"
-            x-init="checked = minhalista2.includes('{{ tag }}')">
-                <a class="panel-block"
-                hx-post={% url 'selecionar_desselecionar2' tag=tag %}
-                hx-vals='{"espaco": "{{espaco.id}}"}'
-                hx-target="#tags_selected2"
-                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                hx-trigger="click"
-                x-on:click="checked = !checked"
-                >
-                <input type="checkbox" class="checkbox" x-bind:checked="checked">            
-    
-                        <span>
-                            {{ tag }}
-                        </span>
-                </a>
-            </div>
-            <div class="column is-1">
-                <button class="button is-info is-small is-fullwidth is-focused"
-                hx-get="{%url 'tag_edicao2'%}"
-                hx-vals='{"tag" : "{{ tag }}", "espaco": "{{espaco.id}}"}'
-                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                hx-target="#editar-tag-modal2"
-                x-cloak
-                @click.stop="modaltageditopen = !modaltageditopen"
-                >
-                    <span class="icon">
-                        <i class="fa-solid fa-pencil"></i>
-                    </span>
-                    <p>Editar</p></button>
-            </div>              
-    {% endfor %}
-    </div> 
+        $('#jstree').on('loaded.jstree', function() {
+            // Marcar os nós que estão na variável de sessão
+            $('#jstree').jstree(true).get_json('#', { 'flat': true }).forEach(function(node) {
+                if (selectedTags.includes(node.text)) {
+                    $('#jstree').jstree('check_node', node.id);
+                }
+            });
+            initialLoad = false;  // Carregamento inicial concluído
+        });
+
+        $('#jstree').on("select_node.jstree", function (e, data) {
+            if (initialLoad) {
+                return;  // Ignorar eventos durante o carregamento inicial
+            }
+
+            let espacoId = "{{ espaco.id }}";
+            let nodeId = data.node.id;
+            let node = $('#jstree').jstree(true).get_node(nodeId);
+            let tag = node.text;
+
+            // Atualizar o botão de edição
+            htmx.ajax('POST', `{% url 'tag_edicao_botao2' %}`, {
+                headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                target: '#edit_button2',
+                values: { 'tag': tag, 'espaco': espacoId }
+            });
+        });
+
+        $('#jstree').on("deselect_node.jstree", function (e, data) {
+            $('#edit_button2').html('');  // Limpa o conteúdo do botão de edição ao desmarcar uma tag
+        });
+
+        $('#jstree').on("changed.jstree", function (e, data) {
+            if (initialLoad) {
+                return;  // Ignorar eventos durante o carregamento inicial
+            }
+
+            let espacoId = "{{ espaco.id }}";  // Assume que você tem essa variável disponível no template
+
+            // Coletando todas as tags selecionadas
+            let selectedTags = $('#jstree').jstree(true).get_checked().map(function(nodeId) {
+                let node = $('#jstree').jstree(true).get_node(nodeId);
+                return node.text;
+            });
+
+            // Coletando todas as tags não selecionadas
+            let allNodes = $('#jstree').jstree(true).get_json('#', { 'flat': true });
+            let deselectedTags = allNodes.filter(function(node) {
+                return !selectedTags.includes(node.text);
+            }).map(function(node) {
+                return node.text;
+            });
+
+            htmx.ajax('POST', `{% url 'selecionar_desselecionar_lista2' %}`, {
+                headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                values: { 'espaco': espacoId, 'selected_tags_questoes': JSON.stringify(selectedTags), 'deselected_tags_questoes': JSON.stringify(deselectedTags) }
+            });
+        });
+    });
+
+    function saveHierarchy() {
+        let hierarchy = $('#jstree').jstree(true).get_json('#', { flat: true });
+        $.ajax({
+            type: 'POST',
+            url: '{% url "save_hierarchy" %}',
+            data: {
+                'hierarchy': JSON.stringify(hierarchy),
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if(response.status == 'success') {
+                    alert('Hierarchy saved successfully!');
+                } else {
+                    alert('Failed to save hierarchy.');
+                }
+            }
+        });
+    }
+</script>
+<div class="columns is-gapless is-multiline is-mobile p-2">
+    <div class="column is-2">
+        <button class="button is-info is-small is-focused" onclick="saveHierarchy()">Salvar hierarquia</button>
+    </div>
+    <div class="column is-2" id="edit_button2">   
+    </div>
+</div>
+
+<div id="jstree"></div>
+
+
+
+
     
                             
        

@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 from urllib.parse import unquote
 from django.db.models import Count, Q
+from django.db.models.functions import Lower
 from django.urls import reverse
 from questoes.models import Questao
 from django.contrib.auth.decorators import login_required
@@ -70,7 +71,6 @@ def redirect_to_space(request):
     response["Hx-Redirect"] = reverse('url_espaco', kwargs={'slug': slug_do_novo_espaco})
     return response
 
-
 def url_espaco(request, slug):
     espaco_solicitado = get_object_or_404(Espaco, slug=slug)
     
@@ -109,8 +109,6 @@ def lista_tags(request):
         categoria = request.GET.get("categoria")
 
         espaco_desejado = Espaco.objects.get(id=espaco)
-
-        
         
         tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria)
 
@@ -410,7 +408,7 @@ def lista_categorias(request):
 
     espaco_solicitado = Espaco.objects.get(id=espaco)
 
-    quantidade_tags_por_categoria = Tag.objects.filter(space=espaco_solicitado).values('category').annotate(quantidade_tags=Count('id')).order_by('category')
+    quantidade_tags_por_categoria = Tag.objects.filter(space=espaco_solicitado).values('category').annotate(quantidade_tags=Count('id')).order_by(Lower('category'))
 
     quantidade_total_tags = Tag.objects.filter(space=espaco_solicitado).aggregate(quantidade_total=Count('id'))['quantidade_total']
 

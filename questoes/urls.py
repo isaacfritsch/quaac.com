@@ -16,6 +16,7 @@ urlpatterns = [
     path('lista_categorias2/', views.lista_categorias2, name='lista_categorias2'),
     path('espaco/lista_tags2/', views.lista_tags2, name='lista_tags2'),
     path('update_tags_selecionadas2/', views.update_tags_selecionadas2, name='update_tags_selecionadas2'),
+    path('selecionar_desselecionar_lista2/', views.selecionar_desselecionar_lista2, name='selecionar_desselecionar_lista2'),
     path('selecionar_desselecionar2/<str:tag>/', views.selecionar_desselecionar2, name='selecionar_desselecionar2'),
     path('botao_tag_confirmar_deletar2/', views.botao_tag_confirmar_deletar2, name='botao_tag_confirmar_deletar2'),    
     path('questao/<str:question>/', views.questao, name='questao'),    
@@ -39,5 +40,6 @@ urlpatterns = [
     path('reply_solucao_tab/', views.reply_solucao_tab, name='reply_solucao_tab'),
     path('marcar_resolvida/', views.marcar_resolvida, name='marcar_resolvida'),    
     path('questoes_por_tag/', views.questoes_por_tag, name='questoes_por_tag'),
-    path('<str:id>/', views.questao_criada, name='questao_criada'),    
+    path('questao_criada/<str:id>/', views.questao_criada, name='questao_criada'),
+    path('tag_edicao_botao2/', views.tag_edicao_botao2, name='tag_edicao_botao2'),       
 ]

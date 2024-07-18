@@ -22,7 +22,7 @@
                                  backgroundcolor: 'background-color: #3298dc;',
                                  textcolor: 'color: white;'                                       
                                  }"
-                        @click.outside="one = false; two = false; three = false; four = false;">                       
+                        >                       
                           <div class="button is-rounded " x-bind:class="one ? 'is-active' : ''"         
                             x-on:click="one = true; two = false; three = false;four= false;five= false;"
                               x-bind:style="one ? backgroundcolor : ''">                             
@@ -30,7 +30,7 @@
                         </div>
                          <div class="button is-rounded " x-bind:class="two ? 'is-active' : ''" 
                            x-on:click="two = true; one = false; three = false; four= false;five= false;"
-                             x-bind:style="two ? backgroundcolor : ''">                            
+                             x-bind:style="two ? backgroundcolor : ''">
                             <p x-bind:style="two ? textcolor : ''">Questões criadas</p>
                         </div>
                          <div class="button is-rounded "x-bind:class="three ? 'is-active' : ''"
@@ -46,7 +46,7 @@
                         <div class="button is-rounded " x-bind:class="five ? 'is-active' : ''"
                             x-on:click="five = true; one = false; two = false; three = false; four = false;"
                            x-bind:style="five ? backgroundcolor : ''"
-                           
+                                                      
                            hx-vals='{"espaco": "{{espaco.id}}", "page":"{{ page }}"}'
                            hx-target="#questoes_perfil"
                            hx-trigger="click"
@@ -54,7 +54,7 @@
                         >                             
                              <p x-bind:style="five ? textcolor : ''">Respondidas</p>
                         </div>                        
-                    </div> 
+                    </div>
             </div>
         </div>
     </div>

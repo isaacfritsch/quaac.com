@@ -7,6 +7,7 @@ from django.forms import formset_factory
 from django.contrib.contenttypes.models import ContentType
 from urllib.parse import unquote
 from django.db.models import Count, Q
+from django.db.models.functions import Lower
 from django.utils.crypto import get_random_string
 from django.forms.models import inlineformset_factory
 from django.urls import reverse
@@ -18,6 +19,7 @@ from questoes.models import Questao, Comment, Reply, Solucao, Replysolucao, Like
 from django.views.decorators.http import require_POST
 from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
 from django.core.paginator import Paginator
+from django.template.loader import render_to_string
 
 
     
@@ -251,7 +253,7 @@ def lista_categorias2(request):
 
     espaco_solicitado = Espaco.objects.get(id=espaco)
 
-    quantidade_tags_por_categoria = Tag.objects.filter(space=espaco_solicitado).values('category').annotate(quantidade_tags=Count('id')).order_by('category')
+    quantidade_tags_por_categoria = Tag.objects.filter(space=espaco_solicitado).values('category').annotate(quantidade_tags=Count('id')).order_by(Lower('category'))
 
     quantidade_total_tags = Tag.objects.filter(space=espaco_solicitado).aggregate(quantidade_total=Count('id'))['quantidade_total']
 
@@ -263,35 +265,66 @@ def lista_categorias2(request):
 
     return render(request, 'questoes/lista_categorias2.html', context)
 
-def lista_tags2(request):
+def tag_edicao_botao2(request):
+    tag = request.POST.get('tag')
     
+    espaco_id = request.POST.get('espaco')
+    
+    context = {
+        'tag': tag,
+        'espaco_id': espaco_id,
+        'csrf_token': request.COOKIES.get('csrftoken')
+    }
+    
+    button_html = render_to_string('questoes/tag_edicao_button2.html', context)
+    return HttpResponse(button_html)
+
+def lista_tags2(request):
     if request.GET.get("espaco"):
         espaco = request.GET.get("espaco")
         categoria = request.GET.get("categoria")
 
         espaco_desejado = Espaco.objects.get(id=espaco)
+        
+        tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria)
 
-        
-        nomes_tags = Tag.objects.filter(space=espaco_desejado.id).values_list('name', flat=True)        
-        
-        nomes_tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria).values_list('name', flat=True) 
+        tag_list = []
+        for tag in tags:
+            tag_list.append({
+                "id": tag.id,
+                "parent": tag.parent.id if tag.parent else "#",
+                "text": tag.name,
+            })
+
         context = {
-            'nomes_tags': sorted(nomes_tags),
-            'espaco':espaco_desejado
+            'tags': json.dumps(tag_list),
+            'espaco': espaco_desejado,
+            'selected_tags_questoes': json.dumps(request.session.get('selected_tags_questoes', []))  # Passar selected_tags para o template
         }
         return render(request, 'questoes/lista_tags2.html', context)
     else:
-        total = request.GET.get("total")   
-    
+        total = request.GET.get("total")
         total = ast.literal_eval(total)
         espaco = total["espaco"]
-        categoria =  total["categoria"]
-        
+        categoria = total["categoria"]
+
         espaco_desejado = Espaco.objects.get(id=espaco)
-        nomes_tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria).values_list('name', flat=True) 
+        
+        
+        tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria)
+
+        tag_list = []
+        for tag in tags:
+            tag_list.append({
+                "id": tag.id,
+                "parent": tag.parent.id if tag.parent else "#",
+                "text": tag.name,
+            })
+
         context = {
-            'nomes_tags': sorted(nomes_tags),
-            'espaco':espaco_desejado,
+            'tags': json.dumps(tag_list),
+            'espaco': espaco_desejado,
+            'selected_tags_questoes': json.dumps(request.session.get('selected_tags_questoes', []))  # Passar selected_tags para o template
         }
         return render(request, 'questoes/lista_tags2.html', context)
     
@@ -308,6 +341,45 @@ def update_tags_selecionadas2(request):
          'espaco': espaco,
     })
 
+    return response
+
+def selecionar_desselecionar_lista2(request):
+    
+    espaco_id = request.POST.get("espaco")
+    
+    
+    selected_tags_questoes = json.loads(request.POST.get("selected_tags_questoes"))        
+    deselected_tags_questoes = json.loads(request.POST.get("deselected_tags_questoes"))    
+    
+    # Recuperar as tags selecionadas da sessão
+    session_selected_tags = request.session.get('selected_tags_questoes', [])
+
+    # Adicionar tags selecionadas que não estão na sessão
+    for tag in selected_tags_questoes:
+        if tag not in session_selected_tags:
+            session_selected_tags.append(tag)
+
+    # Remover tags deselecionadas que estão na sessão
+    for tag in deselected_tags_questoes:
+        if tag in session_selected_tags:
+            session_selected_tags.remove(tag)
+
+    # Atualizar a sessão
+    request.session['selected_tags_questoes'] = session_selected_tags
+    selected2_tags_json = json.dumps(request.session['selected_tags_questoes'])
+    
+    # Assumindo que todas as tags têm a mesma categoria
+    if session_selected_tags:
+        tag_obj = Tag.objects.get(space=espaco_id, name=session_selected_tags[0])
+        categoria = tag_obj.category
+    else:
+        categoria = None
+    
+    response = HttpResponse(status=204)
+    response["Hx-Trigger"] = json.dumps({
+        "selecionardesselecionar": json.dumps({"espaco": espaco_id, "categoria": categoria}),
+        "eventupdateselectedtags2": {"selected2_tags_json": selected2_tags_json}
+    })
     return response
 
 def selecionar_desselecionar2(request, tag):
@@ -563,6 +635,7 @@ def question_create(request, espaco):
     })
     
 def questao_criada(request, id):
+    
     question = get_object_or_404(Questao, id=id)
     
     # Retrieve the variable from the session

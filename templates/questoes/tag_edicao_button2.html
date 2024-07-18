@@ -1,0 +1,13 @@
+
+<button class="button is-info is-small is-focused"
+hx-get="{% url 'tag_edicao2' %}"
+hx-vals='{"tag" : "{{ tag }}", "espaco": "{{ espaco_id }}"}'
+hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+hx-target="#editar-tag-modal2"
+x-cloak
+@click.stop="modaltageditopen = !modaltageditopen">
+<span class="icon">
+<i class="fa-solid fa-pencil"></i>
+</span>
+<p>Editar {{tag}}</p>
+</button>

@@ -8,6 +8,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 
+
 class Like(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

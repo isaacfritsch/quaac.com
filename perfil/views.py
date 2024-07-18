@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 from questoes.models import Questao, Comment, Reply, Solucao, Replysolucao, Like, Resolucao
 from espaco.models import Tag, Espaco
+from users.models import User
 
 def perfil(request):    
     return render(request, 'perfil/perfil.html')
@@ -9,8 +10,7 @@ def perfil(request):
 def pag_questoes_criadas(request):
     espaco_id = request.GET.get("espaco")
     user = request.GET.get("user")
-    espaco = Espaco.objects.get(id=espaco_id)
-    user = Us.objects.get(id=espaco_id)
+    espaco = Espaco.objects.get(id=espaco_id) 
     
     page_num = request.GET.get("page")
     
