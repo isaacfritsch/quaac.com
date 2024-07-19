@@ -1,0 +1,53 @@
+<div class="container">  
+       
+    {% if espacos%}
+    <nav class="panel is-dark">
+        <p class="panel-heading has-text-centered">
+          Comunidades criadas
+        </p>
+        <div class="panel-block">
+            <p class="control has-icons-left">
+              <input class="input"
+              type="text" 
+              placeholder="Pesquisar comunidades"
+              hx-post="{% url 'search_comunidade_perfil' %}"
+              hx-vals='{"user": "{{ user }}"}'
+              hx-target='#space_selection2'                
+              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+              hx-trigger="keyup changed delay:500ms"                
+              name="search"              
+              >
+              <span class="icon is-left">
+                <i class="fas fa-search" aria-hidden="true"></i>
+              </span>
+            </p>
+        </div>
+        <div id="space_selection2">             
+        {% for espaco in espacos %}
+        <a class="panel-block is-active"
+        hx-get="{% url 'redirect_to_space' %}"      
+        hx-vals='{"espaco": "{{ espaco.id }}"}'
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-trigger="click">
+         <span class="panel-icon">
+             <i class="fas fa-book" aria-hidden="true"></i>
+         </span>
+         <div class="content">
+             <div class="is-flex">
+                 <div class="is-justify-content-flex-start">                          
+                     <p class="title is-5 has-text-left">{{ espaco.title }}</p>
+                     <p class="subtitle is-7 has-text-left">{{ espaco.description }}</p>
+                 </div>
+             </div>
+         </div>
+        </a>
+        {% endfor %}
+        </div>
+    {% else %}
+        <a class="panel-block is-active">
+            Nenhuma comunidade criada
+        </a>
+        </nav>
+    {% endif %}
+
+</div>

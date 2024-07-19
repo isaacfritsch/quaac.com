@@ -8,7 +8,7 @@ class Espaco(models.Model):
     """Espaco object."""
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
     )
     
     title = models.CharField(max_length=45, unique=True)
@@ -24,7 +24,7 @@ class Tag(models.Model):
     """Espaco object."""
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         null=False
     )
     space = models.ForeignKey(

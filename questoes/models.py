@@ -25,7 +25,7 @@ class Like(models.Model):
 class Questao(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
     )
     space = models.ForeignKey(
         Espaco,

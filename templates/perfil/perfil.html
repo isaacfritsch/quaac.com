@@ -25,29 +25,53 @@
                         >                       
                           <div class="button is-rounded " x-bind:class="one ? 'is-active' : ''"         
                             x-on:click="one = true; two = false; three = false;four= false;five= false;"
-                              x-bind:style="one ? backgroundcolor : ''">                             
+                              x-bind:style="one ? backgroundcolor : ''"
+                              hx-get="{% url 'comunidades_criadas' %}"                
+                           hx-vals='{"user": "{{user.id}}", "page":"{{ page }}"}'
+                           hx-target="#questoes_perfil"
+                           hx-trigger="click"
+                           hx-swap="innerHTML"
+                              >                             
                              <p x-bind:style="one ? textcolor : ''">Comunidades criadas</p>
                         </div>
                          <div class="button is-rounded " x-bind:class="two ? 'is-active' : ''" 
                            x-on:click="two = true; one = false; three = false; four= false;five= false;"
-                             x-bind:style="two ? backgroundcolor : ''">
+                             x-bind:style="two ? backgroundcolor : ''"
+                             hx-get="{% url 'questoes_criadas' %}"                
+                           hx-vals='{"user": "{{user.id}}", "page":"{{ page }}"}'
+                           hx-target="#questoes_perfil"
+                           hx-trigger="click"
+                           hx-swap="innerHTML"
+                             >
                             <p x-bind:style="two ? textcolor : ''">Questões criadas</p>
                         </div>
                          <div class="button is-rounded "x-bind:class="three ? 'is-active' : ''"
                             x-on:click="three = true; one = false; two = false; four= false;five= false;"
-                              x-bind:style="three ? backgroundcolor : ''">                             
+                              x-bind:style="three ? backgroundcolor : ''"
+                           hx-get="{% url 'questoes_comentarios_resolucoes' %}"                
+                           hx-vals='{"user": "{{user.id}}", "page":"{{ page }}"}'
+                           hx-target="#questoes_perfil"
+                           hx-trigger="click"
+                           hx-swap="innerHTML"
+                              >                             
                              <p x-bind:style="three ? textcolor : ''">Comentários e resoluções</p>
                         </div>
                          <div class="button is-rounded " x-bind:class="four ? 'is-active' : ''"
                             x-on:click="four = true; one = false; two = false; three = false;five= false;"
-                           x-bind:style="four ? backgroundcolor : ''">                             
+                           x-bind:style="four ? backgroundcolor : ''"
+                           hx-get="{% url 'questoes_like' %}"                
+                           hx-vals='{"user": "{{user.id}}", "page":"{{ page }}"}'
+                           hx-target="#questoes_perfil"
+                           hx-trigger="click"
+                           hx-swap="innerHTML"
+                           >                             
                              <p x-bind:style="four ? textcolor : ''">Likes</p>
                         </div>
                         <div class="button is-rounded " x-bind:class="five ? 'is-active' : ''"
                             x-on:click="five = true; one = false; two = false; three = false; four = false;"
                            x-bind:style="five ? backgroundcolor : ''"
-                                                      
-                           hx-vals='{"espaco": "{{espaco.id}}", "page":"{{ page }}"}'
+                           hx-get="{% url 'questoes_respondidas' %}"                
+                           hx-vals='{"user": "{{user.id}}", "page":"{{ page }}"}'
                            hx-target="#questoes_perfil"
                            hx-trigger="click"
                            hx-swap="innerHTML"
