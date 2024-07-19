@@ -11,6 +11,8 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect, HttpResponse
 from .forms import CustomAuthenticationForm, CustomUserCreationForm
 
+
+
 def user_register(request, *args, **kwargs):
     user = request.user
     if user.is_authenticated:
@@ -58,9 +60,8 @@ def user_login(request):
                 login(request, user)
                 
                 request.session['success_message'] = "Login bem-sucedido. Bem-vindo!"
-                response = HttpResponse(status=204)
-                response['HX-Trigger'] = 'userlogin'
-                
+                response = HttpResponse(status=204)                
+                response["Hx-Redirect"] = "/" 
                 return response
                 
             else:                
@@ -101,10 +102,10 @@ def useredit(request):
             login(request, user)
                         
             response = HttpResponse(status=204)
-            response['HX-Trigger'] = 'useredited'
+            request.session['success_message'] = 'Alterações salvas com sucesso!'
+            response["HX-Redirect"] = request.build_absolute_uri('/perfil/')
             
             return response
-
         
         return render(request, 'perfil/user_modal_edit.html', {'form': form})
 
