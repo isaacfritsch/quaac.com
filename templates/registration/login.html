@@ -1,6 +1,7 @@
 {% load widget_tweaks %}
 {% with WIDGET_ERROR_CLASS='is-invalid' %}
 <div class="modal" x-bind:class="modalloginopen ? 'is-active' : ''">
+    <div @userlogin.window="modalloginopen = false"></div>  
     <div class="modal-background" ></div>
     <div class="modal-content has-background-white py-5 px-5" id="login-modal" @click.stop.outside="modalloginopen = false">
 

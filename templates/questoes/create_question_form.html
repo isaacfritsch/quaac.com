@@ -8,13 +8,12 @@
             setTimeout(() => successq = false, 5000);
         }
     ">
-        <div class="panel-block has-background-success has-text-white p-2 has-border-success"
+        <div class="has-text-centered has-background-success has-text-white p-2 has-border-success"
              x-cloak
-             x-show="successq">
-            <span class="icon">
+             x-show="successq">            
+            <p><span class="icon">
               <i class="fa-solid fa-circle-check"></i>
-            </span>
-            <p>Questão criada com sucesso!</p>
+            </span> Questão criada com sucesso!</p>
         </div>
     </div>
 
@@ -75,20 +74,19 @@ hx-post="{% url 'question_create' espaco=espaco.title %}">
           </div>
         </div>
       </div>
-      <div class="panel-block has-background-success has-text-white p-2 has-border-success"
+      <div class="has-text-centered has-background-success has-text-white p-2 has-border-success"
         x-cloak
         x-show="successmessage"
         @taglistcreated.window = "successmessage = !successmessage"
-        @taglistcreated.window.debounce.3000ms="successmessage = !successmessage"
+        @taglistcreated.window.debounce.5000ms="successmessage = !successmessage"
         @taglistchangededit.window = "successmessage = !successmessage"
-        @taglistchangededit.window.debounce.3000ms="successmessage = !successmessage"
+        @taglistchangededit.window.debounce.5000ms="successmessage = !successmessage"
         @taglistchangeddelete.window = "successmessage = !successmessage"
-        @taglistchangeddelete.window.debounce.3000ms="successmessage = !successmessage"
-        >
-        <span class="icon">
+        @taglistchangeddelete.window.debounce.5000ms="successmessage = !successmessage"
+        >        
+        <p><span class="icon">
           <i class="fa-solid fa-circle-check"></i>
-        </span>
-        <p>Alterações salvas com sucesso!</p>
+        </span> Alterações salvas com sucesso!</p>
       </div>
       <div class="panel-block">
         <p class="control has-icons-left">
@@ -179,13 +177,13 @@ hx-post="{% url 'question_create' espaco=espaco.title %}">
             setTimeout(() => successq = false, 5000);
         }
     ">
-        <div class="panel-block has-background-success has-text-white p-2 has-border-success"
+        <div class="has-text-centered has-background-success has-text-white p-2 has-border-success"
              x-cloak
              x-show="successq">
-            <span class="icon">
+            
+            <p><span class="icon">
               <i class="fa-solid fa-circle-check"></i>
-            </span>
-            <p>Questão criada com sucesso!</p>
+            </span> Questão criada com sucesso!</p>
         </div>
     </div>
     <div class="columns is-mobile">

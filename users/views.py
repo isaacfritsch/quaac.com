@@ -1,6 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
+from .models import User
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
+from .forms import CustomUserChangeForm
+from django.contrib.auth import get_user_model
 
 
 from django.http import HttpResponseRedirect, HttpResponse
@@ -53,8 +58,9 @@ def user_login(request):
                 login(request, user)
                 
                 request.session['success_message'] = "Login bem-sucedido. Bem-vindo!"
-                response = HttpResponse()
-                response["Hx-Redirect"] = "/" 
+                response = HttpResponse(status=204)
+                response['HX-Trigger'] = 'userlogin'
+                
                 return response
                 
             else:                
@@ -73,6 +79,38 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+def useredit(request):
+    if request.method == 'GET':
+        user_email = request.GET.get("user")
+        user = get_object_or_404(User, email=user_email)
+        form = CustomUserChangeForm(instance=user)
+        return render(request, 'perfil/user_modal_edit.html', {'form': form})
+    
+    elif request.method == 'POST':
+        user_email = request.POST.get("user")
+        user = get_object_or_404(User, email=user_email)       
+        form = CustomUserChangeForm(request.POST, instance=user)
+        if form.is_valid():            
+            form.save()
+            email = form.cleaned_data.get('email').lower()            
+            password = form.cleaned_data.get('password1') 
+            
+            user = authenticate(request, email=email, password=password)
+            
+            login(request, user)
+                        
+            response = HttpResponse(status=204)
+            response['HX-Trigger'] = 'useredited'
+            
+            return response
+
+        
+        return render(request, 'perfil/user_modal_edit.html', {'form': form})
+
+    else:
+        return HttpResponse(status=405)  # Method Not Allowed
+
 
 
 

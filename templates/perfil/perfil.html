@@ -1,12 +1,36 @@
 {%extends 'base.html' %}
 {%block content%}
-<div class="columns">
+
+  
+
+<div x-data="{ successmessage2: false }" x-cloak >
+     <div class="has-text-centered has-background-success has-text-white p-2 has-border-success"
+      x-cloak
+      x-show="successmessage2"      
+      @useredited.window="successmessage2 = true; setTimeout(() => successmessage2 = false, 5000)"      
+      >      
+      <p><span class="icon">
+        <i class="fa-solid fa-circle-check"></i>
+      </span> Alterações salvas com sucesso!</p>
+    </div>
+</div>
+
+<div class="columns" x-data="{
+modalregisteropen2:false,
+}">
+<div id="editar-tag-modal-user"></div>
     <div class="column is-2">
         <div class="block">
             <div class="box">
                 {{user.name}}<br>
                 {{user.email}}<br><br>
-                <div class="button is-info is-small">Editar informações pessoais</div>
+                <div class="button is-info is-small"
+                hx-get="{% url 'useredit' %}"
+                hx-vals='{"user" : "{{ user}}"}'                
+                hx-target="#editar-tag-modal-user"
+                x-cloak
+                @click.stop="modalregisteropen2 = !modalregisteropen2">
+                Editar informações pessoais</div>
             </div>
         </div>
     </div>

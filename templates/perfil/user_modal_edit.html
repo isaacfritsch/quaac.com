@@ -1,0 +1,65 @@
+{% load widget_tweaks %}
+{% with WIDGET_ERROR_CLASS='is-invalid' %}
+<div class="modal" x-bind:class="modalregisteropen2 ? 'is-active' : ''">
+    
+    <div @useredited.window="modalregisteropen2 = false"></div>      
+         
+   
+    <div class="modal-background" ></div>
+    <div class="modal-content has-background-white py-5 px-5" id="register-modal"  @click.stop.outside="modalregisteropen2 = false">
+        <div class="box">
+            <button class="delete is-pulled-right" x-on:click.stop.prevent="modalregisteropen2 = false"></button>
+            <h1 class="title is-3">Edição de informações do usuário</h1>            
+            <form class="form" name="form"           
+            hx-post="{{ request.path }}" 
+            hx-trigger="submit"   
+            hx-vals='{"user": "{{user}}"}'         
+            hx-target="#register-modal"
+            >
+                {% csrf_token %}
+                <div class="field">
+                    <label class="label">Editar nome</label>
+                    <div class="control">
+                        {% render_field form.name class="input is-primary" placeholder="Nome Completo" name="name" %}
+                        {% if form.name.errors %}
+                            <p class="help is-danger">{{ form.name.errors|first }}</p>
+                    {% endif %}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Editar Email</label>
+                    <div class="control">
+                        {% render_field  form.email class="input is-primary" placeholder="user@example.com" name="email" %}
+                        {% if form.email.errors %}
+                            <p class="help is-danger">{{ form.email.errors|first }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Digite sua senha ou uma nova senha</label>
+                    <div class="control">
+                        {% render_field form.password1 class="input is-primary" placeholder="*********" name="password1" %}
+                        {% if form.password1.errors %}
+                            <p class="help is-danger">{{ form.password1.errors|first }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Confirmar Senha</label>
+                    <div class="control">
+                        {% render_field form.password2 class="input is-primary" placeholder="*********" name="password2" %}
+                        {% if form.password2.errors %}
+                            <p class="help is-danger">{{ form.password2.errors|first }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-success" type="submit">Registrar</button>
+                    </div>
+                </div>               
+            </form>
+        </div>
+    </div>
+</div>
+{% endwith %}

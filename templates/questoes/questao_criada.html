@@ -9,14 +9,13 @@
 }
 </style>
 <div x-data="{ successq: '{{ questao_criada }}' === 'True' }">
-  <div class="panel-block has-background-success has-text-white p-2"
+  <div class="has-text-centered has-background-success has-text-white p-2"
        x-cloak
        x-show.transition="successq"
-       x-init="setTimeout(() => successq = false, 5000)">
-      <span class="icon">
+       x-init="setTimeout(() => successq = false, 5000)">      
+      <p><span class="icon">
         <i class="fa-solid fa-circle-check"></i>
-      </span>
-      <p>Questão criada com sucesso!</p>
+      </span> Questão criada com sucesso!</p>
   </div>
 </div>
 <section class="section">

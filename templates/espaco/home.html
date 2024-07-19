@@ -1,5 +1,16 @@
 {% extends 'base.html' %}
 {%block content%}
+<div x-data="{ successmessage3: false }" x-cloak >
+  <div class="has-text-centered has-background-success has-text-white p-2 has-border-success"
+   x-cloak
+   x-show="successmessage3"      
+   @userlogin.window="successmessage3 = true; setTimeout(() => successmessage3 = false, 5000)"      
+   >      
+   <p><span class="icon">
+     <i class="fa-solid fa-circle-check"></i>
+   </span> Login efetuado com sucesso!</p>
+ </div>
+</div>
 
     <div class="container has-text-centered">
         <p class="title is-4">O que é o Quaac e por que foi criado?</p>

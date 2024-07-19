@@ -85,6 +85,8 @@ def questoes_comentarios_resolucoes(request):
         questoes = Questao.objects.filter(id__in=questao_ids).distinct().order_by('-id')
     else:
         questoes = Questao.objects.none()
+        
+    questoes_comentarios = questoes.count()
 
     page_num = request.GET.get("page")
     paginator = Paginator(questoes, 5)  # Mostrar 5 questões por página
@@ -92,7 +94,8 @@ def questoes_comentarios_resolucoes(request):
 
     context = {        
         'page': page,
-        'user': user_id        
+        'user': user_id,
+        'questoes_comentarios': questoes_comentarios,     
     }
 
     return render(request, 'perfil/questoes_comentarios_resolucoes.html', context)
@@ -129,10 +132,11 @@ def comunidades_criadas(request):
     else:
         espacos = Espaco.objects.none()
     
-
+    comunidades = espacos.count()
     context = {        
         'espacos': espacos,
-        'user': user_id        
+        'user': user_id,
+        'comunidades': comunidades,      
     }
 
     return render(request, 'perfil/comunidades_criadas.html', context)
