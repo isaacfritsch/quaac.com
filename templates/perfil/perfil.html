@@ -18,22 +18,14 @@
 <div class="columns" x-data="{
 modalregisteropen2:false,
 }">
-<div id="editar-tag-modal-user"></div>
-    <div class="column is-2">
-        <div class="block">
-            <div class="box">
-                {{user.name}}<br>
-                {{user.email}}<br><br>
-                <div class="button is-info is-small"
-                hx-get="{% url 'useredit' %}"
-                hx-vals='{"user" : "{{ user}}"}'                
-                hx-target="#editar-tag-modal-user"
-                x-cloak
-                @click.stop="modalregisteropen2 = !modalregisteropen2">
-                Editar informações pessoais</div>
-            </div>
-        </div>
-    </div>
+<div id="editar-tag-modal-user"></div> 
+  <div class="column is-2" id="informacoes_pessoais"
+  hx-get="{% url 'informacoes_pessoais'%}"
+  hx-trigger="useredited from:window"
+  hx-target="#informacoes_pessoais"
+  hx-swap="innerHTML">
+    {% include 'perfil/informacoes_pessoais.html' %} 
+  </div>   
     <div class="column is-10">
         <div class="block">
             <div class="box">

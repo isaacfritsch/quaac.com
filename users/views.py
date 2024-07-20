@@ -58,12 +58,9 @@ def user_login(request):
             if user is not None:
                 # Usuário autenticado com sucesso
                 login(request, user)
-                
-                request.session['success_message'] = "Login bem-sucedido. Bem-vindo!"
                 response = HttpResponse(status=204)                
-                response["Hx-Redirect"] = "/" 
-                return response
-                
+                response['HX-Trigger'] = 'userlogin'
+                return response                
             else:                
                 # Usuário não autenticado - trate conforme necessário
                 form.add_error(None, 'Credenciais inválidas. Verifique seu email e senha.')
@@ -101,16 +98,19 @@ def useredit(request):
             
             login(request, user)
                         
-            response = HttpResponse(status=204)
-            request.session['success_message'] = 'Alterações salvas com sucesso!'
-            response["HX-Redirect"] = request.build_absolute_uri('/perfil/')
-            
+            response = HttpResponse(status=204)            
+            response['HX-Trigger'] = 'useredited'
             return response
         
         return render(request, 'perfil/user_modal_edit.html', {'form': form})
 
     else:
         return HttpResponse(status=405)  # Method Not Allowed
+    
+def navbar(request):
+    return render(request, 'includes/navbar.html')
+    
+
 
 
 

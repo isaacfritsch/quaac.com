@@ -2,7 +2,9 @@
 {% with WIDGET_ERROR_CLASS='is-invalid' %}
 <div class="modal" x-bind:class="modalloginopen ? 'is-active' : ''">     
     <div class="modal-background" ></div>
-    <div class="modal-content has-background-white py-5 px-5" id="login-modal" @click.stop.outside="modalloginopen = false">
+    <div class="modal-content has-background-white py-5 px-5" id="login-modal" @click.stop.outside="modalloginopen = false"
+    @userlogin.window = "modalloginopen = false"
+    >
 
         <div class="box">
             <div x-data="{ openNotificationlogin: true }">

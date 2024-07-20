@@ -11,4 +11,5 @@ urlpatterns = [
     path('questoes_criadas/', views.questoes_criadas, name='questoes_criadas'),
     path('comunidades_criadas/', views.comunidades_criadas, name='comunidades_criadas'),
     path('search_comunidade_perfil/', views.search_comunidade_perfil, name='search_comunidade_perfil'),
+    path('informacoes_pessoais/', views.informacoes_pessoais, name='informacoes_pessoais'),
 ]

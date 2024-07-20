@@ -15,7 +15,6 @@ def perfil(request):
 
 def questoes_respondidas(request):
     user_id = request.GET.get("user")
-
     
     if user_id:
         # Filtrar questões resolvidas pelo usuário e ordenar do mais recente para o mais antigo
@@ -156,3 +155,7 @@ def search_comunidade_perfil(request):
     context = {'results': results}
     
     return render(request, 'perfil/comunidade_search.html', context)
+
+def informacoes_pessoais(request):
+    
+    return render(request, 'perfil/informacoes_pessoais.html')

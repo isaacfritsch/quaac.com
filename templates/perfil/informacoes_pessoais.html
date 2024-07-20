@@ -1,0 +1,14 @@
+
+    <div class="block">
+        <div class="box">
+            {{user.name}}<br>
+            {{user.email}}<br><br>
+            <div class="button is-info is-small"
+            hx-get="{% url 'useredit' %}"
+            hx-vals='{"user" : "{{ user}}"}'                
+            hx-target="#editar-tag-modal-user"
+            x-cloak
+            @click.stop="modalregisteropen2 = !modalregisteropen2">
+            Editar informações pessoais</div>
+        </div>
+    </div>

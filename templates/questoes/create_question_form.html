@@ -1,15 +1,22 @@
 {% load widget_tweaks %}
 {% with WIDGET_ERROR_CLASS='is-invalid' %}
 
-{{success_message}}
-<div x-data="{ successmessage2: @js(session('success_message', false)) }" x-init="setTimeout(() => successmessage2 = false, 5000); @php(session()->forget('success_message'))" x-cloak>
-  <div class="has-text-centered has-background-success has-text-white p-2 has-border-success"
-       x-show="successmessage2">
-      <p><span class="icon">
-          <i class="fa-solid fa-circle-check"></i>
-      </span> {{ session('success_message') }}</p>
-  </div>
-</div>
+<div x-data="{ successq: false }" x-init="
+        if ('{{ questao_criada|default:False }}' == 'True') {
+            successq = true;
+            setTimeout(() => successq = false, 5000);
+        }
+    ">
+        <div class="has-text-centered has-background-success has-text-white p-2 has-border-success"
+             x-cloak
+             x-show="successq">
+            
+            <p><span class="icon">
+              <i class="fa-solid fa-circle-check"></i>
+            </span> Questão criada com sucesso!</p>
+        </div>
+    </div>
+
 
 
 <form class="form"
