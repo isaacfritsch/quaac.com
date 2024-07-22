@@ -19,10 +19,9 @@
 modalregisteropen2:false,
 }">
 <div id="editar-tag-modal-user"></div> 
-  <div class="column is-2" id="informacoes_pessoais"
+  <div class="column is-2" 
   hx-get="{% url 'informacoes_pessoais'%}"
-  hx-trigger="useredited from:window"
-  hx-target="#informacoes_pessoais"
+  hx-trigger="useredited from:window"  
   hx-swap="innerHTML">
     {% include 'perfil/informacoes_pessoais.html' %} 
   </div>   
