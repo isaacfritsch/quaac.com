@@ -41,5 +41,6 @@ urlpatterns = [
     path('marcar_resolvida/', views.marcar_resolvida, name='marcar_resolvida'),    
     path('questoes_por_tag/', views.questoes_por_tag, name='questoes_por_tag'),
     path('questao_criada/<str:id>/', views.questao_criada, name='questao_criada'),
-    path('tag_edicao_botao2/', views.tag_edicao_botao2, name='tag_edicao_botao2'),       
+    path('tag_edicao_botao2/', views.tag_edicao_botao2, name='tag_edicao_botao2'), 
+          
 ]

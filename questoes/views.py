@@ -693,7 +693,7 @@ def comentario(request):
     if not question_id:
        question_id = request.POST.get("question")     
     question = Questao.objects.get(id=question_id)    
-    comentarios = question.comment_set.all()   
+    comentarios = question.comment_set.all()
     
     if request.method == 'POST' and request.user.is_authenticated:
         form = CommentForm(request.POST)
@@ -703,8 +703,8 @@ def comentario(request):
             comment.questao = question
             comment.save()
             trigger_events = {
-            "comentariosalvo": True,
-            "atualizatabquestao": True
+            f"comentariosalvo_{question_id}": True, 
+            f"atualizatabquestao_{question_id}": True
             }
             
             trigger_events_json = json.dumps(trigger_events)
@@ -728,13 +728,13 @@ def comentario(request):
 def delete_comentario(request):
     comentario_id = request.POST.get("comentario")
     comentario = Comment.objects.get(id=comentario_id)
-    
+    question_id = comentario.questao.id
     if request.user == comentario.autor:
         if request.method == 'POST':
             comentario.delete()
             trigger_events = {
-            "comentariosalvo": True,
-            "atualizatabquestao": True
+            f"comentariosalvo_{question_id}": True,
+            f"atualizatabquestao_{question_id}": True
             }
             
             trigger_events_json = json.dumps(trigger_events)
@@ -749,7 +749,7 @@ def add_reply(request):
     if not comentario_id:
        comentario_id = request.POST.get("comentario")     
     comentario = Comment.objects.get(id=comentario_id)    
-    replys = comentario.replies.all()   
+    replys = comentario.replies.all()     
     
     if request.method == 'POST' and request.user.is_authenticated:
         formreply = ReplyForm(request.POST)
@@ -758,9 +758,10 @@ def add_reply(request):
             reply.autor = request.user            
             reply.comment = comentario
             reply.save()
+            
             trigger_events = {
-            "replysalvo": True,
-            "atualizatabcomentario": True
+            f"replysalvo_{comentario_id}": True,
+            f"atualizatabcomentario_{comentario_id}": True
             }
             
             trigger_events_json = json.dumps(trigger_events)
@@ -787,9 +788,10 @@ def delete_reply(request):
     if request.user == reply.autor:
         if request.method == 'POST':
             reply.delete()
+            comentario_id = reply.comment.id
             trigger_events = {
-            "replysalvo": True,
-            "atualizatabcomentario": True
+            f"replysalvo_{comentario_id}": True,
+            f"atualizatabcomentario_{comentario_id}": True
             }
             
             trigger_events_json = json.dumps(trigger_events)
@@ -797,7 +799,7 @@ def delete_reply(request):
             return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
             
         return HttpResponse()
-    
+        
 def solucao(request):
     
     question_id = request.GET.get("question")
@@ -815,8 +817,8 @@ def solucao(request):
             solucao.save()            
             
             trigger_events = {
-            "solucaosalvo": True,
-            "atualizatabquestao": True
+            f"solucaosalvo_{question_id}": True,
+            f"atualizatabquestao_{question_id}": True
             }
             
             trigger_events_json = json.dumps(trigger_events)
@@ -840,12 +842,13 @@ def delete_solucao(request):
     solucao_id = request.POST.get("solucao")
     solucao = Solucao.objects.get(id=solucao_id)
     
+    question_id = solucao.questao.id
     if request.user == solucao.autor:
         if request.method == 'POST':
             solucao.delete()
             trigger_events = {
-            "solucaosalvo": True,
-            "atualizatabquestao": True
+            f"solucaosalvo_{question_id}": True,
+            f"atualizatabquestao_{question_id}": True
             }
             
             trigger_events_json = json.dumps(trigger_events)
@@ -854,7 +857,7 @@ def delete_solucao(request):
         return HttpResponse()
 
 def add_reply_solucao(request):
-    
+
     solucao_id = request.GET.get("solucao")
     if not solucao_id:
        solucao_id = request.POST.get("solucao")     
@@ -870,8 +873,8 @@ def add_reply_solucao(request):
             reply_solucao.save()
             
             trigger_events = {
-            "replysolucaosalvo": True,
-            "atualizatabsolucao": True
+            f"replysolucaosalvo_{solucao_id}": True,
+            f"atualizatabsolucao_{solucao_id}": True
             }
             
             trigger_events_json = json.dumps(trigger_events)
@@ -898,9 +901,10 @@ def delete_reply_solucao(request):
     if request.user == reply.autor:
         if request.method == 'POST':
             reply.delete()
+            solucao_id = reply.solucao.id
             trigger_events = {
-            "replysolucaosalvo": True,
-            "atualizatabsolucao": True
+            f"replysolucaosalvo_{solucao_id}": True,
+            f"atualizatabsolucao_{solucao_id}": True
             }
             
             trigger_events_json = json.dumps(trigger_events)
@@ -923,7 +927,9 @@ def like_question(request):
     if not created:
         # If like already exists, remove it
         like.delete()
-    return HttpResponse(status=204, headers={'HX-Trigger': 'atualizatabquestao'})
+           
+    return HttpResponse(status=204, headers={'HX-Trigger': f"atualizatabquestao_{question_id}"})
+    
 
 def questao_int_tab(request):
     question_id = request.GET.get("question")
@@ -949,7 +955,8 @@ def like_comment(request):
     if not created:
         # If like already exists, remove it
         like.delete()
-    return HttpResponse(status=204, headers={'HX-Trigger': 'atualizatabcomentario'})
+    
+    return HttpResponse(status=204, headers={'HX-Trigger': f'atualizatabcomentario_{comentario_id}'})
 
 def comment_tab(request):
     comentario_id = request.GET.get("comentario")
@@ -975,7 +982,8 @@ def like_reply(request):
     if not created:
         # If like already exists, remove it
         like.delete()
-    return HttpResponse(status=204, headers={'HX-Trigger': 'atualizatabreply'})
+    
+    return HttpResponse(status=204, headers={'HX-Trigger': f'atualizatabreply_{reply_id}'})
 
 def reply_tab(request):
     reply_id = request.GET.get("reply")
@@ -1001,7 +1009,8 @@ def like_solucao(request):
     if not created:
         # If like already exists, remove it
         like.delete()
-    return HttpResponse(status=204, headers={'HX-Trigger': 'atualizatabsolucao'})
+    
+    return HttpResponse(status=204, headers={'HX-Trigger': f'atualizatabsolucao_{solucao_id}'})
 
 def solucao_tab(request):
     solucao_id = request.GET.get("solucao")
@@ -1025,9 +1034,8 @@ def like_reply_solucao(request):
         object_id=reply.id,
     )
     if not created:        
-        like.delete()
-           
-    return HttpResponse(status=204, headers={'HX-Trigger': 'atualizatabsolucaoreply'})
+        like.delete()          
+    return HttpResponse(status=204, headers={'HX-Trigger': f'atualizatabsolucaoreply_{reply_id}'})
 
 def reply_solucao_tab(request):
     reply_id = request.GET.get("reply")

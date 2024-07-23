@@ -13,7 +13,7 @@
                     hx-get="{% url 'add_reply' %}"
                     hx-vals='{"comentario": "{{comentario.id}}"}'        
                     hx-target="#comentario_{{ comentario.id }}"                    
-                    hx-trigger="click, replysalvo from:body"
+                    hx-trigger="click, replysalvo_{{comentario.id}} from:body"
                     hx-swap="innerHTML">
                       <span class="icon is-small">
                         <i class="fa-solid fa-reply"></i>

@@ -81,7 +81,7 @@
             <div class="block">
               <div 
               hx-get="{% url 'questao_int_tab' %}"
-              hx-trigger="atualizatabquestao from:window"
+              hx-trigger="atualizatabquestao_{{question.id}} from:window"
               hx-vals='{"question": "{{question.id}}"}'
               hx-swap="innerHTML"
               >

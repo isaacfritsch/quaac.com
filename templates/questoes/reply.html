@@ -21,7 +21,7 @@
               <p>{{ reply.body|safe }}</p>
               <div class="buttons"
               hx-get="{% url 'reply_tab' %}"
-              hx-trigger="atualizatabreply from:body"
+              hx-trigger="atualizatabreply_{{reply.id}} from:body"
               hx-vals='{"reply": "{{reply.id}}"}'
               hx-swap="innerHTML"
               >
@@ -56,8 +56,8 @@
                   <div class="columns is-mobile">
                     <div class="column">
                       <button class="button is-danger"
-                              hx-post="{% url 'delete_comentario' %}"
-                              hx-vals='{"comentario": "{{comentario.id}}"}'
+                              hx-post="{% url 'delete_reply' %}"
+                              hx-vals='{"reply": "{{reply.id}}"}'
                               hx-trigger="click"
                               hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                               @click.stop.prevent="comentarioconfirmardeletar = false">

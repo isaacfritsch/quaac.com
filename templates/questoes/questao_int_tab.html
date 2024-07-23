@@ -18,7 +18,7 @@
         hx-get="{% url 'solucao' %}"
         hx-vals='{"question": "{{question.id}}"}'        
         hx-target="#question_{{ question.id }}"                    
-        hx-trigger="click, solucaosalvo from:window"
+        hx-trigger="click, solucaosalvo_{{question.id}} from:window"
         hx-swap="innerHTML">
           <span class="icon is-small">
             <i class="fa-solid fa-users-gear"></i>
@@ -31,7 +31,7 @@
         hx-get="{% url 'comentario' %}"
         hx-vals='{"question": "{{question.id}}"}'        
         hx-target="#question_{{ question.id }}"                    
-        hx-trigger="click, comentariosalvo from:body"
+        hx-trigger="click, comentariosalvo_{{question.id}} from:body"
         hx-swap="innerHTML">
           <span class="icon is-small">
             <i class="fa-regular fa-comments"></i>

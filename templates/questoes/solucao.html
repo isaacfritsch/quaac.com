@@ -34,7 +34,7 @@
                         <div class="column">
                           <div class="buttons"                  
                             hx-get="{% url 'solucao_tab' %}"
-                            hx-trigger="atualizatabsolucao from:body"
+                            hx-trigger="atualizatabsolucao_{{solucao.id}} from:body"
                             hx-vals='{"solucao": "{{solucao.id}}"}'
                             hx-swap="innerHTML"
                             >
