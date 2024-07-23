@@ -18,7 +18,7 @@
         hx-get="{% url 'solucao' %}"
         hx-vals='{"question": "{{question.id}}"}'        
         hx-target="#question_{{ question.id }}"                    
-        hx-trigger="click, solucaosalvo from:body"
+        hx-trigger="click, solucaosalvo from:window"
         hx-swap="innerHTML">
           <span class="icon is-small">
             <i class="fa-solid fa-users-gear"></i>

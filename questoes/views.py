@@ -20,6 +20,8 @@ from django.views.decorators.http import require_POST
 from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
 from django.core.paginator import Paginator
 from django.template.loader import render_to_string
+from quaac.decorators import custom_login_required
+from django.http import HttpResponseRedirect
 
 
     
@@ -594,7 +596,7 @@ def botao_tag_confirmar_deletar2(request):
 
 
 
-
+@custom_login_required
 def question_create(request, espaco):
     
     espaco_desejado = Espaco.objects.get(title=espaco)
@@ -638,7 +640,7 @@ def question_create(request, espaco):
             request.session['questao_criada'] = True
             url = reverse('questao_criada', kwargs={'id': question_id})            
             response = HttpResponse()
-            response["Hx-Redirect"] = url            
+            response["Hx-Redirect"] = url           
             return response
         else:
             return render(request, 'questoes/create_question_form.html', {
@@ -648,9 +650,16 @@ def question_create(request, espaco):
         form_questao = QuestaoForm()
         form_solucao = SolucaoForm()
         request.session['selected_tags_questoes'] = []
-    return render(request, 'questoes/create_question.html', {
-        'form_questao': form_questao, 'form_solucao': form_solucao, 'espaco': espaco_desejado
-    })
+
+    if 'redirecionar' in request.GET:
+        return render(request, 'questoes/create_question.html', {
+            'form_questao': form_questao, 'form_solucao': form_solucao, 'espaco': espaco_desejado
+        })
+    else:
+        url = reverse('question_create', kwargs={'espaco': espaco_desejado.title}) + '?redirecionar=true'
+        response = HttpResponse()
+        response["Hx-Redirect"] = url           
+        return response
     
 def questao_criada(request, id):
     
@@ -693,7 +702,15 @@ def comentario(request):
             comment.autor = request.user            
             comment.questao = question
             comment.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'comentariosalvo, atualizatabquestao'})
+            trigger_events = {
+            "comentariosalvo": True,
+            "atualizatabquestao": True
+            }
+            
+            trigger_events_json = json.dumps(trigger_events)
+           
+            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
+            
         else:
             return HttpResponse()
     else:
@@ -715,7 +732,15 @@ def delete_comentario(request):
     if request.user == comentario.autor:
         if request.method == 'POST':
             comentario.delete()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'comentariosalvo, atualizatabquestao'})
+            trigger_events = {
+            "comentariosalvo": True,
+            "atualizatabquestao": True
+            }
+            
+            trigger_events_json = json.dumps(trigger_events)
+           
+            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
+            
         return HttpResponse()
     
 def add_reply(request):
@@ -733,7 +758,15 @@ def add_reply(request):
             reply.autor = request.user            
             reply.comment = comentario
             reply.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'replysalvo, atualizatabcomentario'})
+            trigger_events = {
+            "replysalvo": True,
+            "atualizatabcomentario": True
+            }
+            
+            trigger_events_json = json.dumps(trigger_events)
+           
+            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
+            
         else:
             return HttpResponse()
     else:
@@ -754,7 +787,15 @@ def delete_reply(request):
     if request.user == reply.autor:
         if request.method == 'POST':
             reply.delete()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'replysalvo, atualizatabcomentario'})
+            trigger_events = {
+            "replysalvo": True,
+            "atualizatabcomentario": True
+            }
+            
+            trigger_events_json = json.dumps(trigger_events)
+           
+            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
+            
         return HttpResponse()
     
 def solucao(request):
@@ -771,8 +812,17 @@ def solucao(request):
             solucao = formsolucao.save(commit=False)
             solucao.autor = request.user            
             solucao.questao = question
-            solucao.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'solucaosalvo, atualizatabquestao'})
+            solucao.save()            
+            
+            trigger_events = {
+            "solucaosalvo": True,
+            "atualizatabquestao": True
+            }
+            
+            trigger_events_json = json.dumps(trigger_events)
+           
+            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
+            
         else:
             return HttpResponse()
     else:
@@ -793,7 +843,14 @@ def delete_solucao(request):
     if request.user == solucao.autor:
         if request.method == 'POST':
             solucao.delete()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'solucaosalvo, atualizatabquestao'})
+            trigger_events = {
+            "solucaosalvo": True,
+            "atualizatabquestao": True
+            }
+            
+            trigger_events_json = json.dumps(trigger_events)
+           
+            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})            
         return HttpResponse()
 
 def add_reply_solucao(request):
@@ -811,11 +868,20 @@ def add_reply_solucao(request):
             reply_solucao.autor = request.user            
             reply_solucao.solucao = solucao
             reply_solucao.save()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'replysolucaosalvo, atualizatabsolucao'})
+            
+            trigger_events = {
+            "replysolucaosalvo": True,
+            "atualizatabsolucao": True
+            }
+            
+            trigger_events_json = json.dumps(trigger_events)
+           
+            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})        
+            
         else:
             return HttpResponse()
     else:
-        formreplysolucao = ReplysolucaoForm()
+        formreplysolucao = ReplysolucaoForm()        
         
     context = {
         'replys_solucao':replys_solucao,
@@ -832,7 +898,16 @@ def delete_reply_solucao(request):
     if request.user == reply.autor:
         if request.method == 'POST':
             reply.delete()
-            return HttpResponse(status=204, headers={'HX-Trigger': 'replysolucaosalvo, atualizatabsolucao'})
+            trigger_events = {
+            "replysolucaosalvo": True,
+            "atualizatabsolucao": True
+            }
+            
+            trigger_events_json = json.dumps(trigger_events)
+           
+            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
+            
+            
         return HttpResponse()
 
 def like_question(request):

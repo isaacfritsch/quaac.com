@@ -31,7 +31,7 @@
                   <p>{{ comentario.body|safe }}</p>
                   <div class="buttons"                  
                   hx-get="{% url 'comment_tab' %}"
-                  hx-trigger="atualizatabcomentario from:body"
+                  hx-trigger="atualizatabcomentario from:window"
                   hx-vals='{"comentario": "{{comentario.id}}"}'
                   hx-swap="innerHTML"
                   >                  

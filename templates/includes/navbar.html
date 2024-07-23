@@ -1,3 +1,4 @@
+
 <nav x-data="{ open: false }" x-cloak class="navbar is-light" id="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <a class="navbar-item brand-text is-size-4 has-text-dark" href="/">
@@ -28,9 +29,11 @@
                 <a class="navbar-item"
                 hx-get="{% url 'login' %}"
                 hx-target="#modal-login"
-                hx-trigger="click"
+                hx-trigger="click, userloginrequired from:window"
                 x-cloak
-                @click.stop.prevent="modalloginopen = !modalloginopen">
+                @click.stop.prevent="modalloginopen = !modalloginopen"
+                @userloginrequired.window ="modalloginopen = true"
+                >
                         Login
                 </a>                      
                 <a class="navbar-item"

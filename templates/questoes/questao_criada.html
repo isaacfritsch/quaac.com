@@ -74,18 +74,14 @@
                 </div>
                 <div id="marcar_resolvida_{{ question.id }}">
                 </div>
-                <div class="column has-text-right">
-                  <button class="button is-danger is-inverted">
-                    Reportar
-                  </button>
-                </div>
+                
               </div>
             </div>                       
             <hr>
             <div class="block">
               <div 
               hx-get="{% url 'questao_int_tab' %}"
-              hx-trigger="atualizatabquestao from:body"
+              hx-trigger="atualizatabquestao from:window"
               hx-vals='{"question": "{{question.id}}"}'
               hx-swap="innerHTML"
               >

@@ -5,7 +5,9 @@ from espaco.models import Tag, Espaco
 from users.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Q
+from quaac.decorators import custom_login_required
 
+@custom_login_required
 def perfil(request):
     user = request.user
     context = {

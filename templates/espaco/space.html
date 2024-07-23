@@ -21,6 +21,8 @@
 
 <script type="text/javascript">
   
+   
+
   function updateMinhalista(updatedData) {
     window.minhalista = JSON.parse(updatedData);
 }
@@ -72,13 +74,15 @@ function updateHxValsAndTrigger(button) {
       </p>
     </div>    
 </section>
-
+<div id="none"></div>
 <div>
   <nav class="panel" id="panel_id">
     <div class="panel-heading">
       <div class="columns is-mobile">
         <div class="column">          
-          <a href="{% url 'question_create' espaco=espaco.title %}">
+          <a hx-get="{% url 'question_create' espaco=espaco.title %}"
+          hx-target="#none"
+          >
             <button class="button is-info"> 
               <span class="icon is-small">
                 <i class="fa-solid fa-circle-plus"></i>
