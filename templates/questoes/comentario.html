@@ -27,7 +27,7 @@
           <div class="box">
             <article class="media">
               <div class="media-content">
-                <div class="content">
+                <div class="content" id="content_{{comentario.id}}">
                   <p>{{ comentario.body|safe }}</p>
                   <div class="buttons"                  
                   hx-get="{% url 'comment_tab' %}"
@@ -45,7 +45,12 @@
                 <div x-data="{ comentarioconfirmardeletar: false }">
                   <div class="media-right">
                     <div class="buttons">
-                      <button class="button is-ghost">
+                      <button class="button is-ghost"
+                      hx-get="{% url 'editar_comentario' %}"
+                      hx-vals='{"comentario": "{{comentario.id}}"}'
+                      hx-target="#content_{{comentario.id}}"
+                      hx-trigger="click"                      
+                      >
                         <span class="icon is-small">
                           <i class="fa-solid fa-edit"></i>
                         </span>

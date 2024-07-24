@@ -17,7 +17,7 @@
       <div class="box">
         <article class="media">
           <div class="media-content">
-            <div class="content">
+            <div class="content" id="content_{{reply.id}}">
               <p>{{ reply.body|safe }}</p>
               <div class="buttons"
               hx-get="{% url 'reply_tab' %}"
@@ -38,7 +38,12 @@
                   </div>
                   <div class="media-right">
                     <div class="buttons">
-                      <button class="button is-ghost">
+                      <button class="button is-ghost"
+                      hx-get="{% url 'editar_reply' %}"
+                      hx-vals='{"reply": "{{reply.id}}"}'
+                      hx-target="#content_{{reply.id}}"
+                      hx-trigger="click"
+                      >
                         <span class="icon is-small">
                           <i class="fa-solid fa-edit"></i>
                         </span>

@@ -62,8 +62,7 @@ class Comment(models.Model):
             return f'no author : {self.body[:30]}' 
         
     class Meta:
-        ordering = ['-data']
-        
+        ordering = ['-data']        
 
 
 class Reply(models.Model):

@@ -22,6 +22,7 @@ from django.core.paginator import Paginator
 from django.template.loader import render_to_string
 from quaac.decorators import custom_login_required
 from django.http import HttpResponseRedirect
+from django.http import HttpResponseForbidden
 
 
     
@@ -724,7 +725,40 @@ def comentario(request):
 
     return render(request, 'questoes/comentario.html', context)
 
-
+def editar_comentario(request):
+    
+    comentario_id = request.GET.get("comentario")
+    if not comentario_id:
+       comentario_id = request.POST.get("comentario") 
+    comentario = get_object_or_404(Comment, id=comentario_id)
+    
+    if comentario.autor != request.user:
+        return HttpResponseForbidden("Você não tem permissão para editar este comentário.")
+    
+    if request.method == 'GET':
+        
+        form = CommentForm(instance=comentario)
+        context = {
+            'form': form,
+            'comentario': comentario
+        }
+        return render(request, 'questoes/editar_comentario.html', context)
+    
+    if request.method == 'POST':
+        
+        form = CommentForm(request.POST, instance=comentario)
+        if form.is_valid():
+            form.save()
+            
+            question_id = comentario.questao.id
+            trigger_events = {
+            f"comentariosalvo_{question_id}": True,            
+            }
+            
+            trigger_events_json = json.dumps(trigger_events)
+           
+            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
+        
 def delete_comentario(request):
     comentario_id = request.POST.get("comentario")
     comentario = Comment.objects.get(id=comentario_id)
@@ -781,6 +815,40 @@ def add_reply(request):
 
     return render(request, 'questoes/reply.html', context)
 
+def editar_reply(request):
+
+    reply_id = request.GET.get("reply")
+    if not reply_id:
+       reply_id = request.POST.get("reply")
+    reply = Reply.objects.get(id=reply_id)
+    
+    if reply.autor != request.user:
+        return HttpResponseForbidden("Você não tem permissão para editar este comentário.")
+    
+    if request.method == 'GET':
+        
+        form = ReplyForm(instance=reply)
+        context = {
+            'form': form,
+            'reply': reply
+        }
+        return render(request, 'questoes/editar_reply.html', context)
+    
+    if request.method == 'POST':
+        
+        form = ReplyForm(request.POST, instance=reply)
+        if form.is_valid():
+            form.save()
+            
+            comentario_id = reply.comment.id
+            trigger_events = {
+            f"replysalvo_{comentario_id}": True,            
+            }
+            
+            trigger_events_json = json.dumps(trigger_events)
+           
+            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
+
 def delete_reply(request):
     reply_id = request.POST.get("reply")
     reply = Reply.objects.get(id=reply_id)
@@ -799,6 +867,8 @@ def delete_reply(request):
             return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
             
         return HttpResponse()
+    
+
         
 def solucao(request):
     
