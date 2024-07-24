@@ -908,6 +908,49 @@ def solucao(request):
 
     return render(request, 'questoes/solucao.html', context)
 
+def editar_solucao(request):
+
+    
+    
+    solucao_id = request.GET.get("solucao")
+    if not solucao_id:
+       solucao_id = request.POST.get("solucao")
+    solucao = Solucao.objects.get(id=solucao_id)
+    
+    if solucao.autor != request.user:
+        return HttpResponseForbidden("Você não tem permissão para editar esta Solução.")   
+    
+    if request.method == 'GET':
+
+        form = SolucaoForm(instance=solucao)
+        context = {
+            'form': form,
+            'solucao': solucao
+        }
+        return render(request, 'questoes/editar_solucao.html', context)
+
+    if request.method == 'POST':
+        
+        question_id = solucao.questao.id 
+        question = Questao.objects.get(id=question_id)
+
+        form = SolucaoForm(request.POST, instance=solucao)
+        if form.is_valid():
+            
+            solucao = form.save(commit=False)
+            solucao.autor = request.user
+            solucao.questao = question
+            solucao.save()
+            
+                       
+            trigger_events = {
+            f"solucaosalvo_{question_id}": True,
+            }
+
+            trigger_events_json = json.dumps(trigger_events)
+           
+            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
+
 def delete_solucao(request):
     solucao_id = request.POST.get("solucao")
     solucao = Solucao.objects.get(id=solucao_id)
@@ -963,6 +1006,46 @@ def add_reply_solucao(request):
     }   
 
     return render(request, 'questoes/reply_solucao.html', context)
+
+def editar_reply_solucao(request):
+      
+    reply_id = request.GET.get("reply")
+    if not reply_id:
+       reply_id = request.POST.get("reply")
+    reply = Replysolucao.objects.get(id=reply_id)
+    
+    if reply.autor != request.user:
+        return HttpResponseForbidden("Você não tem permissão para editar este comentário.")
+    
+    if request.method == 'GET':
+
+        form = ReplysolucaoForm(instance=reply)
+        context = {
+            'form': form,
+            'reply': reply
+        }
+        return render(request, 'questoes/editar_reply_solucao.html', context)
+
+    if request.method == 'POST':
+        
+        solucao_id = reply.solucao.id
+        solucao = Solucao.objects.get(id=solucao_id)
+        
+        form = ReplysolucaoForm(request.POST, instance=reply)
+        if form.is_valid():
+         
+            reply_solucao = form.save(commit=False)
+            reply_solucao.autor = request.user            
+            reply_solucao.solucao = solucao
+            reply_solucao.save()          
+                       
+            trigger_events = {
+            f"replysolucaosalvo_{solucao_id}": True,
+            }
+
+            trigger_events_json = json.dumps(trigger_events)
+           
+            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
 
 def delete_reply_solucao(request):
     reply_id = request.POST.get("replysolucao")

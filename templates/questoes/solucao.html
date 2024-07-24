@@ -27,7 +27,7 @@
             <div class="box">
               <article class="media">
                 <div class="media-content">
-                  <div class="content">
+                  <div class="content" id="content_{{solucao.id}}">
                     <p>{{ solucao.bodysol|safe }}</p>
                     <div class="block">
                       <div class="columns is-mobile">
@@ -51,7 +51,12 @@
                 <div x-data="{ solucaoconfirmardeletar: false }">
                   <div class="media-right">
                     <div class="buttons">
-                      <button class="button is-ghost">
+                      <button class="button is-ghost"
+                      hx-get="{% url 'editar_solucao' %}"
+                      hx-vals='{"solucao": "{{solucao.id}}"}'
+                      hx-target="#content_{{solucao.id}}"
+                      hx-trigger="click"
+                      >
                         <span class="icon is-small">
                           <i class="fa-solid fa-edit"></i>
                         </span>

@@ -1,0 +1,12 @@
+{% load widget_tweaks %}
+{% with WIDGET_ERROR_CLASS='is-invalid' %}
+<form method="post" 
+hx-post="{% url 'editar_reply_solucao' %}" 
+hx-vals='{"reply": "{{reply.id}}"}'
+hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+hx-target="#content_{{reply.id}}">
+    {% csrf_token %}
+    {{ form.body }}
+    <button type="submit" class="button is-info">Salvar alterações</button>
+</form>
+{% endwith %}
