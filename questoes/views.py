@@ -1,6 +1,7 @@
 from typing import Any
 import json
 import ast
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.forms import formset_factory
@@ -599,21 +600,19 @@ def botao_tag_confirmar_deletar2(request):
 
 @custom_login_required
 def question_create(request, espaco):
-    
     espaco_desejado = Espaco.objects.get(title=espaco)
         
     form_questao = QuestaoForm(request.POST or None)
     form_solucao = SolucaoForm(request.POST or None)
 
     if request.method == 'POST':       
-        
         if form_questao.is_valid():
             tags = request.session.get('selected_tags_questoes', [])
-            if tags == []:
-                form_questao.add_error('tags', 'A questão precisa ter pelo menos uma tag selecionada')
+            if not tags:
+                messages.error(request, 'A questão precisa ter pelo menos uma tag selecionada')
                 return render(request, 'questoes/create_question_form.html', {
                     'form_questao': form_questao, 'form_solucao': form_solucao, 'espaco': espaco_desejado
-                })
+                })         
             
             question = form_questao.save(commit=False)
             question.user = request.user
@@ -662,18 +661,80 @@ def question_create(request, espaco):
         response["Hx-Redirect"] = url           
         return response
     
+def editar_questao(request, questao_id):  
+      
+    questao = get_object_or_404(Questao, id=questao_id)
+    espaco = questao.space
+    if questao.user != request.user:
+        return HttpResponseForbidden("Você não tem permissão para editar esta questão.")
+    
+    if request.method == 'GET':
+        form = QuestaoForm(instance=questao)        
+        selected_tags_ids = list(questao.tags.values_list('name', flat=True))
+        request.session['selected_tags_questoes'] = selected_tags_ids
+                
+        context = {
+            'form_questao': form, 
+            'espaco': espaco,
+            'question': questao,
+        }
+        return render(request, 'questoes/editar_questao.html', context)
+    
+    if request.method == 'POST':
+        form = QuestaoForm(request.POST, instance=questao)
+        
+        if form.is_valid():
+            tags = request.session.get('selected_tags_questoes', [])
+            if not tags:
+                messages.error(request, 'A questão precisa ter pelo menos uma tag selecionada')
+                
+                
+                return render(request, 'questoes/question_form_edit.html', {
+                    'form_questao': form, 
+                    'espaco': espaco,
+                    'question': questao,
+                })
+            
+            question = form.save(commit=False)
+            question.user = request.user            
+            question.space = espaco          
+
+            # Atualiza as tags associadas à questão
+            question.tags.clear()
+            for tag_name in tags:
+                tag_obj = Tag.objects.get(name=tag_name, space=questao.space.id)
+                question.tags.add(tag_obj)
+            question.save()
+            
+            request.session['questao_editada'] = True
+            request.session['questao_criada'] = False
+            url = reverse('questao_criada', kwargs={'id': questao.id}) 
+                       
+            response = HttpResponse()
+            response["Hx-Redirect"] = url           
+            return response            
+            
+        else:
+            return render(request, 'questoes/questoes/question_form_edit.html', {
+                'form_questao': form,
+                'espaco': espaco,
+                'question': questao
+            })
+            
+            
 def questao_criada(request, id):
     
     question = get_object_or_404(Questao, id=id)
     
     # Retrieve the variable from the session
     questao_criada = request.session.get('questao_criada', False)
-
-    # Optionally, clear the variable from the session if it shouldn't persist
     if 'questao_criada' in request.session:
         del request.session['questao_criada']
+    questao_editada = request.session.get('questao_editada', False)
+    if 'questao_editada' in request.session:
+        del request.session['questao_editada']    
     
-    return render(request, 'questoes/questao_criada.html', {'question': question, 'questao_criada': questao_criada})
+    return render(request, 'questoes/questao_criada.html', {'question': question, 'questao_criada': questao_criada, 'questao_editada': questao_editada})
 
 def questao(request, question):          
         
@@ -687,6 +748,9 @@ def questao(request, question):
                                                      'espaco': espaco_desejado,
                                                      'tags': tags,                                                     
                                                     })
+
+def deletar_questao(request):
+    pass
     
 def comentario(request):
     

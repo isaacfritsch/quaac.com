@@ -18,6 +18,16 @@
       </span> Questão criada com sucesso!</p>
   </div>
 </div>
+<div x-data="{ successq2: '{{ questao_editada }}' === 'True' }">
+  <div class="has-text-centered has-background-success has-text-white p-2"
+       x-cloak
+       x-show.transition="successq2"
+       x-init="setTimeout(() => successq2 = false, 5000)">      
+      <p><span class="icon">
+        <i class="fa-solid fa-circle-check"></i>
+      </span> Questão editada com sucesso!</p>
+  </div>
+</div>
 <section class="section">
   <div class="container is-justify-content-center is-fullwidth">
     <div class="block">
@@ -32,12 +42,22 @@
                 <p class="is-size-7">Created by: {{ question.user.name }}</p>
               </div>
               <div class="column is-narrow">                    
-                <button class="button is-small is-info">
-                  <span class="icon">
-                    <i class="fa-solid fa-pencil"></i>
-                  </span>
-                  <p>Editar questão</p>
-                </button>                    
+                <div class="buttons">
+                  <a class="button is-ghost"
+                  href="{% url  'editar_questao' question.id %}"
+                  >
+                    <span class="icon is-small">
+                      <i class="fa-solid fa-edit"></i>
+                    </span>
+                    <p>Editar questão</p>
+                  </a>
+                  <button class="button is-ghost" @click="questaoconfirmardeletar = true">
+                    <span class="icon is-small">
+                      <i class="fa-solid fa-trash"></i>
+                    </span>
+                    <p>Excluir questão</p>
+                  </button>
+                </div>                   
               </div>       
             </div>            
             <div class="columns is-mobile">
@@ -48,8 +68,7 @@
                   {% endfor %}
                 </div>
               </div>                
-            </div>
-            
+            </div>            
             <hr>
             <div class="content">
               <div class="block">

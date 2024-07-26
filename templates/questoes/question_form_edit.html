@@ -1,29 +1,11 @@
 {% load widget_tweaks %}
 {% with WIDGET_ERROR_CLASS='is-invalid' %}
-
-<div x-data="{ successq: false }" x-init="
-        if ('{{ questao_criada|default:False }}' == 'True') {
-            successq = true;
-            setTimeout(() => successq = false, 5000);
-        }
-    ">
-        <div class="has-text-centered has-background-success has-text-white p-2 has-border-success"
-             x-cloak
-             x-show="successq">
-            
-            <p><span class="icon">
-              <i class="fa-solid fa-circle-check"></i>
-            </span> Questão criada com sucesso!</p>
-        </div>
-    </div>
 <form class="form"
 name="form_questao"
-hx-post="{% url 'question_create' espaco=espaco.title %}">
-
+hx-post="{% url 'editar_questao' question.id %}">
     {% csrf_token %}
     <div class="block" style="margin: 1.5rem;">
-      <h1 class="title is-3">Revise a questão antes de postá-la</h1>
-      
+      <h1 class="title is-3">Revise a questão antes de postá-la</h1>      
     </div>
     <div class="box" style="margin: 1.5rem;">
       <article class="message is-info">
@@ -115,16 +97,12 @@ hx-post="{% url 'question_create' espaco=espaco.title %}">
               </div>
               <div id="categoria_lista2">
               </div>
-              <br>
-
-              {% comment %} Atualiza o tags_selecionadas {% endcomment %}
+              <br>              
               <div hx-get="{% url 'update_tags_selecionadas2' %}"
               hx-vals='{"espaco": "{{espaco.id}}"}'
               hx-target="#tags_selected2"
               hx-trigger="load, taglistchangededit from:body, taglistchanged from:body, taglistchangeddelete from:body, selecionardesselecionar from:body">
-              </div>
-
-              {% comment %} Atualiza o lista_tags para a categoria que foi criada ou editada ou deletada {% endcomment %}
+              </div>              
               <div hx-get="{% url 'lista_tags2' %}"
                   hx-vals='js:{"total": event.detail.value}'
                   hx-target="#tag_selection2"
@@ -137,7 +115,6 @@ hx-post="{% url 'question_create' espaco=espaco.title %}">
                 </div>
         <div class="column is-5">
           <div class="box"> 
-            
             {% if messages %}
               <ul class="messages">
                   {% for message in messages %}
@@ -164,53 +141,16 @@ hx-post="{% url 'question_create' espaco=espaco.title %}">
           {% render_field form_questao.body  style=" height: 291px;" name="body" %}
         </div>
       </div>
-    </div>      
-    <div class="box">
-      <div class="field">
-        <label class="label is-size-5">Resolução</label>
-        {% if form_solucao.bodysol.errors %}
-            <p class="help is-danger is-size-5">{{form_solucao.bodysol.errors|first }}</p>
-        {% endif %}
-        <div class="control">
-          {% render_field form_solucao.bodysol class="style" name="current_answer"%}
-        </div>
-      </div>
     </div>
-    <div x-data="{ successq: false }" x-init="
-        if ('{{ questao_criada|default:False }}' == 'True') {
-            successq = true;
-            setTimeout(() => successq = false, 5000);
-        }
-    ">
-        <div class="has-text-centered has-background-success has-text-white p-2 has-border-success"
-             x-cloak
-             x-show="successq">
-            
-            <p><span class="icon">
-              <i class="fa-solid fa-circle-check"></i>
-            </span> Questão criada com sucesso!</p>
-        </div>
-    </div>
-    <div class="columns is-mobile">
       <div class="column is-3" style="margin: 1.5rem;">
           <div class="field">
               <div class="control">
-                  <button class="button is-info" type="submit" name="action" value="save_and_add_new">
-                      SALVAR E ADICIONAR OUTRA QUESTÃO
+                  <button class="button is-info" type="submit" name="action">
+                      SALVAR EDIÇÃO
                   </button>
               </div>
           </div>
-      </div>
-      <div class="column is-offset-6 is-3" style="margin: 1.5rem;">
-          <div class="field">
-              <div class="control">
-                  <button class="button is-info" type="submit" name="action" value="save">
-                      SALVAR
-                  </button>
-              </div>
-          </div>
-      </div>
+      </div>      
   </div>
-</form>  
-
+</form>
 {% endwith %}

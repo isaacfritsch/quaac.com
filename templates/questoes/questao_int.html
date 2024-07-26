@@ -6,31 +6,65 @@
   word-break: break-all; /* break at any character to prevent overflow */
   hyphens: auto; /* add hyphens when breaking words */
 }
-
 </style>
 
 <section class="section">
   <div class="container is-justify-content-center is-fullwidth">
     <div class="block">
-      <div class="columns is-mobile">      
+      <div class="columns is-mobile">
         <div class="column">
           <div class="box">
             <div class="columns is-mobile has-background-white-ter">
               <div class="column is-narrow">
-                <div href="" style="width: 20px">{{ question.id }}</div>
+                <div style="width: 20px">{{ question.id }}</div>
               </div>
               <div class="column">
                 <p class="is-size-7">Created by: {{ question.user.name }}</p>
               </div>
-              <div class="column is-narrow">                    
-                <button class="button is-small is-info">
-                  <span class="icon">
-                    <i class="fa-solid fa-pencil"></i>
-                  </span>
-                  <p>Editar questão</p>
-                </button>                    
-              </div>       
-            </div>            
+              <div class="column is-narrow">
+                <div x-data="{questaoconfirmardeletar : false}">
+                  <div class="media-right">
+                    <div class="buttons">
+                      <a class="button is-ghost"
+                      href="{% url  'editar_questao' question.id %}"
+                      >
+                        <span class="icon is-small">
+                          <i class="fa-solid fa-edit"></i>
+                        </span>
+                        <p>Editar questão</p>
+                      </a>
+                      <button class="button is-ghost" @click="questaoconfirmardeletar = true">
+                        <span class="icon is-small">
+                          <i class="fa-solid fa-trash"></i>
+                        </span>
+                        <p>Excluir questão</p>
+                      </button>
+                    </div>
+                  </div>
+                  <div x-cloak x-show="questaoconfirmardeletar" class="notification is-info is-light">
+                    <h1 class="title is-5">Tem certeza que deseja excluir a questão?</h1>
+                    <div class="columns is-mobile">
+                      <div class="column">
+                        <button class="button is-danger"
+                        hx-post="{% url 'deletar_questao' %}"
+                        hx-vals='{"questao": "{{questao.id}}"}'                                       
+                        hx-trigger="click"
+                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                        @click.stop.prevent="questaoconfirmardeletar = false">
+                          Deletar
+                        </button>
+                      </div>
+                      <div class="column is-narrow">
+                        <button class="button is-light" @click.stop.prevent="questaoconfirmardeletar = false">
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="columns is-mobile">
               <div class="column">
                 <div class="tags">
@@ -38,15 +72,16 @@
                     <span class="tag is-primary">{{ tag }}</span>
                   {% endfor %}
                 </div>
-              </div>                
+              </div>
             </div>
-            
+
             <hr>
             <div class="content">
               <div class="block">
                 {{ question.body|safe }}
               </div>
-            </div>      
+            </div>
+            
             <div class="block">
               <div class="columns is-mobile">
                 <div class="column" x-data="{ resolved: false }">
@@ -58,32 +93,32 @@
                           hx-swap="innerHTML"
                           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                           @click="resolved = true">
-                    Responder</button>
-                    <div class="is-size-7">
-                      respondida {{question.times_solved}} vezes pela comunidade
-                    </div>
+                    Responder
+                  </button>
+                  <div class="is-size-7">
+                    Respondida {{question.times_solved}} vezes pela comunidade
+                  </div>
                 </div>
-                
                 <div id="marcar_resolvida_{{ question.id }}">
                 </div>
-                
-                </div>
-            </div>            
+              </div>
+            </div>
+
             <hr>
             <div class="block">
               <div 
               hx-get="{% url 'questao_int_tab' %}"
               hx-trigger="atualizatabquestao_{{question.id}} from:window"
               hx-vals='{"question": "{{question.id}}"}'
-              hx-swap="innerHTML"
-              >
-              {%include 'questoes/questao_int_tab.html' %}
+              hx-swap="innerHTML">
+                {% include 'questoes/questao_int_tab.html' %}
               </div>
               <div id="question_{{ question.id }}">
-              </div>    
+              </div>
             </div>
+
           </div>
-        </div>       
+        </div>
       </div>
     </div>
   </div>
