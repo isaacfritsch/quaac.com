@@ -1,0 +1,58 @@
+{% load widget_tweaks %}
+{% with WIDGET_ERROR_CLASS='is-invalid' %}
+<div class="modal" x-bind:class="modalcomunidadeeditar ? 'is-active' : ''">
+    <div @comunidadeeditada.window="modalcomunidadeeditar = false"></div>
+    <div class="modal-background" ></div>
+    <div class="modal-content has-background-white py-5 px-5" id="space-modal" @click.stop.outside="modalcomunidadeeditar = false">
+
+        <div class="box">
+            
+            <button class="delete is-pulled-right"  x-on:click.stop.prevent="modalcomunidadeeditar = false"></button>       
+            <h1 class="title is-3">EDIÇÃO DA COMUNIDADE</h1>            
+            
+            <form class="form" name="form"      
+            hx-post = {{request.path}}
+            hx-trigger="submit"
+            hx-vals='{"espaco" : "{{espaco.id}}"}'        
+            hx-target="#editar-comunidade-modal"                                               
+            >
+
+                {% csrf_token %}
+
+                <div class="field">
+                    <label class="label" for="{{ form.title.id_for_label }}">Título</label>                 
+                    <div class="control">
+                        {% render_field form.title class="input is-primary" placeholder="" name="title"%}
+                    {% if form.title.errors %}
+                        <p class="help is-danger">{{ form.title.errors|first }}</p>
+                    {% endif %}
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <label class="label" for="{{ form.description.id_for_label }}">Descrição</label>
+                    <p><small>Qual o objetivo educacional desse espaço?</small></p>
+                    <div class="control">
+                        {% render_field form.description class="textarea is-primary" placeholder="" name="description" %}
+                    {% if form.description.errors %}
+                        <p class="help is-danger">{{ form.description.errors|first }}</p>
+                    {% endif %} 
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-info"
+                        type="submit"                                                                                                      
+                        >Editar</button>                
+                    </div>
+                </div>        
+                              
+                  
+            </form>
+        </div>
+        
+        
+    </div>
+</div>
+{% endwith %}

@@ -20,9 +20,6 @@
 </div>
 
 <script type="text/javascript">
-  
-   
-
   function updateMinhalista(updatedData) {
     window.minhalista = JSON.parse(updatedData);
 }
@@ -53,17 +50,27 @@ function updateHxValsAndTrigger(button) {
 </div>
 <div id="editar-tag-modal">
 </div>
+<div id="editar-comunidade-modal">
+</div>
+<div x-data="{ successmessage2: false }" x-cloak >
+  <div class="has-text-centered has-background-success has-text-white p-2 has-border-success"
+   x-cloak
+   x-show="successmessage2"      
+   @comunidadeeditada.window="successmessage2 = true; setTimeout(() => successmessage2 = false, 5000)"      
+   >      
+   <p><span class="icon">
+     <i class="fa-solid fa-circle-check"></i>
+   </span> Alterações salvas com sucesso!</p>
+ </div>
+</div> 
 <section class="hero is-small is-black">
-    <div class="hero-body">
-      <div class="columns is-mobile">
-        <div class="column has-text-centered">
-              <p class="title is-size-2">
-                {{espaco.title}}
-              </p>
-                <p class="subtitle is-size-7">
-                  {{espaco.description}}
-                </p>                              
-        </div>                   
+    <div class="hero-body"
+    hx-get="{% url 'comunidade_body'%}"
+    hx-vals='{"espaco" : "{{espaco.id}}"}'
+    hx-trigger="comunidadeeditada from:window"  
+    hx-swap="innerHTML"
+    >      
+      {%include 'espaco/comunidade_body.html'%}       
     </div>
            
       <p class="control has-icons-left">

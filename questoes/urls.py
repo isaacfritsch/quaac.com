@@ -46,8 +46,7 @@ urlpatterns = [
     path('editar_comentario/', views.editar_comentario, name='editar_comentario'),
     path('editar_reply/', views.editar_reply, name='editar_reply'),
     path('editar_solucao/', views.editar_solucao, name='editar_solucao'),
-    path('editar_reply_solucao/', views.editar_reply_solucao, name='editar_reply_solucao'), 
-    
+    path('editar_reply_solucao/', views.editar_reply_solucao, name='editar_reply_solucao'),    
     path('deletar_questao/', views.deletar_questao, name='deletar_questao'), 
           
 ]

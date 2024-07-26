@@ -8,7 +8,7 @@
 }
 </style>
 
-<section class="section">
+<section class="section" id="questaocriada_{{question.id}}">
   <div class="container is-justify-content-center is-fullwidth">
     <div class="block">
       <div class="columns is-mobile">
@@ -47,8 +47,10 @@
                       <div class="column">
                         <button class="button is-danger"
                         hx-post="{% url 'deletar_questao' %}"
-                        hx-vals='{"questao": "{{questao.id}}"}'                                       
+                        hx-vals='{"questao": "{{question.id}}"}'                                       
                         hx-trigger="click"
+                        hx-target="#questaocriada_{{question.id}}"
+                        hx-swap="innerHTML"
                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                         @click.stop.prevent="questaoconfirmardeletar = false">
                           Deletar

@@ -750,7 +750,21 @@ def questao(request, question):
                                                     })
 
 def deletar_questao(request):
-    pass
+    questao_id = request.POST.get("questao")
+    questao = Questao.objects.get(id=questao_id)    
+    if request.user == questao.user:
+        if request.method == 'POST':
+            questao.delete()
+            trigger_events = {
+            f"questaodeletada_{questao_id}": True,            
+            }            
+            trigger_events_json = json.dumps(trigger_events)
+           
+            rendered_html = render(request, 'questoes/questao_deletada.html').content
+            
+            return HttpResponse(rendered_html, headers={'HX-Trigger': trigger_events_json})
+            
+        return HttpResponse()
     
 def comentario(request):
     
@@ -1122,12 +1136,9 @@ def delete_reply_solucao(request):
             trigger_events = {
             f"replysolucaosalvo_{solucao_id}": True,
             f"atualizatabsolucao_{solucao_id}": True
-            }
-            
-            trigger_events_json = json.dumps(trigger_events)
-           
-            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
-            
+            }            
+            trigger_events_json = json.dumps(trigger_events)           
+            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})            
             
         return HttpResponse()
 
@@ -1141,8 +1152,7 @@ def like_question(request):
         content_type=content_type,
         object_id=question.id,
     )
-    if not created:
-        # If like already exists, remove it
+    if not created:        
         like.delete()
            
     return HttpResponse(status=204, headers={'HX-Trigger': f"atualizatabquestao_{question_id}"})

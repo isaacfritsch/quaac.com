@@ -62,6 +62,40 @@ def create_space(request):
     else:
         return render(request, 'espaco/failure_create_space.html')
     
+def comunidadeeditar(request):
+    espaco = request.GET.get("espaco")   
+    
+    if not espaco:
+         espaco = request.POST.get("espaco")
+    
+    espaco = Espaco.objects.get(id=espaco)
+    
+    if request.user == espaco.user: 
+        if request.method == 'GET':            
+            form = CreateSpaceForm(instance=espaco)
+            return render(request, 'espaco/edit_space.html', {'form': form,'espaco': espaco})              
+        if request.method == 'POST':
+            form = CreateSpaceForm(request.POST, instance=espaco)
+            if form.is_valid():
+                novo_espaco = form.save(commit=False)
+                novo_espaco.user = request.user  # Atribuir o usuário atual ao espaco
+                novo_espaco.save()
+                
+                response = HttpResponse(status=204)            
+                response['HX-Trigger'] = 'comunidadeeditada'
+                return response
+
+            return render(request, 'espaco/edit_space.html', {'form': form,'espaco': espaco})
+        else:
+            return HttpResponse(status=405)
+    else:
+        return HttpResponse(status=401)
+    
+def comunidade_body(request):
+    espaco = request.GET.get("espaco")  
+    espaco = Espaco.objects.get(id=espaco)   
+    return render(request, 'espaco/comunidade_body.html', {'espaco':espaco})
+    
 def redirect_to_space(request):
     
     espaco = request.GET.get("espaco")

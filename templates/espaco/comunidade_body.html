@@ -1,0 +1,27 @@
+    
+    <div class="columns is-mobile">
+      
+      <div class="column has-text-centered">
+        <p class="title is-size-2">
+          {{espaco.title}}
+        </p>
+        <p class="subtitle is-size-7">
+          {{espaco.description}}
+        </p>
+      </div>
+      <div class="column is-narrow">
+        <div class="button is-info is-small"
+          hx-get="{% url 'comunidadeeditar' %}"
+          hx-vals='{"espaco" : "{{espaco.id}}"}'
+          hx-target="#editar-comunidade-modal"
+          x-cloak
+          @click.stop="modalcomunidadeeditar = !modalcomunidadeeditar">
+          <span class="icon">
+            <i class="fa-solid fa-pencil"></i>
+          </span>
+          <p>
+          Editar comunidade
+          </p>
+        </div>
+      </div>        
+ 

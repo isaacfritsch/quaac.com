@@ -29,5 +29,7 @@ urlpatterns = [
     path('botao_tag_confirmar_deletar/', views.botao_tag_confirmar_deletar, name='botao_tag_confirmar_deletar'),      
     path('update_tags_selecionadas/', views.update_tags_selecionadas, name='update_tags_selecionadas'),
     path('ultimas_questoes_adicionadas/', views.ultimas_questoes_adicionadas, name='ultimas_questoes_adicionadas'),
+    path('comunidadeeditar/', views.comunidadeeditar, name='comunidadeeditar'),
+    path('comunidade_body/', views.comunidade_body, name='comunidade_body'),
          
 ]
