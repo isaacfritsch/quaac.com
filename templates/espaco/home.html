@@ -27,14 +27,12 @@
         x-cloak
         @click.stop.prevent="modalusercreatespaceerror = !modalusercreatespaceerror"
         @click.stop="modalcreatespace = !modalcreatespace">
-        Crie um Espaço
+        Crie uma comunidade
         </button>
-        <br><br>
-
-        <!-- Painel de espaços **********************************-->
+        <br><br>        
         <nav class="panel is-dark">
             <p class="panel-heading">
-              Painel de espaços
+              Painel de comunidades
             </p>
             <div class="panel-block">
               <p class="control has-icons-left">
@@ -69,7 +67,7 @@
                     </span>
                   </button>                             
                       <button class="button is-black is-small is-outlined is-responsive"
-                      hx-get="{% url 'espaco_list_view' %}"                      
+                      hx-get="{% url 'espaco_popular_list_view' %}"                      
                       hx-target="#space_selection"            
                       hx-trigger="click"
                       hx-swap="innerHTML"
@@ -81,21 +79,7 @@
                     <span class="icon">
                       <i class="fa-solid fa-caret-down"></i>
                     </span>
-                      </button>
-                      <button class="button is-black is-small is-outlined is-responsive"
-                      hx-get="{% url 'espaco_list_view' %}"                      
-                      hx-target="#space_selection"            
-                      hx-trigger="click"
-                      hx-swap="innerHTML"
-                      >            
-                      <span class="icon">
-                          <i class="fa-solid fa-users-line"></i>
-                      </span>
-                    <p>Mais questões</p>          
-                    <span class="icon">
-                      <i class="fa-solid fa-caret-down"></i>
-                    </span>
-                      </button>          
+                      </button>                             
               </p>
             </div>
             <br>

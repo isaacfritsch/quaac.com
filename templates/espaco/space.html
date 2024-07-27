@@ -67,19 +67,12 @@ function updateHxValsAndTrigger(button) {
     <div class="hero-body"
     hx-get="{% url 'comunidade_body'%}"
     hx-vals='{"espaco" : "{{espaco.id}}"}'
-    hx-trigger="comunidadeeditada from:window"  
+    hx-trigger="comunidadeeditada from:window, userlogin from:window"  
     hx-swap="innerHTML"
     >      
       {%include 'espaco/comunidade_body.html'%}       
     </div>
-           
-      <p class="control has-icons-left">
-        <input class="input is-medium is-focused is-primary" type="text" placeholder="Pesquisa de palavras-chave em questões, comentários ou resoluções">
-        <span class="icon is-left">
-          <i class="fas fa-search" aria-hidden="true"></i>
-        </span>
-      </p>
-    </div>    
+  </div>    
 </section>
 <div id="none"></div>
 <div>
@@ -98,6 +91,7 @@ function updateHxValsAndTrigger(button) {
             </button>
           </a>
         </div>
+        {% if espaco.user == request.user %}
         <div class="column is-narrow">
           <div class="buttons is-right">
             <button class="button is-info"
@@ -111,7 +105,8 @@ function updateHxValsAndTrigger(button) {
             </span>
              <p>Criar nova tag</p></button>
           </div>
-        </div>        
+        </div> 
+        {%endif%}       
       </div>
     </div>
     <div class="has-text-centered has-background-success has-text-white p-2 has-border-success"
@@ -225,16 +220,20 @@ function updateHxValsAndTrigger(button) {
 
 <div class="container is-flex is-justify-content-center" style="padding-top:1.5rem;padding-bottom:1.5rem;">
   <div class="tabs is-toggle" x-data="{ one: false, 
-                                        two: false,
-                                        three: false, 
-                                        four: false,
+                                        two: false,                                        
                                         backgroundcolor: 'background-color: #3298dc;'                                        
                                       }"
                                       @click.outside="one = false; two = false; three = false; four = false;">
      <ul>
         <li x-bind:class="one ? 'is-active' : ''" >         
-         <a x-on:click="one = true; two = false; three = false;four= false;"
-            x-bind:style="one ? backgroundcolor : ''">
+         <a x-on:click="one = true; two = false;"
+            x-bind:style="one ? backgroundcolor : ''"
+            hx-get="{% url 'para_voce' %}"
+            hx-vals='{"espaco": "{{espaco.id}}", "page":"{{ page }}"}'
+            hx-target="#questoes_infinitas"
+            hx-trigger=" click"
+            hx-swap="innerHTML"
+            >
            <span class="icon">
              <i class="fa-solid fa-puzzle-piece"></i>
            </span>
@@ -245,32 +244,8 @@ function updateHxValsAndTrigger(button) {
          </a>
        </li>
        <li x-bind:class="two ? 'is-active' : ''" >
-        <a x-on:click="two = true; one = false; three = false; four= false;"
-           x-bind:style="two ? backgroundcolor : ''">
-          <span class="icon">
-            <i class="fa-regular fa-comment-dots"></i>
-          </span>
-          <p>Não comentadas</p>
-          <span class="icon">
-            <i class="fa-solid fa-caret-down"></i>
-          </span>
-        </a>
-      </li>
-       <li x-bind:class="three ? 'is-active' : ''" >
-         <a x-on:click="three = true; one = false; two = false; four= false;"
-            x-bind:style="three ? backgroundcolor : ''">
-           <span class="icon">
-             <i class="fa-regular fa-star"></i>
-           </span>
-           <p>As melhores</p>
-           <span class="icon">
-             <i class="fa-solid fa-caret-down"></i>
-           </span>
-         </a>
-       </li>
-       <li x-bind:class="four ? 'is-active' : ''" >
-         <a x-on:click="four = true; one = false; two = false; three = false;"
-            x-bind:style="four ? backgroundcolor : ''"
+         <a x-on:click="two = true; one = false;"
+            x-bind:style="two ? backgroundcolor : ''"
             hx-get="{% url 'ultimas_questoes_adicionadas' %}"
             hx-vals='{"espaco": "{{espaco.id}}", "page":"{{ page }}"}'
             hx-target="#questoes_infinitas"

@@ -12,11 +12,11 @@
                     'icons': false  // Desativa os ícones
                 }
             },
-            'plugins': ['dnd', 'checkbox', 'wholerow'],
+            'plugins': ['checkbox', 'wholerow' {% if espaco.user == request.user %}, 'dnd'{% endif %}],
             "checkbox": {
-                    "three_state": false, // to avoid that fact that checking a node also check others
-                    "cascade": "down" // to ensure selection is cascaded to children
-                }
+                "three_state": false, // to avoid that fact that checking a node also check others
+                "cascade": "down" // to ensure selection is cascaded to children
+            }
         });
 
         $('#jstree').on('loaded.jstree', function() {
@@ -27,28 +27,6 @@
                 }
             });
             initialLoad = false;  // Carregamento inicial concluído
-        });
-
-        $('#jstree').on("select_node.jstree", function (e, data) {
-            if (initialLoad) {
-                return;  // Ignorar eventos durante o carregamento inicial
-            }
-
-            let espacoId = "{{ espaco.id }}";
-            let nodeId = data.node.id;
-            let node = $('#jstree').jstree(true).get_node(nodeId);
-            let tag = node.text;
-
-            // Atualizar o botão de edição
-            htmx.ajax('POST', `{% url 'tag_edicao_botao' %}`, {
-                headers: { "X-CSRFToken": "{{ csrf_token }}" },
-                target: '#edit_button',
-                values: { 'tag': tag, 'espaco': espacoId }
-            });
-        });
-
-        $('#jstree').on("deselect_node.jstree", function (e, data) {
-            $('#edit_button').html('');  // Limpa o conteúdo do botão de edição ao desmarcar uma tag
         });
 
         $('#jstree').on("changed.jstree", function (e, data) {
@@ -77,33 +55,60 @@
                 values: { 'espaco': espacoId, 'selected_tags': JSON.stringify(selectedTags), 'deselected_tags': JSON.stringify(deselectedTags) }
             });
         });
-    });
 
-    function saveHierarchy() {
-        let hierarchy = $('#jstree').jstree(true).get_json('#', { flat: true });
-        $.ajax({
-            type: 'POST',
-            url: '{% url "save_hierarchy" %}',
-            data: {
-                'hierarchy': JSON.stringify(hierarchy),
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function(response) {
-                if(response.status == 'success') {
-                    alert('Hierarchy saved successfully!');
-                } else {
-                    alert('Failed to save hierarchy.');
+        {% if espaco.user == request.user %}
+            $('#jstree').on("select_node.jstree", function (e, data) {
+                if (initialLoad) {
+                    return;  // Ignorar eventos durante o carregamento inicial
                 }
+
+                let espacoId = "{{ espaco.id }}";
+                let nodeId = data.node.id;
+                let node = $('#jstree').jstree(true).get_node(nodeId);
+                let tag = node.text;
+
+                // Atualizar o botão de edição
+                htmx.ajax('POST', `{% url 'tag_edicao_botao' %}`, {
+                    headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                    target: '#edit_button',
+                    values: { 'tag': tag, 'espaco': espacoId }
+                });
+            });
+
+            $('#jstree').on("deselect_node.jstree", function (e, data) {
+                $('#edit_button').html('');  // Limpa o conteúdo do botão de edição ao desmarcar uma tag
+            });
+        
+            function saveHierarchy() {
+                let hierarchy = $('#jstree').jstree(true).get_json('#', { flat: true });
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "save_hierarchy" %}',
+                    data: {
+                        'hierarchy': JSON.stringify(hierarchy),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if(response.status == 'success') {
+                            alert('Hierarchy saved successfully!');
+                        } else {
+                            alert('Failed to save hierarchy.');
+                        }
+                    }
+                });
             }
-        });
-    }
+        {% endif %}
+    });
 </script>
-<div class="columns is-gapless is-multiline is-mobile p-2">
-    <div class="column is-2">
-        <button class="button is-info is-small is-focused" onclick="saveHierarchy()">Salvar hierarquia</button>
+
+{% if espaco.user == request.user %}
+    <div class="columns is-gapless is-multiline is-mobile p-2">
+        <div class="column is-2">
+            <button class="button is-info is-small is-focused" onclick="saveHierarchy()">Salvar hierarquia</button>
+        </div>
+        <div class="column is-2" id="edit_button">   
+        </div>
     </div>
-    <div class="column is-2" id="edit_button">   
-    </div>
-</div>
+{% endif %}
 
 <div id="jstree"></div>

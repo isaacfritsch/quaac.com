@@ -65,7 +65,7 @@ def user_login(request):
                 # Usuário não autenticado - trate conforme necessário
                 form.add_error(None, 'Credenciais inválidas. Verifique seu email e senha.')
         return render(request, 'registration/login.html', {'form': form, 'error_messages': error_messages})
-        
+
 
     # if a GET (or any other method) we'll create a blank form
     else:

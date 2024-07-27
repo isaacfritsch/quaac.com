@@ -24,9 +24,10 @@ from django.template.loader import render_to_string
 from quaac.decorators import custom_login_required
 from django.http import HttpResponseRedirect
 from django.http import HttpResponseForbidden
+from quaac.decorators import custom_login_required, owner_required
 
 
-    
+@owner_required    
 def tag_creation2(request, espaco):
     
     espaco_desejado = Espaco.objects.get(id=espaco)    
@@ -196,7 +197,7 @@ def processar_tags2(request, tag):
     })
     return response
 
-
+@owner_required
 def tag_edicao2(request):
     
     if request.method == 'GET':
@@ -286,7 +287,7 @@ def lista_categorias2(request):
     }
 
     return render(request, 'questoes/lista_categorias2.html', context)
-
+@owner_required
 def tag_edicao_botao2(request):
     tag = request.POST.get('tag')
     
@@ -428,7 +429,7 @@ def selecionar_desselecionar2(request, tag):
                                                  })
     return response
 
-
+@owner_required
 def botao_tag_confirmar_deletar2(request):
     if request.method == 'POST':
         tag_name = request.POST.get("tag")

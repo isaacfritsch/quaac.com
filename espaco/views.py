@@ -18,9 +18,7 @@ from django.views.generic.list import ListView
 from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
 from django.core.paginator import Paginator
 from django.template.loader import render_to_string
-
-
-# Create your views here.
+from quaac.decorators import custom_login_required, owner_required
 
 def test_view(request): 
     
@@ -36,9 +34,22 @@ def espaco_list_view(request):
     
     return render(request, 'espaco/lista_espaco.html', context)
 
+def espaco_popular_list_view(request):
+    espacos = Espaco.objects.annotate(
+        num_resolved_questions=Count(
+            'questao__resolucao',
+            filter=Q(questao__resolucao__resolvida=True)
+        )
+    ).order_by('-num_resolved_questions')
 
-def create_space(request):
-    if request.user.is_authenticated:
+    context = {
+        'espacos': espacos,
+    }
+    
+    return render(request, 'espaco/lista_espaco.html', context)
+
+@custom_login_required
+def create_space(request):   
         
         if request.method == 'POST':            
             
@@ -59,9 +70,10 @@ def create_space(request):
 
         return render(request, 'espaco/create_space.html', {'form': form})
     
-    else:
-        return render(request, 'espaco/failure_create_space.html')
+def para_voce(request):
+    return render(request, 'espaco/para_voce.html')   
     
+@owner_required    
 def comunidadeeditar(request):
     espaco = request.GET.get("espaco")   
     
@@ -307,7 +319,7 @@ def processar_tags(request, tag):
     })
     return response
 
-
+@owner_required
 def tag_creation(request, espaco):
     
     espaco_desejado = Espaco.objects.get(id=espaco)    
@@ -465,7 +477,7 @@ def lista_categorias(request):
     }
 
     return render(request, 'espaco/lista_categorias.html', context)
-
+@owner_required
 def tag_edicao_botao(request):
     tag = request.POST.get('tag')
     espaco_id = request.POST.get('espaco')
@@ -478,7 +490,7 @@ def tag_edicao_botao(request):
     
     button_html = render_to_string('espaco/tag_edicao_button.html', context)
     return HttpResponse(button_html)
-
+@owner_required
 def tag_edicao(request):
     
     if request.method == 'GET':
@@ -553,7 +565,7 @@ def tag_edicao(request):
     return render(request, 'espaco/tag_modal_edit.html', {'form': form,                                               
                                                      'espaco': espaco_desejado,
                                                      'tag': tag,})
-
+@owner_required
 def botao_tag_confirmar_deletar(request):
     if request.method == 'POST':
         tag_name = request.POST.get("tag")

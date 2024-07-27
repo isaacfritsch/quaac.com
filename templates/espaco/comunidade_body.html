@@ -9,6 +9,7 @@
           {{espaco.description}}
         </p>
       </div>
+      {% if espaco.user == request.user %}
       <div class="column is-narrow">
         <div class="button is-info is-small"
           hx-get="{% url 'comunidadeeditar' %}"
@@ -23,5 +24,6 @@
           Editar comunidade
           </p>
         </div>
+        {% endif %}
       </div>        
  
