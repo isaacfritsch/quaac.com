@@ -21,6 +21,7 @@
               <div class="column">
                 <p class="is-size-7">Created by: {{ question.user.name }}</p>
               </div>
+              {% if question.user == request.user %}
               <div class="column is-narrow">
                 <div x-data="{questaoconfirmardeletar : false}">
                   <div class="media-right">
@@ -65,6 +66,7 @@
                   </div>
                 </div>
               </div>
+              {% endif %}
             </div>
 
             <div class="columns is-mobile">
@@ -86,7 +88,7 @@
             
             <div class="block">
               <div class="columns is-mobile">
-                <div class="column" x-data="{ resolved: false }">
+                <div class="column is-3" x-data="{ resolved: false }">
                   <button :class="{'button': true, 'is-focused': true, 'is-info': !resolved, 'is-success': resolved}"
                           hx-post="{% url 'marcar_resolvida' %}"
                           hx-trigger="click"
@@ -101,7 +103,7 @@
                     Respondida {{question.times_solved}} vezes pela comunidade
                   </div>
                 </div>
-                <div id="marcar_resolvida_{{ question.id }}">
+                <div id="marcar_resolvida_{{ question.id }}" class="column is-9">
                 </div>
               </div>
             </div>

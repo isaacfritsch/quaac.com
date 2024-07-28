@@ -14,7 +14,7 @@ def perfil(request):
         'user':user
     }
     return render(request, 'perfil/perfil.html', context)
-
+@custom_login_required
 def questoes_respondidas(request):
     user_id = request.GET.get("user")
     
@@ -39,7 +39,7 @@ def questoes_respondidas(request):
     }
 
     return render(request, 'perfil/questoes_respondidas.html', context)
-
+@custom_login_required
 def questoes_like(request):
     user_id = request.GET.get("user")
 
@@ -65,7 +65,7 @@ def questoes_like(request):
     }
 
     return render(request, 'perfil/questoes_like.html', context)
-
+@custom_login_required
 def questoes_comentarios_resolucoes(request):
     user_id = request.GET.get("user")
 
@@ -100,7 +100,7 @@ def questoes_comentarios_resolucoes(request):
     }
 
     return render(request, 'perfil/questoes_comentarios_resolucoes.html', context)
-
+@custom_login_required
 def questoes_criadas(request):
     user_id = request.GET.get("user")
 
@@ -123,12 +123,12 @@ def questoes_criadas(request):
     }
 
     return render(request, 'perfil/questoes_criadas.html', context)
-
+@custom_login_required
 def comunidades_criadas(request):
     user_id = request.GET.get("user")
     
     if user_id:
-        # Filtrar espaços criados pelo usuário e ordenar do mais recente para o mais antigo
+        
         espacos = Espaco.objects.filter(user_id=user_id).order_by('-id')
     else:
         espacos = Espaco.objects.none()
@@ -141,13 +141,13 @@ def comunidades_criadas(request):
     }
 
     return render(request, 'perfil/comunidades_criadas.html', context)
-
+@custom_login_required
 def search_comunidade_perfil(request):
     search_text = request.POST.get("search")
     user_id = request.POST.get("user")
     
     if user_id and search_text:
-        # Filtrar espaços pelo texto de pesquisa e pelo usuário criador
+        
         results = Espaco.objects.filter(
             Q(user_id=user_id) & (Q(title__icontains=search_text) | Q(description__icontains=search_text))
         )

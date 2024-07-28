@@ -1,14 +1,22 @@
 {% extends 'base.html' %}
 {%block content%}
 
-    <div class="container has-text-centered">
-        <p class="title is-4">O que é o Quaac e por que foi criado?</p>
-        <p>O quaac é uma plataforma colaborativa de questões totalmente gratuita com o intuito de ajudar estudante a estudarem por questões para sua provas e obejtivos</p>
-        <br>
-        <p class="title is-4">Como utilizar o Quaac?</p>
-        <p> Você pode procurar um espaço abaixo para adicionar questões, resolvê-las e interagir com a espaco, não se esqueça de fazer o login :) </p>
-        <p> Caso não encontra algo que procura você pode adicionar um novo espaço e começar a estudar, outros estudantes com o mesmo objetivo irão se unir a você e engajar o espaço</p>
-        <br>
+  <div class="container has-text-centered">
+    <p class="title is-4">O que é o Quaac e por que foi criado?</p>
+    <p>O Quaac é uma plataforma colaborativa de questões totalmente gratuita com o intuito de ajudar estudantes a estudarem por questões.</p>
+    <br>
+    <p class="title is-4">Como utilizar o Quaac?</p>
+    <p>Você pode procurar uma comunidade abaixo para adicionar questões, resolvê-las e interagir com a comunidade, não se esqueça de fazer o login :)</p>
+    <p>Caso não encontre algo que procura, você pode criar uma nova comunidade. Outros estudantes com o mesmo objetivo educacional irão se unir a você!</p>
+    <br>
+    <p class="title is-4">Dicas adicionais</p>    
+    <ul>
+        <li>1. É recomendável criar uma comunidade no Discord para uma melhor interação com outros usuários.</li>
+        <li>2. Desenvolver o sistema de tags pode ser desafiador, por isso acesse outras comunidades do quaac ou outros sites de questões para ter ideias, receber sugestões de outros usuários (Discord) também pode ajudar!</li>
+    </ul>
+    <br>
+
+
 
         <div x-data="{ openNotificationspaceerror: true }">
 
@@ -38,7 +46,7 @@
               <p class="control has-icons-left">
                 <input class="input"
                 type="text" 
-                placeholder="Pesquisar espaços"
+                placeholder="Pesquisar comunidades"
                 hx-post="{% url 'search_space' %}"
                 hx-target='#space_selection'                
                 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'

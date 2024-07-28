@@ -120,11 +120,11 @@ def redirect_to_space(request):
 def url_espaco(request, slug):
     espaco_solicitado = get_object_or_404(Espaco, slug=slug)
     
-    # Verifica se o espaço atual é diferente do solicitado
+    
     if 'current_espaco' in request.session:
         espaco_atual = request.session['current_espaco']
         if espaco_atual != espaco_solicitado.id:
-            # Se o espaço mudou, redefine selected_tags
+            
             request.session['selected_tags'] = []
     else:
         espaco_atual = None    

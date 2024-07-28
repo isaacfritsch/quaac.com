@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from espaco.models import Espaco
+from questoes.models import Questao
 
 def custom_login_required(view_func):
     @wraps(view_func)
@@ -18,24 +19,22 @@ def custom_login_required(view_func):
 
 def owner_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
-        # Verificar se o espaço está vindo pela slug
-        espaco_slug = kwargs.get('slug')
         
-        # Verificar se o espaço está vindo por GET ou POST
-        espaco_id = request.GET.get("espaco") or request.POST.get("espaco")
+        espaco_id = request.GET.get("espaco") or request.POST.get("espaco") or kwargs.get('espaco')
 
         # Obter o objeto Espaco
-        if espaco_slug:
-            espaco = get_object_or_404(Espaco, slug=espaco_slug)
-        elif espaco_id:
+        if espaco_id:
             espaco = get_object_or_404(Espaco, id=espaco_id)
         else:
-            return HttpResponseForbidden("Espaço não encontrado ou não especificado.")
+            return HttpResponseForbidden("Comunidade não encontrada ou não especificada.")
         
-        # Verificar se o usuário é o dono do espaço
+       
         if espaco.user != request.user:
-            return HttpResponseForbidden("Você não tem permissão para acessar este recurso.")
+            return HttpResponseForbidden("Você não tem permissão para acessar este recurso.")        
         
         return view_func(request, *args, **kwargs)
     
     return _wrapped_view
+
+
+

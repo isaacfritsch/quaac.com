@@ -27,6 +27,7 @@ from django.http import HttpResponseForbidden
 from quaac.decorators import custom_login_required, owner_required
 
 
+
 @owner_required    
 def tag_creation2(request, espaco):
     
@@ -443,7 +444,7 @@ def botao_tag_confirmar_deletar2(request):
         #caso de deletar tag
         if tag_name in selected_tags:
             selected_tags.remove(tag_name)
-            
+
         request.session['selected_tags_questoes'] = selected_tags
         selected2_tags_json = json.dumps(request.session['selected_tags_questoes'])
         
@@ -661,7 +662,8 @@ def question_create(request, espaco):
         response = HttpResponse()
         response["Hx-Redirect"] = url           
         return response
-    
+
+ 
 def editar_questao(request, questao_id):  
       
     questao = get_object_or_404(Questao, id=questao_id)
@@ -750,6 +752,7 @@ def questao(request, question):
                                                      'tags': tags,                                                     
                                                     })
 
+
 def deletar_questao(request):
     questao_id = request.POST.get("questao")
     questao = Questao.objects.get(id=questao_id)    
@@ -766,43 +769,43 @@ def deletar_questao(request):
             return HttpResponse(rendered_html, headers={'HX-Trigger': trigger_events_json})
             
         return HttpResponse()
-    
+
+ 
 def comentario(request):
-    
-    question_id = request.GET.get("question")
-    if not question_id:
-       question_id = request.POST.get("question")     
-    question = Questao.objects.get(id=question_id)    
-    comentarios = question.comment_set.all()
-    
+    question_id = request.GET.get("question") or request.POST.get("question")
+    question = get_object_or_404(Questao, id=question_id)
+
+    # Anotar o número de likes e ordenar por número de likes
+    comentarios = question.comment_set.annotate(like_count=Count('likes')).order_by('-like_count', '-data')
+
     if request.method == 'POST' and request.user.is_authenticated:
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
-            comment.autor = request.user            
+            comment.autor = request.user
             comment.questao = question
             comment.save()
+            
             trigger_events = {
-            f"comentariosalvo_{question_id}": True, 
-            f"atualizatabquestao_{question_id}": True
+                f"comentariosalvo_{question_id}": True,
+                f"atualizatabquestao_{question_id}": True
             }
-            
+
             trigger_events_json = json.dumps(trigger_events)
-           
             return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
-            
         else:
             return HttpResponse()
     else:
         form = CommentForm()
-        
+
     context = {
-        'comentarios':comentarios,
-        'question': question,        
-        'form': form        
-    }   
+        'comentarios': comentarios,
+        'question': question,
+        'form': form
+    }
 
     return render(request, 'questoes/comentario.html', context)
+
 
 def editar_comentario(request):
     
@@ -837,7 +840,7 @@ def editar_comentario(request):
             trigger_events_json = json.dumps(trigger_events)
            
             return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
-        
+       
 def delete_comentario(request):
     comentario_id = request.POST.get("comentario")
     comentario = Comment.objects.get(id=comentario_id)
@@ -855,42 +858,40 @@ def delete_comentario(request):
             return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
             
         return HttpResponse()
-    
+
+@login_required    
 def add_reply(request):
-    
-    comentario_id = request.GET.get("comentario")
-    if not comentario_id:
-       comentario_id = request.POST.get("comentario")     
-    comentario = Comment.objects.get(id=comentario_id)    
-    replys = comentario.replies.all()     
-    
+    comentario_id = request.GET.get("comentario") or request.POST.get("comentario")
+    comentario = get_object_or_404(Comment, id=comentario_id)
+
+    # Anotar o número de likes e ordenar por número de likes
+    replys = comentario.replies.annotate(like_count=Count('likes')).order_by('-like_count', '-data')
+
     if request.method == 'POST' and request.user.is_authenticated:
         formreply = ReplyForm(request.POST)
         if formreply.is_valid():
             reply = formreply.save(commit=False)
-            reply.autor = request.user            
+            reply.autor = request.user
             reply.comment = comentario
             reply.save()
-            
+
             trigger_events = {
-            f"replysalvo_{comentario_id}": True,
-            f"atualizatabcomentario_{comentario_id}": True
+                f"replysalvo_{comentario_id}": True,
+                f"atualizatabcomentario_{comentario_id}": True
             }
-            
+
             trigger_events_json = json.dumps(trigger_events)
-           
             return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
-            
         else:
             return HttpResponse()
     else:
         formreply = ReplyForm()
-        
+
     context = {
-        'replys':replys,
-        'comentario': comentario,        
-        'formreply': formreply        
-    }   
+        'replys': replys,
+        'comentario': comentario,
+        'formreply': formreply
+    }
 
     return render(request, 'questoes/reply.html', context)
 
@@ -948,49 +949,43 @@ def delete_reply(request):
         return HttpResponse()
     
 
-        
+
 def solucao(request):
-    
-    question_id = request.GET.get("question")
-    if not question_id:
-       question_id = request.POST.get("question")     
-    question = Questao.objects.get(id=question_id)    
-    solucoes = question.solucao_set.all()   
-    
+    question_id = request.GET.get("question") or request.POST.get("question")
+    question = get_object_or_404(Questao, id=question_id)
+
+    # Anotar o número de likes e ordenar por número de likes
+    solucoes = question.solucao_set.annotate(like_count=Count('likes')).order_by('-like_count', '-data')
+
     if request.method == 'POST' and request.user.is_authenticated:
         formsolucao = SolucaoForm(request.POST)
         if formsolucao.is_valid():
             solucao = formsolucao.save(commit=False)
-            solucao.autor = request.user            
+            solucao.autor = request.user
             solucao.questao = question
-            solucao.save()            
-            
+            solucao.save()
+
             trigger_events = {
-            f"solucaosalvo_{question_id}": True,
-            f"atualizatabquestao_{question_id}": True
+                f"solucaosalvo_{question_id}": True,
+                f"atualizatabquestao_{question_id}": True
             }
-            
+
             trigger_events_json = json.dumps(trigger_events)
-           
             return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
-            
         else:
             return HttpResponse()
     else:
         formsolucao = SolucaoForm()
-        
+
     context = {
-        'solucoes':solucoes,
-        'question': question,        
-        'formsolucao': formsolucao       
-    }   
+        'solucoes': solucoes,
+        'question': question,
+        'formsolucao': formsolucao
+    }
 
     return render(request, 'questoes/solucao.html', context)
 
 def editar_solucao(request):
-
-    
-    
     solucao_id = request.GET.get("solucao")
     if not solucao_id:
        solucao_id = request.POST.get("solucao")
@@ -1049,40 +1044,37 @@ def delete_solucao(request):
         return HttpResponse()
 
 def add_reply_solucao(request):
+    solucao_id = request.GET.get("solucao") or request.POST.get("solucao")
+    solucao = get_object_or_404(Solucao, id=solucao_id)
 
-    solucao_id = request.GET.get("solucao")
-    if not solucao_id:
-       solucao_id = request.POST.get("solucao")     
-    solucao = Solucao.objects.get(id=solucao_id)    
-    replys_solucao = solucao.replies_solucao.all()   
-    
+    # Anotar o número de likes e ordenar por número de likes
+    replys_solucao = solucao.replies_solucao.annotate(like_count=Count('likes')).order_by('-like_count', '-data')
+
     if request.method == 'POST' and request.user.is_authenticated:
         formreplysolucao = ReplysolucaoForm(request.POST)
         if formreplysolucao.is_valid():
             reply_solucao = formreplysolucao.save(commit=False)
-            reply_solucao.autor = request.user            
+            reply_solucao.autor = request.user
             reply_solucao.solucao = solucao
             reply_solucao.save()
-            
+
             trigger_events = {
-            f"replysolucaosalvo_{solucao_id}": True,
-            f"atualizatabsolucao_{solucao_id}": True
+                f"replysolucaosalvo_{solucao_id}": True,
+                f"atualizatabsolucao_{solucao_id}": True
             }
-            
+
             trigger_events_json = json.dumps(trigger_events)
-           
-            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})        
-            
+            return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
         else:
             return HttpResponse()
     else:
-        formreplysolucao = ReplysolucaoForm()        
-        
+        formreplysolucao = ReplysolucaoForm()
+
     context = {
-        'replys_solucao':replys_solucao,
-        'solucao': solucao,        
-        'formreply': formreplysolucao        
-    }   
+        'replys_solucao': replys_solucao,
+        'solucao': solucao,
+        'formreply': formreplysolucao
+    }
 
     return render(request, 'questoes/reply_solucao.html', context)
 
@@ -1142,7 +1134,7 @@ def delete_reply_solucao(request):
             return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})            
             
         return HttpResponse()
-
+@custom_login_required
 def like_question(request):
     question_id = request.POST.get("question")
     question = Questao.objects.get(id=question_id) 
@@ -1169,7 +1161,7 @@ def questao_int_tab(request):
     }
     
     return render(request, 'questoes/questao_int_tab.html', context)
-
+@custom_login_required
 def like_comment(request):
     comentario_id = request.POST.get("comentario")
     comentario = Comment.objects.get(id=comentario_id) 
@@ -1196,7 +1188,7 @@ def comment_tab(request):
     }
     
     return render(request, 'questoes/comment_tab.html', context)
-
+@custom_login_required
 def like_reply(request):
     reply_id = request.POST.get("reply")
     reply = Reply.objects.get(id=reply_id) 
@@ -1223,7 +1215,7 @@ def reply_tab(request):
     }
     
     return render(request, 'questoes/reply_tab.html', context)
-
+@custom_login_required
 def like_solucao(request):
     solucao_id = request.POST.get("solucao")
     solucao = Solucao.objects.get(id=solucao_id) 
@@ -1250,7 +1242,7 @@ def solucao_tab(request):
     }
     
     return render(request, 'questoes/solucao_tab.html', context)
-
+@custom_login_required
 def like_reply_solucao(request):
     reply_id = request.POST.get("reply")
     reply = Replysolucao.objects.get(id=reply_id) 
@@ -1275,7 +1267,7 @@ def reply_solucao_tab(request):
     }
     
     return render(request, 'questoes/reply_solucao_tab.html', context)
-
+@custom_login_required
 def marcar_resolvida(request):
     if request.method == "POST":
         questao_id = request.POST.get("question")    
@@ -1318,7 +1310,7 @@ def questoes_por_tag(request):
     
     page_num = request.GET.get("page")
 
-    # Base queryset para todas as questões do espaço
+    
     questoes = Questao.objects.filter(space=espaco)
 
     # Filtragem por tags
@@ -1341,8 +1333,10 @@ def questoes_por_tag(request):
     if filter_com_resolucao:
         questoes = questoes.annotate(solucao_count=Count('solucao')).filter(solucao_count__gt=0)
 
-    # Ordenação e paginação
-    questoes = questoes.order_by('-id')
+    # Anotar o número de likes e ordenar por número de likes
+    questoes = questoes.annotate(like_count=Count('likes')).order_by('-like_count', '-id')
+
+    # Paginação
     paginator = Paginator(questoes, 5)  # Mostrar 5 questões por página
     page = paginator.get_page(page_num)
 

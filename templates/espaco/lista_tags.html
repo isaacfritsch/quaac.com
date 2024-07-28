@@ -78,7 +78,7 @@
             $('#jstree').on("deselect_node.jstree", function (e, data) {
                 $('#edit_button').html('');  // Limpa o conteúdo do botão de edição ao desmarcar uma tag
             });
-        
+            
             function saveHierarchy() {
                 let hierarchy = $('#jstree').jstree(true).get_json('#', { flat: true });
                 $.ajax({
@@ -97,6 +97,7 @@
                     }
                 });
             }
+            $('.button.is-info.is-small.is-focused').on('click', saveHierarchy);
         {% endif %}
     });
 </script>
@@ -104,7 +105,7 @@
 {% if espaco.user == request.user %}
     <div class="columns is-gapless is-multiline is-mobile p-2">
         <div class="column is-2">
-            <button class="button is-info is-small is-focused" onclick="saveHierarchy()">Salvar hierarquia</button>
+            <button class="button is-info is-small is-focused">Salvar hierarquia</button>
         </div>
         <div class="column is-2" id="edit_button">   
         </div>

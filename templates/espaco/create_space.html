@@ -7,7 +7,7 @@
         <div class="box">
             
             <button class="delete is-pulled-right"  x-on:click.stop.prevent="modalcreatespace = false"></button>       
-            <h1 class="title is-3">CRIAR ESPAÇO</h1>            
+            <h1 class="title is-3">CRIAR COMUNIDADE</h1>            
             
             <form class="form" name="form"      
             hx-post = {{request.path}}
@@ -29,7 +29,7 @@
                 
                 <div class="field">
                     <label class="label" for="{{ form.description.id_for_label }}">Descrição</label>
-                    <p><small>Qual o objetivo educacional desse espaço?</small></p>
+                    <p><small>Qual o objetivo educacional dessa comunidade? Não esqueça de incluir o link do Discord aqui!</small></p>
                     <div class="control">
                         {% render_field form.description class="textarea is-primary" placeholder="" name="description" %}
                     {% if form.description.errors %}
