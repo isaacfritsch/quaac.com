@@ -1,13 +1,14 @@
 from django import forms
 from .models import Questao, Comment, Solucao, Reply, Replysolucao
 from django_summernote.fields import SummernoteTextFormField, SummernoteTextField
+from django_summernote.widgets import SummernoteWidget
 
 
 
 class QuestaoForm(forms.ModelForm):
 
     confirm = forms.BooleanField(
-        required=True,  # Ensure the user checks it
+        required=True,  
         help_text="Please confirm that the question is not duplicated!"
     )  
 
@@ -18,6 +19,7 @@ class QuestaoForm(forms.ModelForm):
         widgets = {
         'user': forms.HiddenInput(),
         'space': forms.HiddenInput(),
+        'body': SummernoteWidget(),
         }
 
 
@@ -29,9 +31,9 @@ class QuestaoForm(forms.ModelForm):
         self.fields['confirm'].required = True
         self.fields['body'].required = True        
         self.fields['times_solved'].required = False
-        self.fields['tags'].required = False        
+        self.fields['tags'].required = False      
         
-        self.fields['body'] = SummernoteTextFormField()
+        
         
         
 # class AlternativaForm(forms.ModelForm):   
@@ -58,41 +60,53 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['body']
+        widgets = {
+        'body': SummernoteWidget(),
+        }
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        
+        self.fields['body'].required = True
         
-        self.fields['body'] = SummernoteTextFormField(required = True)
 
 class ReplyForm(forms.ModelForm):
     class Meta:
         model = Reply
         fields = ['body']
+        widgets = {        
+        'body': SummernoteWidget(),
+        }
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        
+        self.fields['body'].required = True
         
-        self.fields['body'] = SummernoteTextFormField(required = True)
         
 class SolucaoForm(forms.ModelForm):
     class Meta:
         model = Solucao
-        fields = ['autor', 'questao', 'bodysol'] 
+        fields = ['autor', 'questao', 'bodysol']
+        widgets = {        
+        'bodysol': SummernoteWidget(),
+        } 
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['questao'].required = False
         self.fields['autor'].required = False       
+        self.fields['bodysol'].required = True
         
-        self.fields['bodysol'] = SummernoteTextFormField(required = False)
         
 class ReplysolucaoForm(forms.ModelForm):
     class Meta:
         model = Replysolucao
         fields = ['body']
+        widgets = {        
+        'body': SummernoteWidget(),
+        }
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        
+        self.fields['body'].required = True
         
-        self.fields['body'] = SummernoteTextFormField(required = True)
         
