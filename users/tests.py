@@ -109,7 +109,7 @@ class UserLoginTestCase(TestCase):
             'password': 'password123',
         }
         response = self.client.post(reverse('login'), data)
-        self.assertEqual(response.status_code, 302)  
+        self.assertEqual(response.status_code, 204)  
 
         # Test login with invalid data
         invalid_data = {
