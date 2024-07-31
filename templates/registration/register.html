@@ -3,18 +3,15 @@
 <div class="modal" x-bind:class="modalregisteropen ? 'is-active' : ''">
     <div class="modal-background" ></div>
     <div class="modal-content has-background-white py-5 px-5" id="register-modal"  @click.stop.outside="modalregisteropen = false">
-
         <div class="box">
             <button class="delete is-pulled-right" x-on:click.stop.prevent="modalregisteropen = false"></button>
-            <h1 class="title is-3">REGISTER</h1>
-            
+            <h1 class="title is-3">REGISTER</h1>            
             <form class="form" name="form"           
             hx-post="{{ request.path }}" 
             hx-trigger="submit"            
             hx-target="#register-modal"
             >
                 {% csrf_token %}
-
                 <div class="field">
                     <label class="label">Nome</label>
                     <div class="control">
@@ -24,7 +21,6 @@
                     {% endif %}
                     </div>
                 </div>
-
                 <div class="field">
                     <label class="label">Email</label>
                     <div class="control">
@@ -34,7 +30,6 @@
                         {% endif %}
                     </div>
                 </div>
-
                 <div class="field">
                     <label class="label">Senha</label>
                     <div class="control">
@@ -44,7 +39,6 @@
                         {% endif %}
                     </div>
                 </div>
-
                 <div class="field">
                     <label class="label">Confirmar Senha</label>
                     <div class="control">
@@ -54,20 +48,13 @@
                         {% endif %}
                     </div>
                 </div>
-
                 <div class="field">
                     <div class="control">
                         <button class="button is-success" type="submit">Registrar</button>
                     </div>
-                </div>
-
-                
+                </div>                
             </form>
-
         </div>
-        
-        
-        
     </div>
 </div>
 {% endwith %}

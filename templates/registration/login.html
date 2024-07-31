@@ -5,29 +5,23 @@
     <div class="modal-content has-background-white py-5 px-5" id="login-modal" @click.stop.outside="modalloginopen = false"
     @userlogin.window = "modalloginopen = false"
     >
-
         <div class="box">
             <div x-data="{ openNotificationlogin: true }">
-                
                     {% if error_messages %}
                         <div  x-cloak class="notification is-danger" x-show="openNotificationlogin">
                             <button class="delete" x-on:click.stop.prevent="openNotificationlogin = !openNotificationlogin"></button>
                             {{ error_messages.invalid_login }}
                         </div>
                     {% endif %}
-                
             </div>
             <button class="delete is-pulled-right" x-on:click.stop.prevent="modalloginopen = false"></button>
-            <h1 class="title is-3">LOGIN</h1>                       
-            
+            <h1 class="title is-3">LOGIN</h1> 
             <form class="form" name="form"        
             hx-post = {{request.path}} 
             hx-trigger="submit"            
             hx-target="#login-modal"                                                  
             >
-                
                 {% csrf_token %}
-                
                 <div class="field">
                     <label class="label">Email</label>
                     <div class="control">
@@ -37,7 +31,6 @@
                     {% endif %}
                     </div>
                 </div>
-                
                 <div class="field">
                     <label class="label">Senha</label>
                     <div class="control">
@@ -46,32 +39,30 @@
                         <p class="help is-danger">{{ form.password.errors|first }}</p>
                     {% endif %} 
                     </div>
+                    <a class="button is-ghost"
+                    href="{% url 'reset_password' %}"
+                    >
+                        Esqueci a senha</a>
                 </div>
-
                 <div class="field">
                     <div class="control">
                         <button class="button is-success"
-                        type="submit"
-                                                                                                      
+                        type="submit"                                                                                                      
                         >Login</button>                
                     </div>
                 </div>
-                
-
-                <a class="is-size-8 button-unstyled has-text-link
+                <a class="is-size-8 button is-ghost has-text-link
                                login-modal-tabbable"
                                hx-get="{% url 'register' %}"
                                hx-target="#modal-register"
                                hx-trigger="click once"
                                x-cloak
-                               @click.stop.prevent="modalregisteropen = !modalregisteropen">
+                               @click.stop.prevent="modalregisteropen = !modalregisteropen; modalloginopen = !modalloginopen"                               
+                               >
                   Register new account
-                </a>               
-                  
+                </a>
             </form>
         </div>
-        
-        
     </div>
 </div>
 {% endwith %}

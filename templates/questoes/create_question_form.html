@@ -156,6 +156,7 @@ hx-post="{% url 'question_create' espaco=espaco.title %}">
     <div class="box">      
       <div class="field">
         <label class="label is-size-5">Enunciado</label>
+
         {% if form_questao.body.errors %}
             <p class="help is-danger is-size-5">{{ form_questao.body.errors|first }}</p>
         {% endif %}
@@ -167,7 +168,7 @@ hx-post="{% url 'question_create' espaco=espaco.title %}">
     </div>      
     <div class="box">
       <div class="field">
-        <label class="label is-size-5">Resolução</label>
+        <label class="label is-size-5">Solução</label>        
         {% if form_solucao.bodysol.errors %}
             <p class="help is-danger is-size-5">{{form_solucao.bodysol.errors|first }}</p>
         {% endif %}
