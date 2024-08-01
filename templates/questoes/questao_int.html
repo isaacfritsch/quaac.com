@@ -21,7 +21,7 @@
               <div class="column">
                 <p class="is-size-7">Created by: {{ question.user.name }}</p>
               </div>
-              {% if question.user == request.user %}
+              {% if question.user == request.user or request.user == question.space.user %}
               <div class="column is-narrow">
                 <div x-data="{questaoconfirmardeletar : false}">
                   <div class="media-right">

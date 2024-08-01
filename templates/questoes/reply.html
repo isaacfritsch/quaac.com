@@ -29,15 +29,14 @@
               </div>
             </div>
           </div>
-          
-          {% if user.is_authenticated and comentario.autor == user %}
+          {% if reply.autor == user or reply.comment.questao.space.user == user %}          
               <div x-data="{ comentarioconfirmardeletar: false }">
                 <div class="media">
-                  <div class="media-content">
-                    <!-- Seu conteúdo aqui -->
+                  <div class="media-content">                    
                   </div>
                   <div class="media-right">
                     <div class="buttons">
+                      {% if reply.autor == user %}
                       <button class="button is-ghost"
                       hx-get="{% url 'editar_reply' %}"
                       hx-vals='{"reply": "{{reply.id}}"}'
@@ -48,11 +47,14 @@
                           <i class="fa-solid fa-edit"></i>
                         </span>
                       </button>
+                      {%endif%}
+                      {% if reply.autor == user or reply.comment.questao.space.user == user %} 
                       <button class="button is-ghost" @click="comentarioconfirmardeletar = true">
                         <span class="icon is-small">
                           <i class="fa-solid fa-trash"></i>
                         </span>
                       </button>
+                      {% endif %}
                     </div>
                   </div>
                 </div>

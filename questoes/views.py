@@ -668,7 +668,8 @@ def editar_questao(request, questao_id):
       
     questao = get_object_or_404(Questao, id=questao_id)
     espaco = questao.space
-    if questao.user != request.user:
+    autor = questao.user
+    if questao.user != request.user and request.user != espaco.user:
         return HttpResponseForbidden("Você não tem permissão para editar esta questão.")
     
     if request.method == 'GET':
@@ -699,7 +700,7 @@ def editar_questao(request, questao_id):
                 })
             
             question = form.save(commit=False)
-            question.user = request.user            
+            question.user = autor            
             question.space = espaco          
 
             # Atualiza as tags associadas à questão
@@ -756,7 +757,7 @@ def questao(request, question):
 def deletar_questao(request):
     questao_id = request.POST.get("questao")
     questao = Questao.objects.get(id=questao_id)    
-    if request.user == questao.user:
+    if request.user == questao.user or request.user == questao.space.user:
         if request.method == 'POST':
             questao.delete()
             trigger_events = {
@@ -769,6 +770,8 @@ def deletar_questao(request):
             return HttpResponse(rendered_html, headers={'HX-Trigger': trigger_events_json})
             
         return HttpResponse()
+    else:
+        return HttpResponseForbidden()
 
  
 def comentario(request):
@@ -844,8 +847,9 @@ def editar_comentario(request):
 def delete_comentario(request):
     comentario_id = request.POST.get("comentario")
     comentario = Comment.objects.get(id=comentario_id)
+    autor_comunidade = comentario.questao.space.user
     question_id = comentario.questao.id
-    if request.user == comentario.autor:
+    if request.user == comentario.autor or autor_comunidade == request.user:
         if request.method == 'POST':
             comentario.delete()
             trigger_events = {
@@ -858,8 +862,10 @@ def delete_comentario(request):
             return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})
             
         return HttpResponse()
+    else:
+        return HttpResponseForbidden()
 
-@login_required    
+ 
 def add_reply(request):
     comentario_id = request.GET.get("comentario") or request.POST.get("comentario")
     comentario = get_object_or_404(Comment, id=comentario_id)
@@ -932,8 +938,8 @@ def editar_reply(request):
 def delete_reply(request):
     reply_id = request.POST.get("reply")
     reply = Reply.objects.get(id=reply_id)
-    
-    if request.user == reply.autor:
+    autor_comunidade = reply.comment.questao.space.user
+    if request.user == reply.autor or request.user == autor_comunidade:
         if request.method == 'POST':
             reply.delete()
             comentario_id = reply.comment.id
@@ -1028,9 +1034,10 @@ def editar_solucao(request):
 def delete_solucao(request):
     solucao_id = request.POST.get("solucao")
     solucao = Solucao.objects.get(id=solucao_id)
+    autor_comunidade = solucao.questao.space.user
     
     question_id = solucao.questao.id
-    if request.user == solucao.autor:
+    if request.user == solucao.autor or request.user == autor_comunidade:
         if request.method == 'POST':
             solucao.delete()
             trigger_events = {
@@ -1042,7 +1049,9 @@ def delete_solucao(request):
            
             return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})            
         return HttpResponse()
-
+    else:
+        return HttpResponseForbidden()
+    
 def add_reply_solucao(request):
     solucao_id = request.GET.get("solucao") or request.POST.get("solucao")
     solucao = get_object_or_404(Solucao, id=solucao_id)
@@ -1121,8 +1130,9 @@ def editar_reply_solucao(request):
 def delete_reply_solucao(request):
     reply_id = request.POST.get("replysolucao")
     reply = Replysolucao.objects.get(id=reply_id)
+    autor_comunidade = reply.solucao.questao.space.user
     
-    if request.user == reply.autor:
+    if request.user == reply.autor or request.user == autor_comunidade:
         if request.method == 'POST':
             reply.delete()
             solucao_id = reply.solucao.id
@@ -1134,6 +1144,8 @@ def delete_reply_solucao(request):
             return HttpResponse(status=204, headers={'HX-Trigger': trigger_events_json})            
             
         return HttpResponse()
+    else:
+        return HttpResponseForbidden()
 @custom_login_required
 def like_question(request):
     question_id = request.POST.get("question")

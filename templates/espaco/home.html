@@ -1,20 +1,42 @@
 {% extends 'base.html' %}
 {%block content%}
 
-  <div class="container has-text-centered">
-    <p class="title is-4">O que é o Quaac e por que foi criado?</p>
-    <p>O Quaac é uma plataforma colaborativa de questões totalmente gratuita com o intuito de ajudar estudantes a estudarem por questões.</p>
-    <br>
-    <p class="title is-4">Como utilizar o Quaac?</p>
-    <p>Você pode procurar uma comunidade abaixo para adicionar questões, resolvê-las e interagir com a comunidade, não se esqueça de fazer o login :)</p>
-    <p>Caso não encontre algo que procura, você pode criar uma nova comunidade. Outros estudantes com o mesmo objetivo educacional irão se unir a você!</p>
-    <br>
-    <p class="title is-4">Dicas adicionais</p>    
-    <ul>
-        <li>1. É recomendável criar uma comunidade no Discord para uma melhor interação com outros usuários.</li>
-        <li>2. Desenvolver o sistema de tags pode ser desafiador, por isso acesse outras comunidades do quaac ou outros sites de questões para ter ideias, receber sugestões de outros usuários (Discord) também pode ajudar!</li>
-    </ul>
-    <br>
+<div class="container has-text-centered" x-data="{ one: true, two: false, three: false }">
+  <div>
+      <p class="title is-4" x-on:click="one = !one" 
+         x-bind:class="one ? 'is-active' : ''" style="cursor: pointer;">
+          O que é o Quaac e por que foi criado? <i class="fa-solid fa-angle-down"></i>
+      </p>
+      <div x-show="one" class="content">
+          <p>O Quaac é uma plataforma colaborativa de questões totalmente gratuita com o intuito de ajudar estudantes a estudarem por questões.</p>
+      </div>
+  </div>
+  
+  <div>
+      <p class="title is-4" x-on:click="two = !two" 
+         x-bind:class="two ? 'is-active' : ''" style="cursor: pointer;">
+          Como utilizar o Quaac? <i class="fa-solid fa-angle-down"></i>
+      </p>
+      <div x-show="two" class="content">
+          <p>Você pode procurar uma comunidade abaixo para adicionar questões, resolvê-las e interagir com a comunidade, não se esqueça de fazer o login :)</p>
+          <p>Caso não encontre algo que procura, você pode criar uma nova comunidade. Outros estudantes com o mesmo objetivo educacional irão se unir a você!</p>
+      </div>
+  </div>
+  
+  <div>
+      <p class="title is-4" x-on:click="three = !three" 
+         x-bind:class="three ? 'is-active' : ''" style="cursor: pointer;">
+          Dicas adicionais <i class="fa-solid fa-angle-down"></i>
+      </p>
+      <div x-show="three" class="content">
+          <ul>
+              <li>É recomendável criar uma comunidade no Discord para uma melhor interação com outros usuários.</li>
+              <li>Desenvolver o sistema de tags pode ser desafiador, por isso acesse outras comunidades do quaac ou outros sites de questões para ter ideias, receber sugestões de outros usuários (Discord) também pode ajudar!</li>
+          </ul>
+      </div>
+  </div> 
+
+  <br>
 
 
 

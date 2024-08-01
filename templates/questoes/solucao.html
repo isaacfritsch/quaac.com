@@ -47,49 +47,55 @@
                     <div id="solucao_{{ solucao.id }}"></div>
                   </div>
                 </div>
-                {% if user.is_authenticated and solucao.autor == user %}
-                <div x-data="{ solucaoconfirmardeletar: false }">
-                  <div class="media-right">
-                    <div class="buttons">
-                      <button class="button is-ghost"
-                      hx-get="{% url 'editar_solucao' %}"
-                      hx-vals='{"solucao": "{{solucao.id}}"}'
-                      hx-target="#content_{{solucao.id}}"
-                      hx-trigger="click"
-                      >
+                {% if solucao.autor == user or solucao.questao.user == user %}
+    <div x-data="{ solucaoconfirmardeletar: false }">
+        <div class="media-right">
+            <div class="buttons">
+                {% if solucao.autor == user %}
+                    <!-- Botão de editar, visível apenas para o autor da solução -->
+                    <button class="button is-ghost"
+                            hx-get="{% url 'editar_solucao' %}"
+                            hx-vals='{"solucao": "{{ solucao.id }}"}'
+                            hx-target="#content_{{ solucao.id }}"
+                            hx-trigger="click">
                         <span class="icon is-small">
-                          <i class="fa-solid fa-edit"></i>
+                            <i class="fa-solid fa-edit"></i>
                         </span>
-                      </button>
-                      <button class="button is-ghost" @click="solucaoconfirmardeletar = true">
-                        <span class="icon is-small">
-                          <i class="fa-solid fa-trash"></i>
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-                  <div x-cloak x-show="solucaoconfirmardeletar" class="notification is-info is-light">
-                    <h1 class="title is-5">Tem certeza que deseja excluir o comentário?</h1>
-                    <div class="columns is-mobile">
-                      <div class="column">
-                        <button class="button is-danger"
-                                hx-post="{% url 'delete_solucao' %}"
-                                hx-vals='{"solucao": "{{solucao.id}}"}'
-                                hx-trigger="click"
-                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                @click.stop.prevent="solucaoconfirmardeletar = false">
-                          Deletar
-                        </button>
-                      </div>
-                      <div class="column is-narrow">
-                        <button class="button is-light" @click.stop.prevent="solucaoconfirmardeletar = false">
-                          Cancelar
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                    </button>
                 {% endif %}
+                {% if solucao.autor == user or solucao.questao.space.user == user %}
+                    <!-- Botão de deletar, visível para o autor da solução ou o dono do espaço -->
+                    <button class="button is-ghost" @click="solucaoconfirmardeletar = true">
+                        <span class="icon is-small">
+                            <i class="fa-solid fa-trash"></i>
+                        </span>
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+        <div x-cloak x-show="solucaoconfirmardeletar" class="notification is-info is-light">
+            <h1 class="title is-5">Tem certeza que deseja excluir o comentário?</h1>
+            <div class="columns is-mobile">
+                <div class="column">
+                    <button class="button is-danger"
+                            hx-post="{% url 'delete_solucao' %}"
+                            hx-vals='{"solucao": "{{ solucao.id }}"}'
+                            hx-trigger="click"
+                            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                            @click.stop.prevent="solucaoconfirmardeletar = false">
+                        Deletar
+                    </button>
+                </div>
+                <div class="column is-narrow">
+                    <button class="button is-light" @click.stop.prevent="solucaoconfirmardeletar = false">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
               </article>
             </div>
           </div>

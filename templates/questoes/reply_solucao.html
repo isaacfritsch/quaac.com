@@ -29,11 +29,12 @@
               </div>
             </div>
           </div>
+        {% if reply.autor == user or reply.solucao.questao.space.user == user %}
           
-          {% if user.is_authenticated and reply.autor == user %}
           <div x-data="{comentarioreplysconfirmardeletar : false}">
               <div class="media-right">
                 <div class="buttons">
+                {% if reply.autor == user %}
                   <button class="button is-ghost"
                   hx-get="{% url 'editar_reply_solucao' %}"
                   hx-vals='{"reply": "{{reply.id}}"}'
@@ -44,11 +45,14 @@
                       <i class="fa-solid fa-edit"></i>
                     </span>
                   </button>
+                  {% endif %}
+                  {% if reply.autor == user or reply.solucao.questao.space.user == user %}
                   <button class="button is-ghost" @click="comentarioreplysconfirmardeletar = true">
                     <span class="icon is-small">
                       <i class="fa-solid fa-trash"></i>
                     </span>
                   </button>
+                  {% endif %}
                 </div>
               </div>
               <div x-cloak x-show="comentarioreplysconfirmardeletar" class="notification is-info is-light">
