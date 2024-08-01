@@ -19,6 +19,7 @@ from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
 from django.core.paginator import Paginator
 from django.template.loader import render_to_string
 from quaac.decorators import custom_login_required, owner_required
+from django.http import HttpResponseForbidden
 
 def test_view(request): 
     
@@ -102,6 +103,26 @@ def comunidadeeditar(request):
             return HttpResponse(status=405)
     else:
         return HttpResponse(status=401)
+    
+@owner_required    
+def comunidade_deletar(request):    
+    espaco = request.GET.get("espaco")
+    if not espaco:
+         espaco = request.POST.get("espaco")
+    espaco = Espaco.objects.get(id=espaco)
+    if request.user == espaco.user: 
+        if request.method == 'GET':
+            return render(request, 'espaco/delete_space.html', {'espaco': espaco})              
+        if request.method == 'POST':
+            espaco.delete()
+            response = HttpResponse()
+            response["Hx-Redirect"] = "/"
+            return response
+        else:
+            return HttpResponse(status=405)
+    else:
+        return HttpResponseForbidden()
+        
     
 def comunidade_body(request):
     espaco = request.GET.get("espaco")  
@@ -534,7 +555,7 @@ def tag_edicao(request):
             tag_instance.save()
             
             selected_tags = request.session['selected_tags']
-            #caso de deletar tag
+            
             for i in range(len(selected_tags)):
         
                 if selected_tags[i] == tag_original:   

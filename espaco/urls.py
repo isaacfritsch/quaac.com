@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.test_view, name='home'),#
     path('comunidade/lista_tags/', views.lista_tags, name='lista_tags'),
     path('create_space/', views.create_space, name='create_space'),#
+    path('comunidade_deletar/', views.comunidade_deletar, name='comunidade_deletar'),
     path('para_voce/', views.para_voce, name='para_voce'),
     path('redirect_to_space/', views.redirect_to_space, name='redirect_to_space'),#
     path('espaco_list_view/', views.espaco_list_view, name='espaco_list_view'),#

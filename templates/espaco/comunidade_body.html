@@ -10,7 +10,8 @@
         </p>
       </div>
       {% if espaco.user == request.user %}
-      <div class="column is-narrow">
+      <div class="columns">
+       <div class="column">
         <div class="button is-info is-small"
           hx-get="{% url 'comunidadeeditar' %}"
           hx-vals='{"espaco" : "{{espaco.id}}"}'
@@ -24,6 +25,23 @@
           Editar comunidade
           </p>
         </div>
+      </div>
+        <div class="column is-narrow">
+          <div class="button is-danger is-small"
+          hx-get="{% url 'comunidade_deletar' %}"
+          hx-vals='{"espaco" : "{{espaco.id}}"}'
+          hx-target="#deletar-comunidade-modal"
+          x-cloak
+          @click.stop="modalcomunidadedeletar = !modalcomunidadedeletar">
+          <span class="icon">
+            <i class="fa-solid fa-trash"></i>
+          </span>
+          <p>
+          Deletar comunidade
+          </p>
+        </div>
+      </div>
+
         {% endif %}
       </div>        
  

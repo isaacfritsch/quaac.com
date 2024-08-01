@@ -1,0 +1,48 @@
+{% load widget_tweaks %}
+{% with WIDGET_ERROR_CLASS='is-invalid' %}
+<div class="modal" x-bind:class="modalcomunidadedeletar ? 'is-active' : ''">
+    <div @comunidadeeditada.window="modalcomunidadedeletar = false"></div>
+    <div class="modal-background" ></div>
+    <div class="modal-content has-background-white py-5 px-5" id="space-modal-delete" @click.stop.outside="modalcomunidadedeletar= false">
+
+        <div class="box">
+            <button class="delete is-pulled-right"  x-on:click.stop.prevent="modalcomunidadedeletar = false"></button>       
+            <h1 class="title is-3">DELETAR A COMUNIDADE</h1>
+            <div class="notification is-warning has-text-centered">
+                <strong>ATENÇÃO</strong>
+                <br>
+                Cuidado ao deletar essa comunidade, todas as questões e comentários serão deletados
+            </div>
+            <div x-data="{ comunidadeconfirmardeletar: false }">
+                    <button class="button is-danger" @click="comunidadeconfirmardeletar = true">
+                      <span class="icon is-small">
+                        <i class="fa-solid fa-trash"></i>
+                      </span>
+                      <p> Deletar comunidade </p>
+                    </button>
+                <div x-cloak x-show="comunidadeconfirmardeletar" class="notification is-info is-light">
+                  <h1 class="title is-5">Tem certeza que deseja excluir a comunidade?</h1>
+                  
+                  <div class="columns is-mobile">
+                    <div class="column">
+                      <button class="button is-danger"
+                              hx-post="{% url 'comunidade_deletar' %}"
+                              hx-vals='{"espaco": "{{espaco.id}}"}'
+                              hx-trigger="click"
+                              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+                        Deletar
+                      </button>                      
+                    </div>
+                    <div class="column is-narrow">
+                      <button class="button is-light" @click.stop.prevent="comunidadeconfirmardeletar = false">
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                  <p class="is-size-6">Você será redirecionado para home quando a comunidade for deletada</p>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
+{% endwith %}
