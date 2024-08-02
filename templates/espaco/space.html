@@ -37,6 +37,7 @@ function updateHxValsAndTrigger(button) {
       "nao_respondidas": document.querySelector("input[name='nao_respondidas']").checked,
       "com_comentarios": document.querySelector("input[name='com_comentarios']").checked,
       "com_resolucao": document.querySelector("input[name='com_resolucao']").checked,
+      "exclusivo": document.querySelector("input[name='exclusivo']").checked,
   }));
 
   // Trigger the custom event to initiate the HTMX request
@@ -129,7 +130,7 @@ function updateHxValsAndTrigger(button) {
     
     <div class="panel-block">
       <strong>Questões</strong>
-      <div class="tabs " x-data="{ one: false, two: false, three: false }">
+      <div class="tabs " x-data="{ one: false, two: false, three: false, four:false }">
         <ul>
           <li :class="one ? 'is-active' : ''">
             <a @click.prevent="one = !one">
@@ -152,6 +153,14 @@ function updateHxValsAndTrigger(button) {
               <label class="checkbox has-hover-background">
                 <input type="checkbox" name="com_resolucao" :checked="three">
                 com solução
+              </label>
+            </a>
+          </li>
+          <li :class="four ? 'is-active' : ''">
+            <a @click.prevent="four = !four">
+              <label class="checkbox has-hover-background">
+                <input type="checkbox" name="exclusivo" :checked="four">
+                com todas as tags incluidas
               </label>
             </a>
           </li>

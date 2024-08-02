@@ -1311,24 +1311,28 @@ def marcar_resolvida(request):
     else:
         return HttpResponse("Invalid request method", status=400)
     
-def questoes_por_tag(request):    
-    espaco_id = request.GET.get("espaco")  
+def questoes_por_tag(request):
+    espaco_id = request.GET.get("espaco")
     espaco = Espaco.objects.get(id=espaco_id)
     
     selected_tags = request.session.get('selected_tags', [])
     filter_nao_respondidas = request.GET.get("nao_respondidas") == 'true'
     filter_com_comentarios = request.GET.get("com_comentarios") == 'true'
     filter_com_resolucao = request.GET.get("com_resolucao") == 'true'
+    filter_exclusivo = request.GET.get("exclusivo") == 'true'
     
     page_num = request.GET.get("page")
 
-    
     questoes = Questao.objects.filter(space=espaco)
 
     # Filtragem por tags
     if selected_tags:
         tags = Tag.objects.filter(name__in=selected_tags)
-        questoes = questoes.filter(tags__in=tags).distinct()
+        if filter_exclusivo:
+            for tag in tags:
+                questoes = questoes.filter(tags=tag)
+        else:
+            questoes = questoes.filter(tags__in=tags).distinct()
 
     # Filtragem para questões não respondidas
     if filter_nao_respondidas:
@@ -1359,9 +1363,11 @@ def questoes_por_tag(request):
         'respondidas': filter_nao_respondidas,
         'comentadas': filter_com_comentarios,
         'resolucao': filter_com_resolucao,
+        'exclusivo': filter_exclusivo,
     }
 
     return render(request, 'questoes/questoes_filtradas.html', context)
+
 
 
 
