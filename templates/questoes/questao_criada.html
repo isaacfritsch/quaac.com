@@ -1,13 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<style>
-.block {
-  word-wrap: break-word; 
-  overflow-wrap: break-word;
-  word-break: break-all; 
-  hyphens: auto; 
-}
-</style>
+
 
 <div x-data="{ successq: '{{ questao_criada }}' === 'True', successq2: '{{ questao_editada }}' === 'True' }">
   <div class="has-text-centered has-background-success has-text-white p-2"

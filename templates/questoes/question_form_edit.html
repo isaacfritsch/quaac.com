@@ -22,6 +22,8 @@ hx-post="{% url 'editar_questao' question.id %}">
             <div class="column">
               <p class="has-text-black ">
                 Confirme que não existe essa questão na comunidade <strong>{{espaco.title}}</strong>
+                <br>
+                Confirme a seleção de <strong>todas</strong> as tags que identificam a questão
               </p>
             </div>
               {% if form_questao.confirm.errors %}
@@ -36,7 +38,7 @@ hx-post="{% url 'editar_questao' question.id %}">
         <div class="columns is-mobile">
           <div class="column">
             <p class="is-size-5" style="font-weight: normal;">
-            Selecione as tags que melhor identifiquem a questão
+            Selecione TODAS as tags que melhor identifiquem a questão
             </p>
           </div>
           <div class="column is-narrow">

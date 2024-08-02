@@ -1,3 +1,4 @@
+
 <div class="container">  
     <div class="columns is-centered">
         <div class="column is-half">
@@ -6,9 +7,11 @@
             </p>            
         </div>
     </div>
+    <div class="column is-full">
     {% for question in page.object_list %}
     {% include 'questoes/questao_int.html' %}
     {% endfor %}
+    </div>
     <div class="box">
     <nav class="pagination is-centered" role="navigation" aria-label="pagination">
         {% if page.has_previous %}

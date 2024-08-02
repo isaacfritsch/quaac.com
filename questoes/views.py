@@ -1341,7 +1341,7 @@ def questoes_por_tag(request):
     if filter_com_comentarios:
         questoes = questoes.annotate(comentario_count=Count('comment')).filter(comentario_count__gt=0)
 
-    # Filtragem para questões com resolução
+    # Filtragem para questões com solução
     if filter_com_resolucao:
         questoes = questoes.annotate(solucao_count=Count('solucao')).filter(solucao_count__gt=0)
 
