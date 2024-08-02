@@ -1,4 +1,9 @@
-
+<style>
+    .block {
+        overflow-wrap: anywhere; /* Quebra palavras apenas se necessário para evitar overflow */
+        hyphens: auto; /* Adiciona hífens ao quebrar palavras */
+      }
+    </style>
 <div class="container">  
     <div class="columns is-centered">
         <div class="column is-half">
@@ -9,7 +14,9 @@
     </div>
     <div class="column is-full">
     {% for question in page.object_list %}
+    <div class="block">
     {% include 'questoes/questao_int.html' %}
+    </div>
     {% endfor %}
     </div>
     <div class="box">

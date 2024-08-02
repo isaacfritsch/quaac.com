@@ -1,8 +1,15 @@
-
+<style>
+    .block {
+      overflow-wrap: anywhere; /* Quebra palavras apenas se necessário para evitar overflow */
+      hyphens: auto; /* Adiciona hífens ao quebrar palavras */
+    }
+  
+  </style>
+  
 {% for question in questions%}
-
+<div class="block">
 {% include 'questoes/questao_int.html' %}
-
+</div>
 {% endfor %}
 
 <div class="button is-dark is-outlined is-responsive"
