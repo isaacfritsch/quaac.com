@@ -609,6 +609,7 @@ def question_create(request, espaco):
 
     if request.method == 'POST':       
         if form_questao.is_valid():
+            
             tags = request.session.get('selected_tags_questoes', [])
             if not tags:
                 messages.error(request, 'A questão precisa ter pelo menos uma tag selecionada')
@@ -620,7 +621,7 @@ def question_create(request, espaco):
             question.user = request.user
             question.space = espaco_desejado
             question.save()
-
+            
             for tag_name in tags:
                 tag_obj = Tag.objects.get(name=tag_name, space=espaco_desejado.id)
                 question.tags.add(tag_obj)           
