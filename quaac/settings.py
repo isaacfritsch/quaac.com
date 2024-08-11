@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from decouple import config, Csv
 import django_on_heroku
+import dj_database_url
 
 
 
@@ -84,6 +85,13 @@ WSGI_APPLICATION = 'quaac.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 
+DATABASES = {
+    'default': dj_database_url.config(
+        default='postgres://...',
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+}
 
 
 # Password validation
@@ -120,7 +128,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-
+STATIC_URL = "static/"
+STATICFILES_DIRS = [
+   os.path.join(BASE_DIR, "templates/static"),
+]
+STATIC_ROOT = BASE_DIR /'static'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR /'media'
 
 
 # Default primary key field type
