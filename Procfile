@@ -1,1 +1,1 @@
-web: gunicorn quaac.wsgi:application --log-file - 
+web gunicorn quaac.wsgi --log-file - 
