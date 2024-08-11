@@ -149,6 +149,7 @@ LOGOUT_REDIRECT_URL = "/"
 
 X_FRAME_OPTIONS = config('X_FRAME_OPTIONS')
 
+
 SUMMERNOTE_CONFIG = {
     'iframe': True,   
     
