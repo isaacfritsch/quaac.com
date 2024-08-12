@@ -83,14 +83,15 @@ WSGI_APPLICATION = 'quaac.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+import psycopg2
+DATABASE_URL = os.environ['DATABASE_URL']
 
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgres://...',
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
+        'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
+    }
+
+
 
 
 # Password validation
