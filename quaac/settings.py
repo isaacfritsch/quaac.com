@@ -16,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = config('DEBUG', default=False, cast=bool) 
 SECRET_KEY = config('SECRET_KEY')
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default ='', cast=Csv())
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default =['quaac-2acf6982ad59.herokuapp.com'], cast=Csv())
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_SSL_REDIRECT = True
@@ -83,15 +83,13 @@ WSGI_APPLICATION = 'quaac.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-import psycopg2
 DATABASE_URL = os.environ['DATABASE_URL']
-
+import psycopg2
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+
 DATABASES = {
         'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
     }
-
-
 
 
 # Password validation
@@ -149,6 +147,9 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 X_FRAME_OPTIONS = config('X_FRAME_OPTIONS')
+
+
+
 
 
 SUMMERNOTE_CONFIG = {
