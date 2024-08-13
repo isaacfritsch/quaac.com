@@ -738,8 +738,12 @@ def questao_criada(request, id):
     questao_editada = request.session.get('questao_editada', False)
     if 'questao_editada' in request.session:
         del request.session['questao_editada']    
+    try:
+        return render(request, 'questoes/questao_criada.html', {'question': question, 'questao_criada': questao_criada, 'questao_editada': questao_editada})
+    except Exception as e:
+        print(e)
+        return HttpResponseForbidden()
     
-    return render(request, 'questoes/questao_criada.html', {'question': question, 'questao_criada': questao_criada, 'questao_editada': questao_editada})
 
 def questao(request, question):          
         
