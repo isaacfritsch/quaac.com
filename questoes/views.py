@@ -22,7 +22,7 @@ from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
 from django.core.paginator import Paginator
 from django.template.loader import render_to_string
 from quaac.decorators import custom_login_required
-from django.http import HttpResponseRedirect
+from django.http import JsonResponse
 from django.http import HttpResponseForbidden
 from quaac.decorators import custom_login_required, owner_required
 
@@ -741,8 +741,7 @@ def questao_criada(request, id):
     try:
         return render(request, 'questoes/questao_criada.html', {'question': question, 'questao_criada': questao_criada, 'questao_editada': questao_editada})
     except Exception as e:
-        print(e)
-        return HttpResponseForbidden()
+        return JsonResponse({"error": str(e)})
     
 
 def questao(request, question):          
