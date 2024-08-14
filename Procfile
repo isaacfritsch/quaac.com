@@ -1,1 +1,1 @@
-web: gunicorn quaac.wsgi --log-file - --log-level debug
+web: gunicorn quaac.wsgi --log-file - --capture-output
