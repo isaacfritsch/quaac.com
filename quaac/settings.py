@@ -2,6 +2,9 @@ import os
 from pathlib import Path
 from decouple import config, Csv
 import dj_database_url
+from urllib.parse import urlparse
+
+import json
 
 
 
@@ -32,6 +35,18 @@ if IS_HEROKU_APP:
     DATABASE_URL = config('DATABASE_URL')
 else:
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+    
+if IS_HEROKU_APP:
+    CACHES = {
+    'default': {
+        'BACKEND': 'django_bmemcached.memcached.BMemcached',
+        'LOCATION': os.environ.get('MEMCACHEDCLOUD_SERVERS').split(','),
+        'OPTIONS': {
+                    'username': os.environ.get('MEMCACHEDCLOUD_USERNAME'),
+                    'password': os.environ.get('MEMCACHEDCLOUD_PASSWORD')
+            }
+    }
+}
 
 # Application definition
 
