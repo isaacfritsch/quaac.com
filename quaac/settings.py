@@ -31,6 +31,10 @@ if IS_HEROKU_APP:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     DATABASE_URL = config('DATABASE_URL')
+    REGION_NAME = config('REGION_NAME')
+    ACCESS_KEY = config('ACCESS_KEY')
+    SECRET_KEY_S3 = config('SECRET_KEY_S3')
+    ENDPOINT_URL = config('ENDPOINT_URL')
 else:
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
     
@@ -61,7 +65,8 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'questoes', 
     'django_summernote',
-    'perfil',          
+    'perfil',  
+    'storages',        
 ]
 
 MIDDLEWARE = [
@@ -151,10 +156,21 @@ STATICFILES_DIRS = [
    ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "static/"
+
+
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },    
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "bucket_name": "quaac",
+            "region_name": REGION_NAME,
+            "access_key": ACCESS_KEY,
+            "secret_key": SECRET_KEY_S3,
+            "endpoint_url": ENDPOINT_URL,
+        }
+    }if IS_HEROKU_APP else {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",        
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
@@ -167,6 +183,7 @@ WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR /'media'
+WHITENOISE_MEDIA_ROOT = MEDIA_ROOT
 
 
 # Default primary key field type
