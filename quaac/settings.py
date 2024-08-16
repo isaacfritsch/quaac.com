@@ -6,8 +6,6 @@ from urllib.parse import urlparse
 
 import json
 
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -17,10 +15,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 SECRET_KEY = config('SECRET_KEY')
-IS_HEROKU_APP = config('IS_HEROKU_APP',default=True, cast=bool)
-DEBUG = config('DEBUG', default=False, cast=bool)
-# IS_HEROKU_APP = False
-# DEBUG = True
+IS_HEROKU_APP = "DYNO" in os.environ and not "CI" in os.environ
+
+if not IS_HEROKU_APP:
+    DEBUG = True
 
 if IS_HEROKU_APP:
     ALLOWED_HOSTS = config('ALLOWED_HOSTS', default =['quaac.com'], cast=Csv())
@@ -51,7 +49,7 @@ if IS_HEROKU_APP:
 # Application definition
 
 INSTALLED_APPS = [
-    "whitenoise.runserver_nostatic",
+    'whitenoise.runserver_nostatic',    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -66,7 +64,6 @@ INSTALLED_APPS = [
     'perfil',          
 ]
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -79,8 +76,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'quaac.urls'
-
-
 
 TEMPLATES = [
     {
@@ -100,10 +95,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'quaac.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 
 import psycopg2
 
@@ -120,7 +113,6 @@ else:
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -140,7 +132,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -152,28 +143,22 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static'),
    ]
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = "static/"
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    # Enable WhiteNoise's GZip and Brotli compression of static assets:
-    # https://whitenoise.readthedocs.io/en/latest/django.html#add-compression-and-caching-support
+    },    
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-
 # Don't store the original (un-hashed filename) version of static files, to reduce slug size:
 # https://whitenoise.readthedocs.io/en/latest/django.html#WHITENOISE_KEEP_ONLY_HASHED_FILES
 WHITENOISE_KEEP_ONLY_HASHED_FILES = True
