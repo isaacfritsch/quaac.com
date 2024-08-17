@@ -2,10 +2,25 @@ from django.db import models
 from django.conf import settings
 from autoslug import AutoSlugField
 from django.db.models.functions import Lower
+import re
 
+def natural_key(string):
+    # Função que separa a string em partes de texto e números
+    return [int(text) if text.isdigit() else text.lower() for text in re.split('([0-9]+)', string)]
 
-class Espaco(models.Model):
+class TagQuerySet(models.QuerySet):
+    def natural_ordering(self):
+        return sorted(self, key=lambda tag: natural_key(tag.name))
     
+class TagManager(models.Manager):
+    def get_queryset(self):
+        return TagQuerySet(self.model, using=self._db)
+
+    def natural_ordering(self):
+        return self.get_queryset().natural_ordering()
+    
+class Espaco(models.Model):
+    """Espaco object."""
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -21,7 +36,6 @@ class Espaco(models.Model):
       
    
 class Tag(models.Model):
-    
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -34,19 +48,11 @@ class Tag(models.Model):
     )
     name = models.CharField(max_length=45, unique=False)  
     category = models.CharField(max_length=255)
-    parent = models.ForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.CASCADE)
-    name_normalized = models.CharField(max_length=255, editable=False, default='')
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.CASCADE)    
 
-    class Meta:
-        ordering = ['name_normalized']
-        
-    def save(self, *args, **kwargs):
-        self.name_normalized = self._normalize_name()
-        super().save(*args, **kwargs)
-        
-    def _normalize_name(self):
-        return self.name.lower()
-    
+    objects = TagManager()
+
     def __str__(self):
         return self.name
+
     
