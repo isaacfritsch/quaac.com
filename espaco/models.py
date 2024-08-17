@@ -35,9 +35,17 @@ class Tag(models.Model):
     name = models.CharField(max_length=45, unique=False)  
     category = models.CharField(max_length=255)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.CASCADE)
+    name_normalized = models.CharField(max_length=255, editable=False, default='')
 
     class Meta:
-        ordering = [Lower('name')]
+        ordering = ['name_normalized']
+        
+    def save(self, *args, **kwargs):
+        self.name_normalized = self._normalize_name()
+        super().save(*args, **kwargs)
+        
+    def _normalize_name(self):
+        return self.name.lower()
     
     def __str__(self):
         return self.name

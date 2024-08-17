@@ -66,7 +66,8 @@ INSTALLED_APPS = [
     'questoes', 
     'django_summernote',
     'perfil',  
-    'storages',        
+    'storages', 
+    'django_cleanup.apps.CleanupConfig',       
 ]
 
 MIDDLEWARE = [
