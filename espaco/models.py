@@ -47,5 +47,6 @@ class Tag(models.Model):
     def _normalize_name(self):
         return self.name.lower()
     
-    
+    def __str__(self):
+        return self.name
     
