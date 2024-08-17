@@ -46,7 +46,7 @@ class Tag(models.Model):
         on_delete=models.CASCADE,
         null=False
     )
-    name = models.CharField(max_length=45, unique=False)  
+    name = models.CharField(max_length=100, unique=False)  
     category = models.CharField(max_length=255)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.CASCADE)    
 
