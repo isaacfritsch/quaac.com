@@ -5,7 +5,7 @@ from django.db.models.functions import Lower
 
 
 class Espaco(models.Model):
-    """Espaco object."""
+    
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -21,7 +21,7 @@ class Espaco(models.Model):
       
    
 class Tag(models.Model):
-    """Espaco object."""
+    
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
