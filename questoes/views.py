@@ -310,7 +310,7 @@ def lista_tags2(request):
 
         espaco_desejado = Espaco.objects.get(id=espaco)
         
-        tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria)
+        tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria).natural_ordering()
 
         tag_list = []
         for tag in tags:
@@ -335,7 +335,7 @@ def lista_tags2(request):
         espaco_desejado = Espaco.objects.get(id=espaco)
         
         
-        tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria)
+        tags = Tag.objects.filter(space=espaco_desejado.id, category=categoria).natural_ordering()
 
         tag_list = []
         for tag in tags:
