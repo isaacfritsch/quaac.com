@@ -119,7 +119,7 @@ else:
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-AWS_QUERYSTRING_AUTH = False
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -159,7 +159,7 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "static/"
 
-
+AWS_QUERYSTRING_EXPIRE = 3153600000
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3.S3Storage",
@@ -169,6 +169,7 @@ STORAGES = {
             "access_key": ACCESS_KEY,
             "secret_key": SECRET_KEY_S3,
             "endpoint_url": ENDPOINT_URL,
+            "querystring_expire": AWS_QUERYSTRING_EXPIRE,
         }
     }if IS_HEROKU_APP else {
         "BACKEND": "django.core.files.storage.FileSystemStorage",        
