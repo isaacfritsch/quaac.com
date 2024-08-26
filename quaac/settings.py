@@ -5,6 +5,10 @@ import dj_database_url
 from urllib.parse import urlparse
 
 import json
+# from storages.backends.s3boto3 import S3Boto3Storage
+
+# class CustomS3Boto3Storage(S3Boto3Storage):
+#     querystring_auth = False
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -120,7 +124,6 @@ else:
         }
     }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -159,7 +162,7 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "static/"
 
-AWS_QUERYSTRING_EXPIRE = 3153600000
+
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3.S3Storage",
@@ -169,7 +172,7 @@ STORAGES = {
             "access_key": ACCESS_KEY,
             "secret_key": SECRET_KEY_S3,
             "endpoint_url": ENDPOINT_URL,
-            "querystring_expire": AWS_QUERYSTRING_EXPIRE,
+            "querystring_auth": False,
         }
     }if IS_HEROKU_APP else {
         "BACKEND": "django.core.files.storage.FileSystemStorage",        
