@@ -37,12 +37,6 @@ class Questao(models.Model):
     likes = GenericRelation(Like)
       
 
-# class Alternativa(models.Model):
-#     question = models.ForeignKey(
-#         Questao,
-#         on_delete=models.CASCADE)
-#     text = models.TextField()
-#     correct = models.BooleanField(default=False)
     
 class Comment(models.Model):
     autor = models.ForeignKey(

@@ -18,13 +18,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 
-SECRET_KEY = config('SECRET_KEY')
+
 IS_HEROKU_APP = "DYNO" in os.environ and not "CI" in os.environ
 
 if not IS_HEROKU_APP:
+    SECRET_KEY = 'django-insecure-xyz1234567890'
     DEBUG = True
 
 if IS_HEROKU_APP:
+    SECRET_KEY = config('SECRET_KEY')
     ALLOWED_HOSTS = config('ALLOWED_HOSTS', default =['quaac.com'], cast=Csv())
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -203,7 +205,7 @@ LOGIN_REDIRECT_URL = "/"
 
 LOGOUT_REDIRECT_URL = "/"
 
-X_FRAME_OPTIONS = config('X_FRAME_OPTIONS')
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 
 
@@ -235,13 +237,20 @@ SUMMERNOTE_CONFIG = {
 }
 
 #SMTP configuration
-
-EMAIL_BACKEND = config('EMAIL_BACKEND')
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+if IS_HEROKU_APP:
+    EMAIL_BACKEND = config('EMAIL_BACKEND')
+    EMAIL_HOST = config('EMAIL_HOST')
+    EMAIL_PORT = config('EMAIL_PORT', cast=int)
+    EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+else:
+    #Mude se necessário
+    EMAIL_USE_TLS = True
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_HOST_USER = 'test@gmail.com'
+    EMAIL_HOST_PASSWORD = 'password'
+    EMAIL_PORT = 587
 
 
 
