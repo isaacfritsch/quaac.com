@@ -30,7 +30,7 @@ Figura 1 - Diagrama de casos de uso da plataforma
 
 A Figura 1 apresenta um diagrama simplificado das principais interações que o usuário pode realizar no quaac.com. O site é dividido em quatro seções principais: Home, Comunidade, Questões e Perfil do Usuário, e a seguir será explicado como cada uma dessas interações acontece em cada seção.
 
-2.1.1 Home 
+2.1.1 Home  
 Apresenta uma descrição e informações de uso, a criação da comunidade e seu painel de seleção. As comunidades são ambientes com objetivos educacionais específicos, nos quais os usuários poderão inserir questões relacionadas a esses objetivos. A figura 2 mostra o exemplo atual de uso da Home, com uma comunidade criada, a Unicamp: para questões de provas anteriores das matérias da Unicamp.
 ![home](https://github.com/user-attachments/assets/3f24460f-0c03-4b09-8644-9bd82486ca10)
 Figura 2 - Página da Home do quaac.com
@@ -40,14 +40,14 @@ A barra de navegação possui alguns botões (Home, Login e Register), quando o 
 ![register](https://github.com/user-attachments/assets/0066c5ca-32f6-41b6-bfb4-fcc318a90cad)
 Figura 3 - Modais de Registro e Login no quaac.com
 
-2.1.2 Comunidade
+2.1.2 Comunidade  
 Para encontrar questões o usuário poderá filtrar pelas tags criadas pelo moderador e outras opções de tags padrão: não respondidas, com comentários, com solução e todas as tags incluídas, como mostra a Figura 4. 
 ![comunidade](https://github.com/user-attachments/assets/c56e90c6-aa71-4cd7-b860-16a19becf0c4)
 Figura 4 - Página da comunidade Unicamp
 
 As questões são filtradas pelas tags selecionadas e apresentadas em ordem decrescente de curtidas, um tipo simples de sistema de recomendação colaborativo. O moderador pode criar/editar tags e configurá-las em um sistema de árvores. 
 
-2.1.3 Questão
+2.1.3 Questão  
 Qualquer usuário pode inserir uma questão clicando no botão "Adicionar nova questão", sendo redirecionado para o formulário de adição de uma nova questão, como mostra a Figura 5.
 ![formularioquestao](https://github.com/user-attachments/assets/8c099e2f-d9db-424c-a177-b634d052ab44)
 Figura 5 - Página do formulário para adicionar uma nova questão
@@ -56,7 +56,7 @@ Após a criação, as questões podem ser acessadas pelos usuários, que podem r
 ![questao](https://github.com/user-attachments/assets/acd95321-b8b3-4cc2-8eab-7f19fbf8ec33)
 Figura 6 - Uma questão inserida por um usuário na comunidade Unicamp
 
-2.1.4 Perfil do Usuário
+2.1.4 Perfil do Usuário  
 É possível editar as informações pessoais, verificar comunidades e questões criadas, questões marcadas como respondidas ou curtidas, e questões com comentários ou soluções (Figura 7). Com isso, o perfil se torna uma ferramenta importante para revisão e aprimoramento dos estudos por questões.
 ![perfil](https://github.com/user-attachments/assets/9815e6bc-e26d-4455-9336-826a416613ca)
 Figura 7 - Página de perfil de um usuário
@@ -83,14 +83,14 @@ git clone https://github.com/isaacfritsch/quaac.com.git
 cd quaac
 ```
 
-2. Crie um Ambiente Virtual
+### 2. Crie um Ambiente Virtual 
 Recomendamos o uso de um ambiente virtual para isolar as dependências do projeto.
 ```shell
 python -m venv venv
 source venv/bin/activate  # No Windows use: venv\Scripts\activate
 ```
 
-3. Instale as Dependências
+### 3. Instale as Dependências
 Use o pip para instalar as dependências do backend e npm para o frontend.
 
 ```shell
